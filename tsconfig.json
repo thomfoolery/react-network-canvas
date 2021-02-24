@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": ".",
+    "outDir": "./dist",
+    "pretty": true,
+    "jsx": "react",
+    "strict": true,
+    "target": "es2019",
+    "importHelpers": true,
+    "skipLibCheck": false,
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "paths": {
+      "@app/*": ["./src/*"]
+    }
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "node_modules"]
+}

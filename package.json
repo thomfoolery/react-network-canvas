@@ -1,0 +1,21 @@
+{
+  "name": "react-component-node-canvas",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "17.x"
+  },
+  "devDependencies": {
+    "eslint": "^7.20.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "snowpack": "^3.0.11",
+    "tslib": "^2.1.0"
+  },
+  "scripts": {
+    "start": "snowpack dev",
+    "build": "snowpack build"
+  }
+}

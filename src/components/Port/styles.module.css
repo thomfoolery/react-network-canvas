@@ -1,0 +1,8 @@
+.Port {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  background-color: black;
+  border-radius: 5px;
+  margin: 10px 0;
+}
