@@ -3,7 +3,7 @@
   width: 100px;
   height: 100px;
   border-radius: 5px;
-  box-shadow: 0 0 0 1px lightgrey;
+  box-shadow: 0 0 0 1px lightgrey, 0 2px 3px rgba(0, 0, 0, 0.2);
   background-color: white;
 
   display: flex;
@@ -12,7 +12,7 @@
 }
 
 .Node.isSelected {
-  box-shadow: 0 0 0 1px black;
+  box-shadow: 0 0 0 1px black, 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .NodeInputPorts {

@@ -5,14 +5,14 @@ import * as Types from "@app/types";
 
 const Context = createContext();
 
-function getObjectsByIdMap(objects) {
+function getObjectsByIdHash(objects) {
   return objects.reduce((acc, object) => {
     acc[object.id] = object;
     return acc;
   }, {});
 }
 
-function getEdgesByNodeIdMap(edges) {
+function getEdgesByNodeIdHash(edges) {
   return edges.reduce((acc, edge) => {
     const {from, to} = edge;
 
@@ -35,15 +35,17 @@ function getEdgesByNodeIdMap(edges) {
 interface GraphManagerProps {
   nodes: Types.Node[];
   edges: Types.Edge[];
-  nodesByIdMap: {[id: string]: Types.Node};
-  edgesByIdMap: {[id: string]: Types.Edge};
-  edgesByNodeIdMap: {[id: string]: Types.Edge[]};
+  nodesByIdHash: {[id: string]: Types.Node};
+  edgesByIdHash: {[id: string]: Types.Edge};
+  edgesByNodeIdHash: {[id: string]: Types.Edge[]};
   selectedNodeIds: string[];
   dragDelta: Types.Position;
   subscriptions: {
     nodePositionChangeById: Publisher;
     isSelectedById: Publisher;
     dragDeltaById: Publisher;
+    nodesChange: Publisher;
+    edgesChange: Publisher;
   };
 }
 
@@ -51,15 +53,17 @@ class GraphManager {
   _private: GraphManagerProps = {
     nodes: [],
     edges: [],
-    nodesByIdMap: {},
-    edgesByIdMap: {},
-    edgesByNodeIdMap: {},
+    nodesByIdHash: {},
+    edgesByIdHash: {},
+    edgesByNodeIdHash: {},
     selectedNodeIds: [],
     dragDelta: {x: 0, y: 0},
     subscriptions: {
       nodePositionChangeById: new Publisher(),
       isSelectedById: new Publisher(),
       dragDeltaById: new Publisher(),
+      nodesChange: new Publisher(),
+      edgesChange: new Publisher(),
     },
   };
 
@@ -72,31 +76,48 @@ class GraphManager {
   get nodes() {
     return [...this._private.nodes];
   }
-  set nodes(nodes) {
+  set nodes(nodes: Types.Node[]) {
     this._private.nodes = nodes;
-    this._private.nodesByIdMap = getObjectsByIdMap(nodes);
+    this._private.nodesByIdHash = getObjectsByIdHash(nodes);
+    this._private.subscriptions.nodesChange.notifyAll(nodes);
   }
-  getNodeById(id): Types.Node {
-    return {...this._private.nodesByIdMap[id]};
+  getNodeById(id: string): Types.Node {
+    return {...this._private.nodesByIdHash[id]};
   }
   getNodesByEdgeId(id: string): {from?: Types.Node; to?: Types.Node} {
-    const edge: Types.Edge = this._private.edgesByIdMap[id];
+    const edge: Types.Edge = this._private.edgesByIdHash[id];
     if (edge) {
-      const from = this._private.nodesByIdMap[edge.from.nodeId];
-      const to = this._private.nodesByIdMap[edge.to.nodeId];
+      const from = this._private.nodesByIdHash[edge.from.nodeId];
+      const to = this._private.nodesByIdHash[edge.to.nodeId];
       return {from, to};
     }
     return {from: undefined, to: undefined};
   }
+  removeNodeById(id: string) {
+    const removedEdgeIds = this._private.edgesByNodeIdHash[id].map(
+      ({id}) => id
+    );
+
+    this.nodes = this._private.nodes.filter((node) => node.id != id);
+    this.edges = this._private.edges.filter(
+      (edge) => !removedEdgeIds.includes(edge.id)
+    );
+  }
+  subscribeToNodesChange(fn: Function) {
+    this._private.subscriptions.nodesChange.addListenerForId("default", fn);
+  }
+  unsubscribeToNodesChange(fn: Function) {
+    this._private.subscriptions.nodesChange.removeListenerForId("default", fn);
+  }
   // position
-  handleDragDelta(dragDelta) {
+  handleDragDelta(dragDelta: Types.Position) {
     const {selectedNodeIds} = this._private;
     this._private.subscriptions.dragDeltaById.notifyIds(
       selectedNodeIds,
       dragDelta
     );
   }
-  handleDragEnd(dragDelta) {
+  handleDragEnd(dragDelta: Types.Position) {
     const {selectedNodeIds} = this._private;
     this._private.subscriptions.dragDeltaById.notifyIds(selectedNodeIds, {
       x: 0,
@@ -104,8 +125,8 @@ class GraphManager {
     });
     selectedNodeIds.forEach((id) => this.updateNodePositionById(id, dragDelta));
   }
-  updateNodePositionById(id, dragDelta) {
-    const node = this._private.nodesByIdMap[id];
+  updateNodePositionById(id: string, dragDelta: Types.Position) {
+    const node = this._private.nodesByIdHash[id];
     const position = {
       x: node.position.x + dragDelta.x,
       y: node.position.y + dragDelta.y,
@@ -117,17 +138,17 @@ class GraphManager {
       position
     );
   }
-  subscribeToDragDeltaById(id, fn) {
-    this._private.subscriptions.dragDeltaById.addListener(id, fn);
+  subscribeToDragDeltaById(id: string, fn: Function) {
+    this._private.subscriptions.dragDeltaById.addListenerForId(id, fn);
   }
-  unsubscribeToDragDeltaById(id, fn) {
-    this._private.subscriptions.dragDeltaById.removeListener(id, fn);
+  unsubscribeToDragDeltaById(id: string, fn: Function) {
+    this._private.subscriptions.dragDeltaById.removeListenerForId(id, fn);
   }
-  subscribeToNodePositionChangeById(id, fn) {
-    this._private.subscriptions.nodePositionChangeById.addListener(id, fn);
+  subscribeToNodePositionChangeById(id: string, fn: Function) {
+    this._private.subscriptions.nodePositionChangeById.addListenerForId(id, fn);
   }
-  unsubscribeToNodePositionChangeById(id, fn) {
-    this._private.subscriptions.nodePositionChangeById.addListener(id, fn);
+  unsubscribeToNodePositionChangeById(id: string, fn: Function) {
+    this._private.subscriptions.nodePositionChangeById.addListenerForId(id, fn);
   }
   // selected ids
   get selectedNodeIds(): string[] {
@@ -175,11 +196,11 @@ class GraphManager {
       false
     );
   }
-  subscribeToIsSelectedById(id, fn) {
-    this._private.subscriptions.isSelectedById.addListener(id, fn);
+  subscribeToIsSelectedById(id: string, fn: Function) {
+    this._private.subscriptions.isSelectedById.addListenerForId(id, fn);
   }
-  unsubscribeToIsSelectedById(id, fn) {
-    this._private.subscriptions.isSelectedById.removeListener(id, fn);
+  unsubscribeToIsSelectedById(id: string, fn: Function) {
+    this._private.subscriptions.isSelectedById.removeListenerForId(id, fn);
   }
   // edges
   get edges() {
@@ -187,16 +208,42 @@ class GraphManager {
   }
   set edges(edges: Types.Edge[]) {
     this._private.edges = edges;
-    this._private.edgesByIdMap = getObjectsByIdMap(edges);
-    this._private.edgesByNodeIdMap = getEdgesByNodeIdMap(edges);
+    this._private.edgesByIdHash = getObjectsByIdHash(edges);
+    this._private.edgesByNodeIdHash = getEdgesByNodeIdHash(edges);
+    this._private.subscriptions.edgesChange.notifyAll(edges);
   }
   getEdgeById(id: string): Types.Edge {
-    return {...this._private.edgesByIdMap[id]};
+    return {...this._private.edgesByIdHash[id]};
   }
   getEdgesByNodeId(id: string): Types.Edge[] {
-    return this._private.edgesByNodeIdMap[id]
-      ? [...this._private.edgesByNodeIdMap[id]]
+    return this._private.edgesByNodeIdHash[id]
+      ? [...this._private.edgesByNodeIdHash[id]]
       : [];
+  }
+  appendEdge(edge: Types.Edge) {
+    this.edges = this._private.edges.concat(edge);
+  }
+  removeEdgeById(id: string) {
+    const filter = (edge) => edge.id != id;
+    const {edgesByNodeIdHash} = this._private;
+    const edge = this._private.edgesByIdHash[id];
+    const fromNodeEdges = edgesByNodeIdHash[edge.from.nodeId];
+    const toNodeEdges = edgesByNodeIdHash[edge.to.nodeId];
+
+    edgesByNodeIdHash[edge.from.nodeId] = fromNodeEdges.filter(filter);
+    edgesByNodeIdHash[edge.to.nodeId] = toNodeEdges.filter(filter);
+
+    this.edges = this._private.edges.filter(filter);
+
+    // redraw from and to nodes
+    this.updateNodePositionById(edge.from.nodeId, {x: 0, y: 0});
+    this.updateNodePositionById(edge.to.nodeId, {x: 0, y: 0});
+  }
+  subscribeToEdgesChange(fn: Function) {
+    this._private.subscriptions.edgesChange.addListenerForId("default", fn);
+  }
+  unsubscribeToEdgesChange(fn: Function) {
+    this._private.subscriptions.edgesChange.removeListenerForId("default", fn);
   }
 }
 
@@ -205,9 +252,6 @@ export function GraphManagerProvider({nodes, edges, children}) {
   const graphManager = useMemo(() => new GraphManager({nodes, edges}), []);
 
   useEffect(() => {
-    function handleDragStart() {
-      console.log("dragStart");
-    }
     function handleDragMove(_, dragDelta) {
       graphManager.handleDragDelta(dragDelta);
     }
@@ -215,12 +259,10 @@ export function GraphManagerProvider({nodes, edges, children}) {
       graphManager.handleDragEnd(dragDelta);
     }
 
-    dragManager.subscribeToDragStart("graphManager", handleDragStart);
     dragManager.subscribeToDragMove("graphManager", handleDragMove);
     dragManager.subscribeToDragEnd("graphManager", handleDragEnd);
 
     return () => {
-      dragManager.unsubscribeToDragStart("graphManager", handleDragStart);
       dragManager.unsubscribeToDragMove("graphManager", handleDragMove);
       dragManager.unsubscribeToDragEnd("graphManager", handleDragEnd);
     };

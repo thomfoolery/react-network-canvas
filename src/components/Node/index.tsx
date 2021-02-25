@@ -1,9 +1,9 @@
-import React, {useMemo, useState, useEffect} from "react";
+import React, {useMemo, useState, useCallback, useEffect} from "react";
 import * as Types from "@app/types";
 import Port from "../Port";
 
-import {useGraphManager} from "../../hooks";
-import {svgGeneratePath} from "../../utils";
+import {useDragManager, useGraphManager} from "@app/hooks";
+import {isClick, svgGeneratePath} from "@app/utils";
 
 import styles from "./styles.module.css";
 
@@ -13,9 +13,11 @@ interface Props {
 
 function Node(props: Props) {
   const {node} = props;
+  const dragManager = useDragManager();
   const graphManager = useGraphManager();
-  const [position, setPosition] = useState(node.position);
+
   const [isSelected, setIsSelected] = useState(false);
+  const [position, setPosition] = useState(node.position);
   const [dragDelta, setDragDelta] = useState({x: 0, y: 0});
 
   const {id, inputPorts, outputPorts} = node;
@@ -25,12 +27,23 @@ function Node(props: Props) {
   };
 
   const edges = graphManager.getEdgesByNodeId(id);
+
   const edgesIn = useMemo(() => {
     return edges.filter(({to}) => to.nodeId === id);
   }, [edges]);
   const edgesOut = useMemo(() => {
     return edges.filter(({from}) => from.nodeId === id);
   }, [edges]);
+
+  const handleMouseDown = useCallback(() => {
+    graphManager.selectedNodeIds = [id];
+  }, []);
+
+  const handleMouseUp = useCallback(() => {
+    if (isClick(dragManager.dragDelta)) {
+      graphManager.selectedNodeIds = [id];
+    }
+  }, []);
 
   useEffect(() => edgesIn.forEach(updateEdgePath), [dragDelta]);
   useEffect(() => edgesOut.forEach(updateEdgePath), [edgesOut, dragDelta]);
@@ -60,8 +73,9 @@ function Node(props: Props) {
     <div
       style={style}
       id={`Node-${id}`}
+      onMouseUp={handleMouseUp}
+      onMouseDown={handleMouseDown}
       className={containerClassList.join(" ")}
-      onClick={() => (graphManager.selectedNodeIds = [id])}
     >
       <div className={styles.NodeInputPorts}>
         {inputPorts.map((port) => (
@@ -101,6 +115,7 @@ function updateEdgePath(edge) {
   const path = svgGeneratePath(x1, y1, x2, y2);
 
   svgPath.setAttribute("d", path);
+  svgPath?.nextElementSibling?.setAttribute("d", path);
 }
 
 export default Node;

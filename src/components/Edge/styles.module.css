@@ -3,3 +3,14 @@
   stroke-width: 3px;
   fill: transparent;
 }
+
+.EdgeArea {
+  stroke: transparent;
+  stroke-width: 20px;
+  fill: transparent;
+  cursor: pointer;
+}
+
+.Hover .Edge {
+  stroke: red;
+}

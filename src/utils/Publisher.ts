@@ -12,12 +12,18 @@ class Publisher {
     });
   }
 
-  addListener(id, fn) {
+  notifyAll(...args) {
+    this._private.subscriptionsById.forEach((fns) =>
+      fns.forEach((fn) => fn(...args))
+    );
+  }
+
+  addListenerForId(id, fn) {
     const subscriptions = this._private.subscriptionsById.get(id) || [];
     this._private.subscriptionsById.set(id, subscriptions.concat(fn));
   }
 
-  removeListener(id, fn) {
+  removeListenerForId(id, fn) {
     const subscriptions = this._private.subscriptionsById.get(id) || [];
     this._private.subscriptionsById.set(
       id,

@@ -1,5 +1,5 @@
 import React, {createContext, useRef, useMemo, useContext} from "react";
-// import {Publisher} from "@app/utils";
+import {Publisher} from "@app/utils";
 import * as Types from "@app/types";
 
 const Context = createContext();
@@ -21,9 +21,9 @@ class DragManager {
     dragDelta: {x: 0, y: 0},
     dragStartPosition: null,
     subscriptions: {
-      dragStartById: new Map(),
-      dragMoveById: new Map(),
-      dragEndById: new Map(),
+      dragStartById: new Publisher(),
+      dragMoveById: new Publisher(),
+      dragEndById: new Publisher(),
     },
   };
 
@@ -33,13 +33,15 @@ class DragManager {
     this.handleDragStart = this.handleDragStart.bind(this);
   }
 
+  get dragDelta() {
+    return {...this._private.dragDelta};
+  }
+
   // event handlers
   handleDragStart(event) {
     event.currentTarget.addEventListener("mousemove", this.handleDragMove);
     this._private.dragStartPosition = {x: event.screenX, y: event.screenY};
-    this._private.subscriptions.dragStartById.forEach((fns) =>
-      fns.forEach((fn) => fn(event))
-    );
+    this._private.subscriptions.dragStartById.notifyAll(event);
   }
   handleDragMove(event) {
     if (!this._private.dragStartPosition) return;
@@ -52,9 +54,7 @@ class DragManager {
     };
 
     this._private.dragDelta = dragDelta;
-    this._private.subscriptions.dragMoveById.forEach((fns) =>
-      fns.forEach((fn) => fn(event, dragDelta))
-    );
+    this._private.subscriptions.dragMoveById.notifyAll(event, dragDelta);
   }
   handleDragEnd(event) {
     event.currentTarget.removeEventListener("mousemove", this.handleDragMove);
@@ -68,45 +68,28 @@ class DragManager {
       y: currentPosition.y - dragStartPosition.y,
     };
 
-    this._private.subscriptions.dragEndById.forEach((fns) =>
-      fns.forEach((fn) => fn(event, dragDelta))
-    );
+    this._private.subscriptions.dragEndById.notifyAll(event, dragDelta);
     this._private.dragStartPosition = null;
   }
 
   // subscriptions
   subscribeToDragStart(id, fn) {
-    this.registerSubscriptionById("dragStartById", id, fn);
+    this._private.subscriptions.dragStartById.addListenerForId(id, fn);
   }
   unsubscribeToDragStart(id, fn) {
-    this.unregisterSubscriptionById("dragStartById", id, fn);
+    this._private.subscriptions.dragStartById.removeListenerForId(id, fn);
   }
   subscribeToDragMove(id, fn) {
-    this.registerSubscriptionById("dragMoveById", id, fn);
+    this._private.subscriptions.dragMoveById.addListenerForId(id, fn);
   }
   unsubscribeToDragMove(id, fn) {
-    this.unregisterSubscriptionById("dragMoveById", id, fn);
+    this._private.subscriptions.dragMoveById.removeListenerForId(id, fn);
   }
   subscribeToDragEnd(id, fn) {
-    this.registerSubscriptionById("dragEndById", id, fn);
+    this._private.subscriptions.dragEndById.addListenerForId(id, fn);
   }
   unsubscribeToDragEnd(id, fn) {
-    this.unregisterSubscriptionById("dragEndById", id, fn);
-  }
-  registerSubscriptionById(registryId, id, fn) {
-    const registry = this._private.subscriptions[registryId];
-    const subscriptions = registry.has(id) ? registry.get(id) : [];
-
-    registry.set(id, [...subscriptions, fn]);
-  }
-  unregisterSubscriptionById(registryId, id, fn) {
-    const registry = this._private.subscriptions[registryId];
-
-    if (registry.has(id)) {
-      const value = registry.get(id).filter((f) => f !== fn);
-
-      registry.set(id, value);
-    }
+    this._private.subscriptions.dragEndById.removeListenerForId(id, fn);
   }
 }
 
