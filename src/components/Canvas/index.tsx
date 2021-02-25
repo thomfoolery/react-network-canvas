@@ -1,14 +1,27 @@
-import React, {useRef, useState, useEffect, useCallback} from "react";
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  RefObject,
+  SyntheticEvent,
+} from "react";
 import Node from "../Node";
 import Edge from "../Edge";
 
 import {useDragManager, useGraphManager} from "@app/hooks";
 import {isClick} from "@app/utils";
+import * as Types from "@app/types";
 
 import styles from "./styles.module.css";
 
-function Edges(props) {
-  const {onClick = () => null} = props;
+interface EdgeProps {
+  onClick?(event: SyntheticEvent, position: Types.Position): void;
+  workspaceDivRef: RefObject<HTMLDivElement>;
+}
+
+function Edges(props: EdgeProps) {
+  const {onClick = () => null, workspaceDivRef} = props;
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
   const containerRef = useRef();
@@ -27,10 +40,15 @@ function Edges(props) {
   const handleMouseUp = useCallback(
     (event) => {
       if (isClick(dragManager.dragDelta)) {
-        onClick(event);
+        const position = {
+          x: event.clientX + workspaceDivRef.current.scrollLeft,
+          y: event.clientY + workspaceDivRef.current.scrollTop,
+        };
+        graphManager.createNode({position});
+        onClick(event, position);
       }
     },
-    [dragManager]
+    [dragManager, workspaceDivRef]
   );
 
   useEffect(() => {
@@ -73,14 +91,16 @@ function Nodes() {
 }
 
 interface Props {
-  onClick?(event): void;
+  onClick?(event: SyntheticEvent, position: Types.Position): void;
+  workspaceDivRef: RefObject<HTMLDivElement>;
 }
 
 function Canvas(props: Props) {
-  const {onClick = () => null} = props;
+  const {onClick = () => null, workspaceDivRef} = props;
+
   return (
     <div className={styles.Canvas} onClick={onClick}>
-      <Edges />
+      <Edges workspaceDivRef={workspaceDivRef} />
       <Nodes />
     </div>
   );

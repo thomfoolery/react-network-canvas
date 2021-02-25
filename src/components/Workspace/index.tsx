@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import Canvas from "../Canvas";
 
 import styles from "./styles.module.css";
@@ -6,9 +6,11 @@ import styles from "./styles.module.css";
 interface Props {}
 
 function Workspace(props: Props) {
+  const workspaceDivRef = useRef();
+
   return (
-    <div className={styles.Workspace}>
-      <Canvas />
+    <div ref={workspaceDivRef} className={styles.Workspace}>
+      <Canvas workspaceDivRef={workspaceDivRef} />
     </div>
   );
 }

@@ -2,6 +2,8 @@ import React from "react";
 import Workspace from "./components/Workspace";
 import {DragManagerProvider, GraphManagerProvider} from "./hooks";
 
+import styles from "./styles.module.css";
+
 interface Props {
   nodes: any[];
   edges: any[];
@@ -15,13 +17,13 @@ function NodeCanvas(props: Props) {
   };
 
   return (
-    <div style={style}>
-      <DragManagerProvider>
+    <DragManagerProvider>
+      <div className={styles.NodeCanvas} style={style}>
         <GraphManagerProvider nodes={nodes} edges={edges}>
           <Workspace />
         </GraphManagerProvider>
-      </DragManagerProvider>
-    </div>
+      </div>
+    </DragManagerProvider>
   );
 }
 

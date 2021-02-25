@@ -96,11 +96,15 @@ class DragManager {
 export function DragManagerProvider({children}) {
   const dragManager = useMemo(() => new DragManager(), []);
   const containerRef = useRef();
-
+  const style = {
+    width: `100%`,
+    height: `100%`,
+  };
   return (
     <Context.Provider value={dragManager}>
       <div
         ref={containerRef}
+        style={style}
         onMouseUp={dragManager.handleDragEnd}
         onMouseDown={dragManager.handleDragStart}
       >

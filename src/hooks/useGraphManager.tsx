@@ -1,4 +1,5 @@
 import React, {createContext, useMemo, useContext, useEffect} from "react";
+import {v1 as generateUuid} from "uuid";
 import {useDragManager} from "./useDragManager";
 import {Publisher} from "@app/utils";
 import * as Types from "@app/types";
@@ -92,6 +93,17 @@ class GraphManager {
       return {from, to};
     }
     return {from: undefined, to: undefined};
+  }
+  createNode(nodeProps) {
+    const node = {
+      id: generateUuid(),
+      inputPorts: [{id: generateUuid()}],
+      outputPorts: [{id: generateUuid()}],
+      position: {x: 0, y: 0},
+      ...nodeProps,
+    };
+
+    this.nodes = [...this.nodes, node];
   }
   removeNodeById(id: string) {
     const removedEdgeIds = this._private.edgesByNodeIdHash[id].map(
