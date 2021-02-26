@@ -5,10 +5,12 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
+
 import {Publisher, svgGeneratePath} from "@app/utils";
-import {useDragManager} from "@app/hooks";
 import {DRAFT_EDGE_ID} from "@app/constants";
+import {useDragManager} from "@app/hooks";
 import * as Types from "@app/types";
+
 import {v1 as generateUuid} from "uuid";
 
 const Context = createContext();
@@ -124,7 +126,7 @@ class GraphManager {
     }
     return {from: undefined, to: undefined};
   }
-  createNode(nodeProps: Partial<Types.Node>) {
+  createNode(nodeProps: Partial<Types.Node>): Types.Node {
     const node = {
       id: generateUuid(),
       inputPorts: [{id: generateUuid()}],
@@ -134,6 +136,8 @@ class GraphManager {
     };
 
     this.nodes = [...this.nodes, node];
+
+    return node;
   }
   removeNodeById(id: string) {
     const edges = this._private.edgesByNodeIdHash[id] || [];
@@ -244,12 +248,17 @@ class GraphManager {
       (id) => !this._private.selectedNodeIds.includes(id)
     );
 
-    this._private.selectedNodeIds = [...selectedNodeIds];
-    this._private.subscriptions.isSelectedById.notifyIds(selectedNodeIds, true);
-    this._private.subscriptions.isSelectedById.notifyIds(
-      unselectedNodeIds,
-      false
-    );
+    requestAnimationFrame(() => {
+      this._private.selectedNodeIds = [...selectedNodeIds];
+      this._private.subscriptions.isSelectedById.notifyIds(
+        newSelectedNodeIds,
+        true
+      );
+      this._private.subscriptions.isSelectedById.notifyIds(
+        unselectedNodeIds,
+        false
+      );
+    });
   }
   appendSelectedNodeIds(appendedNodeIds: string[]) {
     const selectedNodeIds = Array.from(
@@ -302,7 +311,7 @@ class GraphManager {
       ? [...this._private.edgesByNodeIdHash[id]]
       : [];
   }
-  createEdge(edgeProps: Partial<Types.Edge>) {
+  createEdge(edgeProps: Partial<Types.Edge>): Types.Edge {
     const edge: Types.Edge = {
       id: generateUuid(),
       from: {
@@ -319,6 +328,8 @@ class GraphManager {
     this.edges = [...this._private.edges, edge];
     // trigger render to draw edges
     this.updateNodePositionById(edge.from.nodeId, {x: 0, y: 0});
+
+    return edge;
   }
   removeEdgeById(id: string) {
     const filter = (edge) => edge.id != id;

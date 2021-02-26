@@ -10,7 +10,7 @@ interface Props {
 
 class Bridge implements Types.Bridge {
   onClickCanvas(event, position, graphManager) {}
-  onClickPort(event, port, graphManager) {}
+  onClickPort(event, port, node, graphManager) {}
   onKeyPress(event, key, graphManager) {}
 }
 

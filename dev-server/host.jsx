@@ -10,10 +10,32 @@ function App() {
   const {nodes, edges} = graph;
   const bridge = {
     onClickCanvas(event, position, graphManager) {
-      graphManager.createNode({position});
+      const node = graphManager.createNode({position});
+
+      graphManager.selectedNodeIds = [node.id];
     },
-    onClickPort(event, port, graphManager) {
-      // console.log(event, port, graphManager);
+    onClickPort(event, port, parentNode, graphManager) {
+      const parentNodeElement = document.querySelector(
+        `#Node-${parentNode.id}`
+      );
+      const BB = parentNodeElement.getBoundingClientRect();
+      const position = {
+        x: BB.left + BB.width + 50,
+        y: BB.top,
+      };
+      const node = graphManager.createNode({position});
+
+      graphManager.createEdge({
+        from: {
+          nodeId: parentNode.id,
+          portId: port.id,
+        },
+        to: {
+          nodeId: node.id,
+          portId: node.inputPorts[0].id,
+        },
+      });
+      graphManager.selectedNodeIds = [node.id];
     },
     onKeyPress(event, key, graphManager) {
       if (key === "Backspace" && graphManager.selectedNodeIds.length > 0) {

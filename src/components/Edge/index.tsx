@@ -16,12 +16,18 @@ function Edge(props: Props) {
   const handleClick = useCallback(() => {
     graphManager.removeEdgeById(edge.id);
   }, [graphManager]);
+
+  const handleMouseDown = useCallback(() => {
+    graphManager.selectedNodeIds = [];
+  }, []);
+
   const handleMouseEnter = useCallback(() => setIsHovered(true), []);
   const handleMouseLeave = useCallback(() => setIsHovered(false), []);
 
   return (
     <g
       onClick={handleClick}
+      onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={isHovered ? styles.Hover : null}

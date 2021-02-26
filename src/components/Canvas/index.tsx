@@ -1,7 +1,7 @@
-import React, {RefObject, SyntheticEvent} from "react";
-import * as Types from "@app/types";
+import React, {SyntheticEvent} from "react";
+import * as Types from "./components/Background/node_modules/@app/types";
 
-import {Nodes, Edges} from "./components";
+import {Background, Foreground} from "./components";
 
 import styles from "./styles.module.css";
 
@@ -14,8 +14,8 @@ function Canvas(props: Props) {
 
   return (
     <div className={styles.Canvas} onClick={onClick}>
-      <Edges />
-      <Nodes />
+      <Background />
+      <Foreground />
     </div>
   );
 }

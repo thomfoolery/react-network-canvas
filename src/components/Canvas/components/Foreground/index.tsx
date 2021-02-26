@@ -3,7 +3,7 @@ import Node from "@app/components/Node";
 
 import {useGraphManager} from "@app/hooks";
 
-function Nodes() {
+function Foreground() {
   const graphManager = useGraphManager();
 
   const [nodes, setNodes] = useState(graphManager.nodes);
@@ -22,4 +22,4 @@ function Nodes() {
   );
 }
 
-export default memo(Nodes);
+export default memo(Foreground);

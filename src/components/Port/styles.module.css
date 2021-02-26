@@ -1,8 +1,17 @@
 .Port {
   position: relative;
+  display: block;
+
+  cursor: pointer;
+  padding: 5px;
+}
+
+.Port::after {
+  content: "";
+  display: block;
   width: 10px;
   height: 10px;
+
+  border-radius: 50%;
   background-color: black;
-  border-radius: 5px;
-  margin: 10px 0;
 }

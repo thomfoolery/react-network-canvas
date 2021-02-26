@@ -129,12 +129,14 @@ export function DragManagerProvider(props: Props) {
     width: `100%`,
     height: `100%`,
   };
+
   return (
     <Context.Provider value={dragManager}>
       <div
         ref={containerRef}
         style={style}
         onMouseUp={dragManager.handleDragEnd}
+        onMouseLeave={dragManager.handleDragEnd}
         onMouseDown={dragManager.handleDragStart}
       >
         {children}

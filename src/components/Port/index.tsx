@@ -55,7 +55,7 @@ function Port(props: Props) {
     (event) => {
       const {dragData} = dragManager;
       if (isClick(dragManager.dragDelta)) {
-        bridge.onClickPort(event, port, graphManager);
+        bridge.onClickPort(event, port, node, graphManager);
       } else if (dragData.port) {
         const edge = {
           from: {

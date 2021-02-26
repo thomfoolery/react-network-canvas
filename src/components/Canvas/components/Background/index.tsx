@@ -1,12 +1,11 @@
 import React, {
+  memo,
   useRef,
   useState,
   useEffect,
   useCallback,
-  RefObject,
   SyntheticEvent,
 } from "react";
-import Edge from "@app/components/Edge";
 
 import {
   useDragManager,
@@ -14,7 +13,9 @@ import {
   useWorkspace,
   useBridge,
 } from "@app/hooks";
+
 import {DRAFT_EDGE_ID} from "@app/constants";
+import Edge from "@app/components/Edge";
 import * as Types from "@app/types";
 import {isClick} from "@app/utils";
 
@@ -32,11 +33,11 @@ const draftEdge = {
   },
 };
 
-interface EdgeProps {
+interface BackgroundProps {
   onClick?(event: SyntheticEvent, position: Types.Position): void;
 }
 
-function Edges(props: EdgeProps) {
+function Background(props: BackgroundProps) {
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
   const workspace = useWorkspace();
@@ -78,8 +79,8 @@ function Edges(props: EdgeProps) {
       ref={containerRef}
       onMouseUp={handleMouseUp}
       onMouseDown={handleMouseDown}
-      className={styles.CanvasEdges}
       xmlns="http://www.w3.org/2000/svg"
+      className={styles.CanvasBackground}
     >
       {edges.map((edge) => (
         <Edge key={edge.id} edge={edge} />
@@ -90,4 +91,4 @@ function Edges(props: EdgeProps) {
   );
 }
 
-export default Edges;
+export default memo(Background);
