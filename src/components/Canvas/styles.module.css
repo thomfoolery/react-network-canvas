@@ -3,8 +3,9 @@
   width: var(--canvas-size);
   height: var(--canvas-size);
   background-image: radial-gradient(lightgrey, white 1px);
-  background-position: 5px 5px;
-  background-size: 10px 10px;
+  background-size: var(--grid-size) var(--grid-size);
+  background-position: calc(var(--canvas-size) / 2) calc(var(--canvas-size) / 2);
+  user-select: none;
 }
 
 .CanvasEdges {

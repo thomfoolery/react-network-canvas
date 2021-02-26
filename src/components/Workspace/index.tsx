@@ -1,5 +1,6 @@
 import React, {useRef} from "react";
 import Canvas from "../Canvas";
+import {WorkspaceProvider} from "@app/hooks";
 
 import styles from "./styles.module.css";
 
@@ -10,7 +11,9 @@ function Workspace(props: Props) {
 
   return (
     <div ref={workspaceDivRef} className={styles.Workspace}>
-      <Canvas workspaceDivRef={workspaceDivRef} />
+      <WorkspaceProvider value={workspaceDivRef}>
+        <Canvas workspaceDivRef={workspaceDivRef} />
+      </WorkspaceProvider>
     </div>
   );
 }

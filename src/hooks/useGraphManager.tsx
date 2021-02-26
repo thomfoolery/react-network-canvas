@@ -1,4 +1,10 @@
-import React, {createContext, useMemo, useContext, useEffect} from "react";
+import React, {
+  createContext,
+  useMemo,
+  useContext,
+  useEffect,
+  ReactNode,
+} from "react";
 import {v1 as generateUuid} from "uuid";
 import {useDragManager} from "./useDragManager";
 import {Publisher} from "@app/utils";
@@ -32,8 +38,7 @@ function getEdgesByNodeIdHash(edges) {
     return acc;
   }, {});
 }
-
-interface GraphManagerProps {
+interface GraphManagerPrivateProps {
   nodes: Types.Node[];
   edges: Types.Edge[];
   nodesByIdHash: {[id: string]: Types.Node};
@@ -50,8 +55,12 @@ interface GraphManagerProps {
   };
 }
 
+interface GraphManagerArguments {
+  nodes: Types.Node[];
+  edges: Types.Edge[];
+}
 class GraphManager {
-  _private: GraphManagerProps = {
+  _private: GraphManagerPrivateProps = {
     nodes: [],
     edges: [],
     nodesByIdHash: {},
@@ -68,7 +77,7 @@ class GraphManager {
     },
   };
 
-  constructor({nodes = [], edges = []}) {
+  constructor({nodes = [], edges = []}: GraphManagerArguments) {
     this.nodes = nodes;
     this.edges = edges;
   }
@@ -259,9 +268,16 @@ class GraphManager {
   }
 }
 
-export function GraphManagerProvider({nodes, edges, children}) {
-  const dragManager = useDragManager();
+interface Props {
+  nodes: Types.Node[];
+  edges: Types.Edge[];
+  children?: ReactNode;
+}
+
+export function GraphManagerProvider(props: Props) {
+  const {nodes, edges, children} = props;
   const graphManager = useMemo(() => new GraphManager({nodes, edges}), []);
+  const dragManager = useDragManager();
 
   useEffect(() => {
     function handleDragMove(_, dragDelta) {

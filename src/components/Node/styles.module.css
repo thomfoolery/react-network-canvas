@@ -1,6 +1,6 @@
 .Node {
   position: absolute;
-  width: 100px;
+  width: 150px;
   border-radius: 5px;
   box-shadow: 0 0 0 1px lightgrey, 0 2px 3px rgba(0, 0, 0, 0.2);
   background-color: white;
@@ -15,9 +15,15 @@
 }
 
 .NodeInputPorts {
+  flex: 0 1 auto;
   margin-left: -5px;
 }
 
+.NodeBody {
+  flex: 1;
+}
+
 .NodeOutputPorts {
+  flex: 0 1 auto;
   margin-right: -5px;
 }

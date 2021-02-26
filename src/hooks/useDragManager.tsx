@@ -1,23 +1,29 @@
-import React, {createContext, useRef, useMemo, useContext} from "react";
+import React, {
+  createContext,
+  useRef,
+  useMemo,
+  useContext,
+  ReactNode,
+} from "react";
 import {Publisher} from "@app/utils";
 import * as Types from "@app/types";
 
 const Context = createContext();
 
-interface DragManagerProps {
-  domElement: HTMLDivElement | null;
+interface DragManagerPrivateProps {
+  dragData: any;
   dragDelta: Types.Position;
   dragStartPosition: Types.Position | null;
   subscriptions: {
-    dragStartById: any;
-    dragMoveById: any;
-    dragEndById: any;
+    dragStartById: Publisher;
+    dragMoveById: Publisher;
+    dragEndById: Publisher;
   };
 }
 
 class DragManager {
-  _private: DragManagerProps = {
-    domElement: null,
+  _private: DragManagerPrivateProps = {
+    dragData: null,
     dragDelta: {x: 0, y: 0},
     dragStartPosition: null,
     subscriptions: {
@@ -37,6 +43,14 @@ class DragManager {
     return {...this._private.dragDelta};
   }
 
+  get dragData() {
+    return {...this._private.dragData};
+  }
+
+  set dragData(dragData: any) {
+    this._private.dragData = dragData;
+  }
+
   // event handlers
   handleDragStart(event) {
     event.currentTarget.addEventListener("mousemove", this.handleDragMove);
@@ -54,9 +68,15 @@ class DragManager {
     };
 
     this._private.dragDelta = dragDelta;
-    this._private.subscriptions.dragMoveById.notifyAll(event, dragDelta);
+    this._private.subscriptions.dragMoveById.notifyAll(
+      event,
+      dragDelta,
+      this.dragData
+    );
   }
   handleDragEnd(event) {
+    this._private.dragData = null;
+
     event.currentTarget.removeEventListener("mousemove", this.handleDragMove);
 
     if (!this._private.dragStartPosition) return;
@@ -68,7 +88,11 @@ class DragManager {
       y: currentPosition.y - dragStartPosition.y,
     };
 
-    this._private.subscriptions.dragEndById.notifyAll(event, dragDelta);
+    this._private.subscriptions.dragEndById.notifyAll(
+      event,
+      dragDelta,
+      this.dragData
+    );
     this._private.dragStartPosition = null;
   }
 
@@ -93,9 +117,14 @@ class DragManager {
   }
 }
 
-export function DragManagerProvider({children}) {
+interface Props {
+  children?: ReactNode;
+}
+
+export function DragManagerProvider(props: Props) {
   const dragManager = useMemo(() => new DragManager(), []);
   const containerRef = useRef();
+  const {children} = props;
   const style = {
     width: `100%`,
     height: `100%`,

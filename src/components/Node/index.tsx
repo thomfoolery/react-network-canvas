@@ -31,11 +31,13 @@ function Node(props: Props) {
   const edgesIn = useMemo(() => {
     return edges.filter(({to}) => to.nodeId === id);
   }, [edges]);
+
   const edgesOut = useMemo(() => {
     return edges.filter(({from}) => from.nodeId === id);
   }, [edges]);
 
   const handleMouseDown = useCallback(() => {
+    dragManager.dragData = {dragType: "node"};
     graphManager.selectedNodeIds = [id];
   }, []);
 
@@ -73,8 +75,6 @@ function Node(props: Props) {
     <div
       style={style}
       id={`Node-${id}`}
-      onMouseUp={handleMouseUp}
-      onMouseDown={handleMouseDown}
       className={containerClassList.join(" ")}
     >
       <div className={styles.NodeInputPorts}>
@@ -82,6 +82,11 @@ function Node(props: Props) {
           <Port key={port.id} port={port} />
         ))}
       </div>
+      <div
+        onMouseUp={handleMouseUp}
+        onMouseDown={handleMouseDown}
+        className={styles.NodeBody}
+      ></div>
       <div className={styles.NodeOutputPorts}>
         {outputPorts.map((port) => (
           <Port key={port.id} port={port} />
