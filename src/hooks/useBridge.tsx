@@ -11,6 +11,7 @@ interface Props {
 class Bridge implements Types.Bridge {
   onClickCanvas(event, position, graphManager) {}
   onClickPort(event, port, graphManager) {}
+  onKeyPress(event, key, graphManager) {}
 }
 
 export function BridgeProvider(props: Props) {

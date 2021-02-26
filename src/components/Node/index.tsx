@@ -37,32 +37,33 @@ function Node(props: Props) {
   }, [edges]);
 
   const handleMouseDown = useCallback(() => {
-    dragManager.dragData = {dragType: "node"};
+    dragManager.dragData = {dragType: "node", node};
     graphManager.selectedNodeIds = [id];
-  }, []);
+  }, [node, dragManager, graphManager]);
 
   const handleMouseUp = useCallback(() => {
     if (isClick(dragManager.dragDelta)) {
       graphManager.selectedNodeIds = [id];
     }
-  }, []);
+  }, [dragManager, graphManager]);
 
   useEffect(() => edgesIn.forEach(updateEdgePath), [dragDelta]);
   useEffect(() => edgesOut.forEach(updateEdgePath), [edgesOut, dragDelta]);
 
   useEffect(() => {
     graphManager.subscribeToNodePositionChangeById(id, setPosition);
-    () => graphManager.unsubscribeToNodePositionChangeById(id, setPosition);
+    return () =>
+      graphManager.unsubscribeToNodePositionChangeById(id, setPosition);
   }, [id, setPosition]);
 
   useEffect(() => {
     graphManager.subscribeToIsSelectedById(id, setIsSelected);
-    () => graphManager.unsubscribeToIsSelectedById(id, setIsSelected);
+    return () => graphManager.unsubscribeToIsSelectedById(id, setIsSelected);
   }, [id, setIsSelected]);
 
   useEffect(() => {
     graphManager.subscribeToDragDeltaById(id, setDragDelta);
-    () => graphManager.unsubscribeToDragDeltaById(id, setDragDelta);
+    return () => graphManager.unsubscribeToDragDeltaById(id, setDragDelta);
   }, [id, setDragDelta]);
 
   const containerClassList = [styles.Node];
@@ -79,7 +80,7 @@ function Node(props: Props) {
     >
       <div className={styles.NodeInputPorts}>
         {inputPorts.map((port) => (
-          <Port key={port.id} port={port} />
+          <Port key={port.id} node={node} port={port} />
         ))}
       </div>
       <div
@@ -89,7 +90,7 @@ function Node(props: Props) {
       ></div>
       <div className={styles.NodeOutputPorts}>
         {outputPorts.map((port) => (
-          <Port key={port.id} port={port} />
+          <Port key={port.id} node={node} port={port} />
         ))}
       </div>
     </div>
@@ -100,6 +101,15 @@ function updateEdgePath(edge) {
   const svgPath: any = document.querySelector(`#Edge-${edge.id}`);
   const portFrom: any = document.querySelector(`#Port-${edge.from.portId}`);
   const portTo: any = document.querySelector(`#Port-${edge.to.portId}`);
+
+  if (!portFrom) {
+    console.log(`Port ${edge.from.portId} does not exist`);
+    return;
+  }
+  if (!portTo) {
+    console.log(`Port ${edge.to.portId} does not exist`);
+    return;
+  }
 
   const x1 =
     portFrom.offsetParent.offsetLeft +

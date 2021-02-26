@@ -12,11 +12,12 @@ import * as Types from "@app/types";
 import styles from "./styles.module.css";
 
 interface Props {
+  node: Types.Node;
   port: Types.Port;
 }
 
 function Port(props: Props) {
-  const {port} = props;
+  const {node, port} = props;
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
   const workspace = useWorkspace();
@@ -37,22 +38,40 @@ function Port(props: Props) {
       graphManager.selectedNodeIds = [];
       dragManager.dragData = {
         dragType: "port",
-        sourcePosition: {
-          x: scrollPosition.left + BB.x + BB.width / 2,
-          y: scrollPosition.top + BB.y + BB.height / 2,
+        port: {
+          ...port,
+          parentNode: node,
+          position: {
+            x: scrollPosition.left + BB.x + BB.width / 2,
+            y: scrollPosition.top + BB.y + BB.height / 2,
+          },
         },
       };
     },
-    [port, dragManager, graphManager, workspace]
+    [node, port, dragManager, graphManager, workspace]
   );
 
   const handleMouseUp = useCallback(
     (event) => {
+      const {dragData} = dragManager;
       if (isClick(dragManager.dragDelta)) {
         bridge.onClickPort(event, port, graphManager);
+      } else if (dragData.port) {
+        const edge = {
+          from: {
+            nodeId: dragData.port.parentNode.id,
+            portId: dragData.port.id,
+          },
+          to: {
+            nodeId: node.id,
+            portId: port.id,
+          },
+        };
+
+        graphManager.createEdge(edge);
       }
     },
-    [port, graphManager]
+    [node, port, dragManager, graphManager]
   );
 
   return (

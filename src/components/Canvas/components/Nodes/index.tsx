@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {memo, useState, useEffect} from "react";
 import Node from "@app/components/Node";
 
 import {useGraphManager} from "@app/hooks";
@@ -22,4 +22,4 @@ function Nodes() {
   );
 }
 
-export default Nodes;
+export default memo(Nodes);

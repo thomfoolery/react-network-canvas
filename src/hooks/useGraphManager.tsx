@@ -47,8 +47,9 @@ interface GraphManagerPrivateProps {
   edgesByNodeIdHash: {[id: string]: Types.Edge[]};
   selectedNodeIds: string[];
   dragDelta: Types.Position;
-  dragManager: any;
-  workspace: {
+  dragManager?: any;
+  workspace?: {
+    container: HTMLDivElement;
     scrollPosition: {
       left: number;
       top: number;
@@ -77,13 +78,7 @@ class GraphManager {
     selectedNodeIds: [],
     dragDelta: {x: 0, y: 0},
     dragManager: undefined,
-    workspace: {
-      container: null,
-      scrollPosition: {
-        left: 0,
-        top: 0,
-      },
-    },
+    workspace: undefined,
     subscriptions: {
       nodePositionChangeById: new Publisher(),
       isSelectedById: new Publisher(),
@@ -129,7 +124,7 @@ class GraphManager {
     }
     return {from: undefined, to: undefined};
   }
-  createNode(nodeProps) {
+  createNode(nodeProps: Partial<Types.Node>) {
     const node = {
       id: generateUuid(),
       inputPorts: [{id: generateUuid()}],
@@ -141,13 +136,28 @@ class GraphManager {
     this.nodes = [...this.nodes, node];
   }
   removeNodeById(id: string) {
-    const removedEdgeIds = this._private.edgesByNodeIdHash[id].map(
-      ({id}) => id
-    );
+    const edges = this._private.edgesByNodeIdHash[id] || [];
+    const removedEdgeIds = edges.map(({id}) => id);
 
-    this.nodes = this._private.nodes.filter((node) => node.id != id);
     this.edges = this._private.edges.filter(
       (edge) => !removedEdgeIds.includes(edge.id)
+    );
+    this.nodes = this._private.nodes.filter((node) => node.id != id);
+  }
+  removeNodesByIds(removedNodeIds: string[]) {
+    const removedEdgeIds: string[] = removedNodeIds.reduce(
+      (acc: string[], id: string) => {
+        const edges = this._private.edgesByNodeIdHash[id] || [];
+        return [...acc, ...edges.map(({id}) => id)];
+      },
+      []
+    );
+
+    this.edges = this._private.edges.filter(
+      (edge) => !removedEdgeIds.includes(edge.id)
+    );
+    this.nodes = this._private.nodes.filter(
+      (node) => !removedNodeIds.includes(node.id)
     );
   }
   subscribeToNodesChange(fn: Function) {
@@ -168,12 +178,12 @@ class GraphManager {
       dragDelta
     );
 
-    if (dragManager?.dragData?.dragType === "port") {
+    if (workspace && dragManager?.dragData?.dragType === "port") {
       const {scrollPosition} = workspace;
       const {dragData} = dragManager;
 
-      const x1 = dragData.sourcePosition.x;
-      const y1 = dragData.sourcePosition.y;
+      const x1 = dragData.port.position.x;
+      const y1 = dragData.port.position.y;
       const x2 = scrollPosition.left + event.clientX;
       const y2 = scrollPosition.top + event.clientY;
 
@@ -292,8 +302,23 @@ class GraphManager {
       ? [...this._private.edgesByNodeIdHash[id]]
       : [];
   }
-  appendEdge(edge: Types.Edge) {
-    this.edges = this._private.edges.concat(edge);
+  createEdge(edgeProps: Partial<Types.Edge>) {
+    const edge: Types.Edge = {
+      id: generateUuid(),
+      from: {
+        nodeId: "",
+        portId: "",
+      },
+      to: {
+        nodeId: "",
+        portId: "",
+      },
+      ...edgeProps,
+    };
+
+    this.edges = [...this._private.edges, edge];
+    // trigger render to draw edges
+    this.updateNodePositionById(edge.from.nodeId, {x: 0, y: 0});
   }
   removeEdgeById(id: string) {
     const filter = (edge) => edge.id != id;
