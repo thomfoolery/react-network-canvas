@@ -75,25 +75,25 @@ class DragManager {
     );
   }
   handleDragEnd(event) {
-    this._private.dragData = null;
-
     event.currentTarget.removeEventListener("mousemove", this.handleDragMove);
 
-    if (!this._private.dragStartPosition) return;
+    if (this._private.dragStartPosition) {
+      const {dragStartPosition} = this._private;
+      const currentPosition = {x: event.screenX, y: event.screenY};
+      const dragDelta = {
+        x: currentPosition.x - dragStartPosition.x,
+        y: currentPosition.y - dragStartPosition.y,
+      };
 
-    const {dragStartPosition} = this._private;
-    const currentPosition = {x: event.screenX, y: event.screenY};
-    const dragDelta = {
-      x: currentPosition.x - dragStartPosition.x,
-      y: currentPosition.y - dragStartPosition.y,
-    };
+      this._private.subscriptions.dragEndById.notifyAll(
+        event,
+        dragDelta,
+        this.dragData
+      );
+    }
 
-    this._private.subscriptions.dragEndById.notifyAll(
-      event,
-      dragDelta,
-      this.dragData
-    );
     this._private.dragStartPosition = null;
+    this._private.dragData = null;
   }
 
   // subscriptions

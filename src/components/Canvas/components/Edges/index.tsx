@@ -8,7 +8,12 @@ import React, {
 } from "react";
 import Edge from "@app/components/Edge";
 
-import {useDragManager, useGraphManager, useBridge} from "@app/hooks";
+import {
+  useDragManager,
+  useGraphManager,
+  useWorkspace,
+  useBridge,
+} from "@app/hooks";
 import {DRAFT_EDGE_ID} from "@app/constants";
 import * as Types from "@app/types";
 import {isClick} from "@app/utils";
@@ -29,14 +34,12 @@ const draftEdge = {
 
 interface EdgeProps {
   onClick?(event: SyntheticEvent, position: Types.Position): void;
-  workspaceDivRef: RefObject<HTMLDivElement>;
 }
 
 function Edges(props: EdgeProps) {
-  const {workspaceDivRef} = props;
-
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
+  const workspace = useWorkspace();
   const bridge = useBridge();
 
   const containerRef = useRef();
@@ -56,13 +59,13 @@ function Edges(props: EdgeProps) {
     (event) => {
       if (isClick(dragManager.dragDelta)) {
         const position = {
-          x: event.clientX + workspaceDivRef.current.scrollLeft,
-          y: event.clientY + workspaceDivRef.current.scrollTop,
+          x: event.clientX + workspace.scrollPosition.left,
+          y: event.clientY + workspace.scrollPosition.top,
         };
         bridge.onClickCanvas(event, position, graphManager);
       }
     },
-    [bridge, dragManager, workspaceDivRef]
+    [bridge, dragManager, workspace]
   );
 
   useEffect(() => {

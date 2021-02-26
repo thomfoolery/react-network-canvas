@@ -7,15 +7,14 @@ import styles from "./styles.module.css";
 
 interface Props {
   onClick?(event: SyntheticEvent, position: Types.Position): void;
-  workspaceDivRef: RefObject<HTMLDivElement>;
 }
 
 function Canvas(props: Props) {
-  const {onClick = () => null, workspaceDivRef} = props;
+  const {onClick = () => null} = props;
 
   return (
     <div className={styles.Canvas} onClick={onClick}>
-      <Edges workspaceDivRef={workspaceDivRef} />
+      <Edges />
       <Nodes />
     </div>
   );

@@ -5,10 +5,11 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import {v1 as generateUuid} from "uuid";
-import {useDragManager} from "./useDragManager";
-import {Publisher} from "@app/utils";
+import {Publisher, svgGeneratePath} from "@app/utils";
+import {useDragManager} from "@app/hooks";
+import {DRAFT_EDGE_ID} from "@app/constants";
 import * as Types from "@app/types";
+import {v1 as generateUuid} from "uuid";
 
 const Context = createContext();
 
@@ -46,6 +47,13 @@ interface GraphManagerPrivateProps {
   edgesByNodeIdHash: {[id: string]: Types.Edge[]};
   selectedNodeIds: string[];
   dragDelta: Types.Position;
+  dragManager: any;
+  workspace: {
+    scrollPosition: {
+      left: number;
+      top: number;
+    };
+  };
   subscriptions: {
     nodePositionChangeById: Publisher;
     isSelectedById: Publisher;
@@ -68,6 +76,14 @@ class GraphManager {
     edgesByNodeIdHash: {},
     selectedNodeIds: [],
     dragDelta: {x: 0, y: 0},
+    dragManager: undefined,
+    workspace: {
+      container: null,
+      scrollPosition: {
+        left: 0,
+        top: 0,
+      },
+    },
     subscriptions: {
       nodePositionChangeById: new Publisher(),
       isSelectedById: new Publisher(),
@@ -80,8 +96,18 @@ class GraphManager {
   constructor({nodes = [], edges = []}: GraphManagerArguments) {
     this.nodes = nodes;
     this.edges = edges;
+
+    this.handleDragMove = this.handleDragMove.bind(this);
+    this.handleDragEnd = this.handleDragEnd.bind(this);
   }
 
+  // workspace
+  get workspace() {
+    return this._private.workspace;
+  }
+  set workspace(workspace: any) {
+    this._private.workspace = workspace;
+  }
   // nodes
   get nodes() {
     return [...this._private.nodes];
@@ -131,20 +157,45 @@ class GraphManager {
     this._private.subscriptions.nodesChange.removeListenerForId("default", fn);
   }
   // position
-  handleDragDelta(dragDelta: Types.Position) {
-    const {selectedNodeIds} = this._private;
+  set dragManager(dragManager: any) {
+    this._private.dragManager = dragManager;
+  }
+  handleDragMove(event, dragDelta: Types.Position) {
+    const {selectedNodeIds, dragManager, workspace} = this._private;
+
     this._private.subscriptions.dragDeltaById.notifyIds(
       selectedNodeIds,
       dragDelta
     );
+
+    if (dragManager?.dragData?.dragType === "port") {
+      const {scrollPosition} = workspace;
+      const {dragData} = dragManager;
+
+      const x1 = dragData.sourcePosition.x;
+      const y1 = dragData.sourcePosition.y;
+      const x2 = scrollPosition.left + event.clientX;
+      const y2 = scrollPosition.top + event.clientY;
+
+      this.updateDraftEdgePath(x1, y1, x2, y2);
+    }
   }
-  handleDragEnd(dragDelta: Types.Position) {
-    const {selectedNodeIds} = this._private;
-    this._private.subscriptions.dragDeltaById.notifyIds(selectedNodeIds, {
+  handleDragEnd(event, dragDelta: Types.Position) {
+    const {selectedNodeIds, dragManager, subscriptions} = this._private;
+
+    subscriptions.dragDeltaById.notifyIds(selectedNodeIds, {
       x: 0,
       y: 0,
     });
-    selectedNodeIds.forEach((id) => this.updateNodePositionById(id, dragDelta));
+
+    if (dragManager?.dragData?.dragType === "node") {
+      selectedNodeIds.forEach((id) =>
+        this.updateNodePositionById(id, dragDelta)
+      );
+    }
+    if (dragManager?.dragData?.dragType === "port") {
+      this.clearDraftEdgePath();
+    }
   }
   updateNodePositionById(id: string, dragDelta: Types.Position) {
     const node = this._private.nodesByIdHash[id];
@@ -260,6 +311,21 @@ class GraphManager {
     this.updateNodePositionById(edge.from.nodeId, {x: 0, y: 0});
     this.updateNodePositionById(edge.to.nodeId, {x: 0, y: 0});
   }
+  updateDraftEdgePath(x1: number, y1: number, x2: number, y2: number) {
+    const svgPath = document.querySelector(`#Edge-${DRAFT_EDGE_ID}`);
+    const {dragData} = this._private.dragManager;
+
+    const path = svgGeneratePath(x1, y1, x2, y2);
+
+    svgPath?.setAttribute("d", path);
+    svgPath?.nextElementSibling?.setAttribute("d", path);
+  }
+  clearDraftEdgePath() {
+    const svgPath = document.querySelector(`#Edge-${DRAFT_EDGE_ID}`);
+
+    svgPath?.setAttribute("d", "");
+    svgPath?.nextElementSibling?.setAttribute("d", "");
+  }
   subscribeToEdgesChange(fn: Function) {
     this._private.subscriptions.edgesChange.addListenerForId("default", fn);
   }
@@ -280,19 +346,14 @@ export function GraphManagerProvider(props: Props) {
   const dragManager = useDragManager();
 
   useEffect(() => {
-    function handleDragMove(_, dragDelta) {
-      graphManager.handleDragDelta(dragDelta);
-    }
-    function handleDragEnd(_, dragDelta) {
-      graphManager.handleDragEnd(dragDelta);
-    }
+    const id = "graphManager";
 
-    dragManager.subscribeToDragMove("graphManager", handleDragMove);
-    dragManager.subscribeToDragEnd("graphManager", handleDragEnd);
+    dragManager.subscribeToDragMove(id, graphManager.handleDragMove);
+    dragManager.subscribeToDragEnd(id, graphManager.handleDragEnd);
 
     return () => {
-      dragManager.unsubscribeToDragMove("graphManager", handleDragMove);
-      dragManager.unsubscribeToDragEnd("graphManager", handleDragEnd);
+      dragManager.unsubscribeToDragMove(id, graphManager.handleDragMove);
+      dragManager.unsubscribeToDragEnd(id, graphManager.handleDragEnd);
     };
   }, [dragManager]);
 
