@@ -11,6 +11,6 @@
   cursor: pointer;
 }
 
-.Hover .Edge {
+.isHovered .Edge {
   stroke: red;
 }

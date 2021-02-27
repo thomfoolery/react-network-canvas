@@ -58,7 +58,10 @@ function Background(props: BackgroundProps) {
 
   const handleMouseUp = useCallback(
     (event) => {
-      if (isClick(dragManager.dragDelta)) {
+      if (
+        isClick(dragManager.dragDelta) &&
+        containerRef.current === event.target
+      ) {
         const position = {
           x: event.clientX + workspace.scrollPosition.left,
           y: event.clientY + workspace.scrollPosition.top,
@@ -66,7 +69,7 @@ function Background(props: BackgroundProps) {
         bridge.onClickCanvas(event, position, graphManager);
       }
     },
-    [bridge, dragManager, workspace]
+    [bridge, dragManager, workspace, containerRef]
   );
 
   useEffect(() => {
@@ -85,8 +88,7 @@ function Background(props: BackgroundProps) {
       {edges.map((edge) => (
         <Edge key={edge.id} edge={edge} />
       ))}
-
-      <Edge edge={draftEdge} />
+      <Edge isDraft edge={draftEdge} />
     </svg>
   );
 }

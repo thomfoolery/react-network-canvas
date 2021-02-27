@@ -6,10 +6,11 @@ import styles from "./styles.module.css";
 
 interface Props {
   edge: Types.Edge;
+  isDraft: boolean;
 }
 
 function Edge(props: Props) {
-  const {edge} = props;
+  const {edge, isDraft} = props;
   const graphManager = useGraphManager();
   const [isHovered, setIsHovered] = useState(false);
 
@@ -24,13 +25,19 @@ function Edge(props: Props) {
   const handleMouseEnter = useCallback(() => setIsHovered(true), []);
   const handleMouseLeave = useCallback(() => setIsHovered(false), []);
 
+  const classList: string[] = [];
+
+  if (!isDraft && isHovered) {
+    classList.push(styles.isHovered);
+  }
+
   return (
     <g
       onClick={handleClick}
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={isHovered ? styles.Hover : null}
+      className={classList.join(" ")}
     >
       <path id={`Edge-${edge.id}`} className={styles.Edge} />
       <path className={styles.EdgeArea} />
