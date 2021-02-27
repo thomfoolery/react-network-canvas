@@ -2,7 +2,7 @@ import React, {useMemo, useState, useCallback, useEffect} from "react";
 import * as Types from "@app/types";
 import Port from "../Port";
 
-import {useDragManager, useGraphManager} from "@app/hooks";
+import {useWorkspace, useDragManager, useGraphManager} from "@app/hooks";
 import {isClick, svgGeneratePath} from "@app/utils";
 
 import styles from "./styles.module.css";
@@ -13,6 +13,7 @@ interface Props {
 
 function Node(props: Props) {
   const {node} = props;
+  const workspace = useWorkspace();
   const dragManager = useDragManager();
   const graphManager = useGraphManager();
 
@@ -38,14 +39,25 @@ function Node(props: Props) {
 
   const handleMouseDown = useCallback(() => {
     dragManager.dragData = {dragType: "node", node};
-    graphManager.selectedNodeIds = [id];
-  }, [node, dragManager, graphManager]);
+    if (
+      !workspace.isShiftKeyDown &&
+      !graphManager.selectedNodeIds.includes(id)
+    ) {
+      graphManager.selectedNodeIds = [id];
+    }
+  }, [node, workspace, dragManager, graphManager]);
 
   const handleMouseUp = useCallback(() => {
     if (isClick(dragManager.dragDelta)) {
-      graphManager.selectedNodeIds = [id];
+      if (workspace.isShiftKeyDown) {
+        if (graphManager.selectedNodeIds.includes(id)) {
+          graphManager.removeSelectedNodeId(id);
+        } else {
+          graphManager.appendSelectedNodeId(id);
+        }
+      }
     }
-  }, [dragManager, graphManager]);
+  }, [workspace, dragManager, graphManager]);
 
   useEffect(() => edgesIn.forEach(updateEdgePath), [dragDelta]);
   useEffect(() => edgesOut.forEach(updateEdgePath), [edgesOut, dragDelta]);

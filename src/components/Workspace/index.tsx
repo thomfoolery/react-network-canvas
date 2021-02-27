@@ -12,15 +12,20 @@ import styles from "./styles.module.css";
 interface Props {}
 
 function Workspace(props: Props) {
-  const workspaceDivRef = useRef();
-  const bridge = useBridge();
-  const dragManager = useDragManager();
   const graphManager = useGraphManager();
+  const dragManager = useDragManager();
+  const bridge = useBridge();
+
+  const workspaceDivRef = useRef();
+  const shiftKeyDownRef = useRef(false);
 
   const workspace = useMemo(() => {
     return {
       get container() {
         return workspaceDivRef.current;
+      },
+      get isShiftKeyDown() {
+        return shiftKeyDownRef.current;
       },
       scrollPosition: {
         get left() {
@@ -31,18 +36,37 @@ function Workspace(props: Props) {
         },
       },
     };
-  }, [workspaceDivRef]);
+  }, [workspaceDivRef, shiftKeyDownRef]);
 
   useEffect(() => {
     graphManager.dragManager = dragManager;
     graphManager.workspace = workspace;
-  }, [graphManager, dragManager, workspaceDivRef]);
+  }, [graphManager, dragManager, workspace]);
 
   useEffect(() => {
-    document.addEventListener("keyup", (event) => {
+    function handleKeyUp(event) {
       bridge.onKeyPress(event, event.key, graphManager);
-    });
-  }, [bridge, graphManager]);
+    }
+
+    document.addEventListener("keyup", handleKeyUp);
+    return () => document.removeEventListener("keyup", handleKeyUp);
+  }, [bridge, workspace, graphManager]);
+
+  useEffect(() => {
+    function handleKeyDown({key}) {
+      if (key === "Shift") shiftKeyDownRef.current = true;
+    }
+    function handleKeyUp({key}) {
+      if (key === "Shift") shiftKeyDownRef.current = false;
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keyup", handleKeyUp);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [shiftKeyDownRef]);
 
   return (
     <div ref={workspaceDivRef} className={styles.Workspace}>

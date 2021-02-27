@@ -143,6 +143,10 @@ class GraphManager {
     const edges = this._private.edgesByNodeIdHash[id] || [];
     const removedEdgeIds = edges.map(({id}) => id);
 
+    this._private.selectedNodeIds = this._private.selectedNodeIds.filter(
+      (selectedNodeId) => selectedNodeId !== id
+    );
+
     this.edges = this._private.edges.filter(
       (edge) => !removedEdgeIds.includes(edge.id)
     );
@@ -155,6 +159,10 @@ class GraphManager {
         return [...acc, ...edges.map(({id}) => id)];
       },
       []
+    );
+
+    this._private.selectedNodeIds = this._private.selectedNodeIds.filter(
+      (selectedNodeId) => !removedNodeIds.includes(selectedNodeId)
     );
 
     this.edges = this._private.edges.filter(
@@ -248,6 +256,12 @@ class GraphManager {
       (id) => !this._private.selectedNodeIds.includes(id)
     );
 
+    console.log(
+      this._private.selectedNodeIds,
+      unselectedNodeIds,
+      selectedNodeIds
+    );
+
     requestAnimationFrame(() => {
       this._private.selectedNodeIds = [...selectedNodeIds];
       this._private.subscriptions.isSelectedById.notifyIds(
@@ -260,23 +274,35 @@ class GraphManager {
       );
     });
   }
+  appendSelectedNodeId(id: string) {
+    if (this._private.selectedNodeIds.includes(id)) return;
+    const selectedNodeIds = Array.from(
+      new Set([...this._private.selectedNodeIds, id])
+    );
+
+    this.selectedNodeIds = selectedNodeIds;
+  }
   appendSelectedNodeIds(appendedNodeIds: string[]) {
     const selectedNodeIds = Array.from(
       new Set([...this._private.selectedNodeIds, ...appendedNodeIds])
     );
 
-    this._private.subscriptions.isSelectedById.notifyIds(selectedNodeIds, true);
+    this.selectedNodeIds = selectedNodeIds;
+  }
+  removeSelectedNodeId(id: string) {
+    if (!this._private.selectedNodeIds.includes(id)) return;
+    const selectedNodeIds = this._private.selectedNodeIds.filter(
+      (selectedNodeId) => selectedNodeId !== id
+    );
+
+    this.selectedNodeIds = selectedNodeIds;
   }
   removeSelectedNodeIds(unselectedNodeIds: string[]) {
     const selectedNodeIds = this._private.selectedNodeIds.filter(
       (id) => !unselectedNodeIds.includes(id)
     );
 
-    this._private.selectedNodeIds = selectedNodeIds;
-    this._private.subscriptions.isSelectedById.notifyIds(
-      unselectedNodeIds,
-      false
-    );
+    this.selectedNodeIds = selectedNodeIds;
   }
   clearSelectedNodeIds(): void {
     const {selectedNodeIds} = this._private;

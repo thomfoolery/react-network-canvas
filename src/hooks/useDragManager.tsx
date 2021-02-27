@@ -55,6 +55,7 @@ class DragManager {
   handleDragStart(event) {
     event.currentTarget.addEventListener("mousemove", this.handleDragMove);
     this._private.dragStartPosition = {x: event.screenX, y: event.screenY};
+    this._private.dragDelta = {x: 0, y: 0};
     this._private.subscriptions.dragStartById.notifyAll(event);
   }
   handleDragMove(event) {
