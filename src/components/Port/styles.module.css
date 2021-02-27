@@ -2,7 +2,6 @@
   position: relative;
   display: block;
 
-  cursor: pointer;
   padding: 5px;
 }
 
@@ -14,4 +13,8 @@
 
   border-radius: 50%;
   background-color: black;
+}
+
+.Output {
+  cursor: pointer;
 }

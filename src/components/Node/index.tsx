@@ -92,7 +92,7 @@ function Node(props: Props) {
     >
       <div className={styles.NodeInputPorts}>
         {inputPorts.map((port) => (
-          <Port key={port.id} node={node} port={port} />
+          <Port key={port.id} node={node} port={port} type="input" />
         ))}
       </div>
       <div
@@ -102,7 +102,7 @@ function Node(props: Props) {
       ></div>
       <div className={styles.NodeOutputPorts}>
         {outputPorts.map((port) => (
-          <Port key={port.id} node={node} port={port} />
+          <Port key={port.id} node={node} port={port} type="output" />
         ))}
       </div>
     </div>

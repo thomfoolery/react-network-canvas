@@ -14,10 +14,11 @@ import styles from "./styles.module.css";
 interface Props {
   node: Types.Node;
   port: Types.Port;
+  type: "input" | "output";
 }
 
 function Port(props: Props) {
-  const {node, port} = props;
+  const {node, port, type} = props;
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
   const workspace = useWorkspace();
@@ -25,28 +26,31 @@ function Port(props: Props) {
 
   const handleMouseDown = useCallback(
     (event) => {
-      const domElement = document.querySelector(`#Port-${port.id}`);
-      const BB = {
-        x: domElement?.getBoundingClientRect().left || 0,
-        y: domElement?.getBoundingClientRect().top || 0,
-        width: domElement?.getBoundingClientRect().width || 0,
-        height: domElement?.getBoundingClientRect().height || 0,
-      };
+      if (type === "output") {
+        const domElement = document.querySelector(`#Port-${port.id}`);
+        const BB = {
+          x: domElement?.getBoundingClientRect().left || 0,
+          y: domElement?.getBoundingClientRect().top || 0,
+          width: domElement?.getBoundingClientRect().width || 0,
+          height: domElement?.getBoundingClientRect().height || 0,
+        };
 
-      const {scrollPosition} = workspace;
+        const {scrollPosition} = workspace;
 
-      graphManager.selectedNodeIds = [];
-      dragManager.dragData = {
-        dragType: "port",
-        port: {
-          ...port,
-          parentNode: node,
-          position: {
-            x: scrollPosition.left + BB.x + BB.width / 2,
-            y: scrollPosition.top + BB.y + BB.height / 2,
+        graphManager.selectedNodeIds = [];
+        dragManager.dragData = {
+          dragType: "port",
+          port: {
+            ...port,
+            type,
+            parentNode: node,
+            position: {
+              x: scrollPosition.left + BB.x + BB.width / 2,
+              y: scrollPosition.top + BB.y + BB.height / 2,
+            },
           },
-        },
-      };
+        };
+      }
     },
     [node, port, dragManager, graphManager, workspace]
   );
@@ -56,7 +60,11 @@ function Port(props: Props) {
       const {dragData} = dragManager;
       if (isClick(dragManager.dragDelta)) {
         bridge.onClickPort(event, port, node, graphManager);
-      } else if (dragData.port) {
+      } else if (
+        dragData.port &&
+        type === "output" &&
+        dragData.port.type === "input"
+      ) {
         const edge = {
           from: {
             nodeId: dragData.port.parentNode.id,
@@ -67,19 +75,23 @@ function Port(props: Props) {
             portId: port.id,
           },
         };
-
         graphManager.createEdge(edge);
       }
     },
-    [node, port, dragManager, graphManager]
+    [node, port, type, dragManager, graphManager]
   );
+
+  const classList = [
+    styles.Port,
+    type === "input" ? styles.Input : styles.Output,
+  ];
 
   return (
     <div
       id={`Port-${port.id}`}
-      className={styles.Port}
       onMouseUp={handleMouseUp}
       onMouseDown={handleMouseDown}
+      className={classList.join(" ")}
     ></div>
   );
 }
