@@ -12,3 +12,11 @@
   width: 100%;
   height: 100%;
 }
+
+.SelectBox {
+  position: absolute;
+  background-color: rgba(100, 148, 237, 0.25);
+  border-radius: 5px;
+  box-shadow: 0 0 0 1px cornflowerblue;
+  pointer-events: none;
+}

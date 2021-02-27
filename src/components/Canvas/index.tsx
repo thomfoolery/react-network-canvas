@@ -1,5 +1,8 @@
-import React, {SyntheticEvent} from "react";
-import * as Types from "./components/Background/node_modules/@app/types";
+import React, {useRef, useEffect, useCallback, SyntheticEvent} from "react";
+import * as Types from "@app/types";
+
+import {useDragManager, useGraphManager, useWorkspace} from "@app/hooks";
+import {isClick} from "@app/utils";
 
 import {Background, Foreground} from "./components";
 
@@ -11,13 +14,113 @@ interface Props {
 
 function Canvas(props: Props) {
   const {onClick = () => null} = props;
+  const workspace = useWorkspace();
+  const dragManager = useDragManager();
+  const graphManager = useGraphManager();
+
+  const selectBoxRef = useRef();
+
+  const handleMouseDown = useCallback((event) => {
+    if (workspace.isShiftKeyDown) {
+      dragManager.dragData = {
+        type: "selectbox",
+        startPosition: {
+          x: workspace.scrollPosition.left + event.clientX,
+          y: workspace.scrollPosition.top + event.clientY,
+        },
+      };
+    }
+  });
+
+  useEffect(() => {
+    function handleDragMove(event, dragDelta, dragData) {
+      if (dragData.type === "selectbox") {
+        drawSelectBox(dragDelta, dragData, selectBoxRef.current);
+      }
+    }
+
+    function handleDragEnd(event, dragDelta, dragData) {
+      if (dragData.type === "selectbox" && !isClick(dragDelta)) {
+        const [x1, y1, x2, y2] = getBoundingBoxCoordinates(
+          selectBoxRef.current
+        );
+        const selectedNodeIds = graphManager.nodes.reduce((acc, node) => {
+          const nodeElement = document.querySelector(`#Node-${node.id}`);
+          const BB = nodeElement?.getBoundingClientRect() || {
+            left: 0,
+            top: 0,
+            width: 0,
+            height: 0,
+          };
+          if (
+            BB.left > x1 &&
+            BB.top > y1 &&
+            BB.left + BB.width < x2 &&
+            BB.top + BB.height < y2
+          ) {
+            return [...acc, node.id];
+          }
+          return acc;
+        }, []);
+
+        graphManager.selectedNodeIds = selectedNodeIds;
+      }
+      clearSelectBox(selectBoxRef.current);
+    }
+
+    dragManager.subscribeToDragMove("selectbox", handleDragMove);
+    dragManager.subscribeToDragEnd("selectbox", handleDragEnd);
+
+    return () => {
+      dragManager.unsubscribeToDragMove("selectbox", handleDragMove);
+      dragManager.unsubscribeToDragEnd("selectbox", handleDragEnd);
+    };
+  }, [workspace, dragManager, graphManager]);
 
   return (
-    <div className={styles.Canvas} onClick={onClick}>
+    <div
+      onClick={onClick}
+      className={styles.Canvas}
+      onMouseDown={handleMouseDown}
+    >
+      <div ref={selectBoxRef} className={styles.SelectBox} />
       <Background />
       <Foreground />
     </div>
   );
+}
+
+function getBoundingBoxCoordinates(element) {
+  const {style} = element;
+  const x1 = parseInt(style.left, 10);
+  const y1 = parseInt(style.top, 10);
+  const x2 = parseInt(style.left, 10) + parseInt(style.width, 10);
+  const y2 = parseInt(style.top, 10) + parseInt(style.height, 10);
+
+  return [x1, y1, x2, y2];
+}
+
+function drawSelectBox(dragDelta, dragData, element) {
+  const {style} = element;
+  style.left = `${Math.min(
+    dragData.startPosition.x,
+    dragData.startPosition.x + dragDelta.x
+  )}px`;
+  style.top = `${Math.min(
+    dragData.startPosition.y,
+    dragData.startPosition.y + dragDelta.y
+  )}px`;
+  style.width = `${Math.abs(dragDelta.x)}px`;
+  style.height = `${Math.abs(dragDelta.y)}px`;
+}
+
+function clearSelectBox(element) {
+  element.style = {
+    left: 0,
+    top: 0,
+    width: 0,
+    height: 0,
+  };
 }
 
 export default Canvas;

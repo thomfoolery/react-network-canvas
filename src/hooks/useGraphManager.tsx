@@ -256,14 +256,9 @@ class GraphManager {
       (id) => !this._private.selectedNodeIds.includes(id)
     );
 
-    console.log(
-      this._private.selectedNodeIds,
-      unselectedNodeIds,
-      selectedNodeIds
-    );
+    this._private.selectedNodeIds = [...selectedNodeIds];
 
     requestAnimationFrame(() => {
-      this._private.selectedNodeIds = [...selectedNodeIds];
       this._private.subscriptions.isSelectedById.notifyIds(
         newSelectedNodeIds,
         true
@@ -303,15 +298,6 @@ class GraphManager {
     );
 
     this.selectedNodeIds = selectedNodeIds;
-  }
-  clearSelectedNodeIds(): void {
-    const {selectedNodeIds} = this._private;
-
-    this._private.selectedNodeIds = [];
-    this._private.subscriptions.isSelectedById.notifyIds(
-      selectedNodeIds,
-      false
-    );
   }
   subscribeToIsSelectedById(id: string, fn: Function) {
     this._private.subscriptions.isSelectedById.addListenerForId(id, fn);
