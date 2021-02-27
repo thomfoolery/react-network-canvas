@@ -22,24 +22,27 @@ function App() {
         .getEdgesByNodeId(parentNode.id)
         .filter(({from}) => from.nodeId === parentNode.id);
 
-      const BB = parentNodeElement.getBoundingClientRect();
+      const BCR = parentNodeElement.getBoundingClientRect();
+      const initialPosition = graphManager.workspace.getCanvasPosition(BCR);
       const position = edgesOut.reduce(
         (acc, edge) => {
           const nodeElement = document.querySelector(`#Node-${edge.to.nodeId}`);
-          const BB = nodeElement.getBoundingClientRect();
-          if (BB.top >= acc.y) {
+          const BCR = nodeElement.getBoundingClientRect();
+          const position = graphManager.workspace.getCanvasPosition(BCR);
+          if (position.y >= acc.y) {
             return {
               ...acc,
-              y: BB.top + BB.height + 20,
+              y: position.y + BCR.height + 20,
             };
           }
           return acc;
         },
         {
-          x: BB.left + BB.width + 50,
-          y: BB.top,
+          x: initialPosition.x + BCR.width + 50,
+          y: initialPosition.y,
         }
       );
+
       const node = graphManager.createNode({position});
 
       graphManager.createEdge({

@@ -62,10 +62,8 @@ function Background(props: BackgroundProps) {
         isClick(dragManager.dragDelta) &&
         containerRef.current === event.target
       ) {
-        const position = {
-          x: event.clientX + workspace.scrollPosition.left,
-          y: event.clientY + workspace.scrollPosition.top,
-        };
+        const position = workspace.getCanvasPosition(event);
+
         bridge.onClickCanvas(event, position, graphManager);
       }
     },

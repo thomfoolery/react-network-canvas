@@ -27,13 +27,34 @@ function Workspace(props: Props) {
       get isShiftKeyDown() {
         return shiftKeyDownRef.current;
       },
+      offset: {
+        get x() {
+          return workspaceDivRef.current.getBoundingClientRect().left;
+        },
+        get y() {
+          return workspaceDivRef.current.getBoundingClientRect().top;
+        },
+      },
       scrollPosition: {
-        get left() {
+        get x() {
           return workspaceDivRef.current.scrollLeft;
         },
-        get top() {
+        get y() {
           return workspaceDivRef.current.scrollTop;
         },
+      },
+      getCanvasPosition(object) {
+        if (object instanceof DOMRect) {
+          return {
+            x: object.left - this.offset.x + this.scrollPosition.x,
+            y: object.top - this.offset.y + this.scrollPosition.y,
+          };
+        } else {
+          return {
+            x: object.clientX - this.offset.x + this.scrollPosition.x,
+            y: object.clientY - this.offset.y + this.scrollPosition.y,
+          };
+        }
       },
     };
   }, [workspaceDivRef, shiftKeyDownRef]);

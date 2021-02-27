@@ -50,13 +50,7 @@ interface GraphManagerPrivateProps {
   selectedNodeIds: string[];
   dragDelta: Types.Position;
   dragManager?: any;
-  workspace?: {
-    container: HTMLDivElement;
-    scrollPosition: {
-      left: number;
-      top: number;
-    };
-  };
+  workspace?: Types.Workspace;
   subscriptions: {
     nodePositionChangeById: Publisher;
     isSelectedById: Publisher;
@@ -182,7 +176,7 @@ class GraphManager {
   set dragManager(dragManager: any) {
     this._private.dragManager = dragManager;
   }
-  handleDragMove(event, dragDelta: Types.Position) {
+  handleDragMove(event, dragDelta: Types.Position, dragData: any) {
     const {selectedNodeIds, dragManager, workspace} = this._private;
 
     this._private.subscriptions.dragDeltaById.notifyIds(
@@ -191,31 +185,30 @@ class GraphManager {
     );
 
     if (workspace && dragManager?.dragData?.dragType === "port") {
-      const {scrollPosition} = workspace;
-      const {dragData} = dragManager;
+      const position = workspace.getCanvasPosition(event);
 
       const x1 = dragData.port.position.x;
       const y1 = dragData.port.position.y;
-      const x2 = scrollPosition.left + event.clientX;
-      const y2 = scrollPosition.top + event.clientY;
+      const x2 = position.x;
+      const y2 = position.y;
 
       this.updateDraftEdgePath(x1, y1, x2, y2);
     }
   }
-  handleDragEnd(event, dragDelta: Types.Position) {
-    const {selectedNodeIds, dragManager, subscriptions} = this._private;
+  handleDragEnd(event, dragDelta: Types.Position, dragData: any) {
+    const {selectedNodeIds, subscriptions} = this._private;
 
     subscriptions.dragDeltaById.notifyIds(selectedNodeIds, {
       x: 0,
       y: 0,
     });
 
-    if (dragManager?.dragData?.dragType === "node") {
+    if (dragData?.dragType === "node") {
       selectedNodeIds.forEach((id) =>
         this.updateNodePositionById(id, dragDelta)
       );
     }
-    if (dragManager?.dragData?.dragType === "port") {
+    if (dragData?.dragType === "port") {
       this.clearDraftEdgePath();
     }
   }

@@ -5,8 +5,7 @@ import {
   useGraphManager,
   useWorkspace,
 } from "@app/hooks";
-import {isClick, svgGeneratePath} from "@app/utils";
-import {DRAFT_EDGE_ID} from "@app/constants";
+import {isClick} from "@app/utils";
 import * as Types from "@app/types";
 
 import styles from "./styles.module.css";
@@ -24,18 +23,13 @@ function Port(props: Props) {
   const workspace = useWorkspace();
   const bridge = useBridge();
 
-  const handleMouseDown = useCallback(
-    (event) => {
-      if (type === "output") {
-        const domElement = document.querySelector(`#Port-${port.id}`);
-        const BB = {
-          x: domElement?.getBoundingClientRect().left || 0,
-          y: domElement?.getBoundingClientRect().top || 0,
-          width: domElement?.getBoundingClientRect().width || 0,
-          height: domElement?.getBoundingClientRect().height || 0,
-        };
+  const handleMouseDown = useCallback(() => {
+    if (type === "output") {
+      const domElement = document.querySelector(`#Port-${port.id}`);
 
-        const {scrollPosition} = workspace;
+      if (domElement) {
+        const BCR = domElement.getBoundingClientRect();
+        const position = workspace.getCanvasPosition(BCR);
 
         graphManager.selectedNodeIds = [];
         dragManager.dragData = {
@@ -45,25 +39,24 @@ function Port(props: Props) {
             type,
             parentNode: node,
             position: {
-              x: scrollPosition.left + BB.x + BB.width / 2,
-              y: scrollPosition.top + BB.y + BB.height / 2,
+              x: position.x + domElement.clientWidth / 2,
+              y: position.y + domElement.clientHeight / 2,
             },
           },
         };
       }
-    },
-    [node, port, dragManager, graphManager, workspace]
-  );
+    }
+  }, [node, port, dragManager, graphManager, workspace]);
 
   const handleMouseUp = useCallback(
-    (event) => {
+    (event: SyntheticEvent) => {
       const {dragData} = dragManager;
       if (isClick(dragManager.dragDelta)) {
         bridge.onClickPort(event, port, node, graphManager);
       } else if (
         dragData.port &&
-        type === "output" &&
-        dragData.port.type === "input"
+        type === "input" &&
+        dragData.port.type === "output"
       ) {
         const edge = {
           from: {

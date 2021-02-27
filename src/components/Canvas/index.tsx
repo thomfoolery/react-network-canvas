@@ -24,10 +24,7 @@ function Canvas(props: Props) {
     if (workspace.isShiftKeyDown) {
       dragManager.dragData = {
         type: "selectbox",
-        startPosition: {
-          x: workspace.scrollPosition.left + event.clientX,
-          y: workspace.scrollPosition.top + event.clientY,
-        },
+        startPosition: workspace.getCanvasPosition(event),
       };
     }
   });
@@ -41,24 +38,20 @@ function Canvas(props: Props) {
 
     function handleDragEnd(event, dragDelta, dragData) {
       if (dragData.type === "selectbox" && !isClick(dragDelta)) {
-        const [x1, y1, x2, y2] = getBoundingBoxCoordinates(
-          selectBoxRef.current
-        );
+        const [x1, y1, x2, y2] = getSelectBoxCoordinates(selectBoxRef.current);
         const selectedNodeIds = graphManager.nodes.reduce((acc, node) => {
-          const nodeElement = document.querySelector(`#Node-${node.id}`);
-          const BB = nodeElement?.getBoundingClientRect() || {
-            left: 0,
-            top: 0,
-            width: 0,
-            height: 0,
-          };
-          if (
-            BB.left > x1 &&
-            BB.top > y1 &&
-            BB.left + BB.width < x2 &&
-            BB.top + BB.height < y2
-          ) {
-            return [...acc, node.id];
+          const nodeElement: HTMLDivElement | null = document.querySelector(
+            `#Node-${node.id}`
+          );
+          if (nodeElement) {
+            const x = parseInt(nodeElement.style.left, 10);
+            const y = parseInt(nodeElement.style.top, 10);
+            const width = nodeElement.clientWidth;
+            const height = nodeElement.clientHeight;
+
+            if (x > x1 && y > y1 && x + width < x2 && y + height < y2) {
+              return [...acc, node.id];
+            }
           }
           return acc;
         }, []);
@@ -90,7 +83,7 @@ function Canvas(props: Props) {
   );
 }
 
-function getBoundingBoxCoordinates(element) {
+function getSelectBoxCoordinates(element) {
   const {style} = element;
   const x1 = parseInt(style.left, 10);
   const y1 = parseInt(style.top, 10);
