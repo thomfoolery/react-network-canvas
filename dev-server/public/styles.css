@@ -4,7 +4,7 @@ body {
 }
 
 #app {
-  --margin: 5vmax;
+  --margin: 1vmax;
 
   position: relative;
   width: calc(100vw - calc(var(--margin) * 2));

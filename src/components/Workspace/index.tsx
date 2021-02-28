@@ -17,7 +17,7 @@ interface Props {
 }
 
 function Workspace(props: Props) {
-  const {canvasSize, containerWidth = 0, containerHeight = 0} = props;
+  const {canvasSize} = props;
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
   const bridge = useBridge();
@@ -25,13 +25,7 @@ function Workspace(props: Props) {
   const workspaceDivRef = useRef();
   const shiftKeyDownRef = useRef(false);
 
-  const {transform, setContainer, panZoomRef} = usePanZoom({
-    container: workspaceDivRef.current,
-    // minX: canvasSize * -1 + containerWidth,
-    // minY: canvasSize * -1 + containerHeight,
-    // maxX: 0,
-    // maxY: 0,
-  });
+  const {transform, setContainer, panZoomRef} = usePanZoom();
 
   setContainer(workspaceDivRef.current);
 
@@ -90,7 +84,12 @@ function Workspace(props: Props) {
   const handleRef = useCallback(
     (el) => {
       workspaceDivRef.current = el;
-      setContainer(el);
+      setContainer(el, {
+        minX: (canvasSize - workspaceDivRef.current.offsetWidth) * -1 - 10,
+        minY: (canvasSize - workspaceDivRef.current.offsetHeight) * -1 - 10,
+        maxX: 10,
+        maxY: 10,
+      });
     },
     [workspaceDivRef, setContainer]
   );

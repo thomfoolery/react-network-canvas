@@ -2,6 +2,7 @@
   position: relative;
   width: var(--canvas-size);
   height: var(--canvas-size);
+  border-radius: 5px;
   background-image: radial-gradient(lightgrey, white 1px);
   background-size: var(--grid-size) var(--grid-size);
   background-position: calc(var(--canvas-size) / 2) calc(var(--canvas-size) / 2);
@@ -23,4 +24,5 @@
   border-radius: 5px;
   box-shadow: 0 0 0 1px cornflowerblue;
   pointer-events: none;
+  opacity: 0;
 }

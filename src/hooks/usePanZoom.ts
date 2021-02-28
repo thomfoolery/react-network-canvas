@@ -1,28 +1,9 @@
-import {useRef, useState, useEffect, useCallback} from "react";
+import {useRef, useState, useCallback} from "react";
 import {useDragManager} from "@app/hooks";
 
-interface Options {
-  minX?: number;
-  maxX?: number;
-  minY?: number;
-  maxY?: number;
-  minZoom?: number;
-  maxZoom?: number;
-  container?: HTMLDivElement;
-}
+interface Options {}
 
-const defaultOptions = {};
-
-export function usePanZoom(options: Options = defaultOptions) {
-  const {
-    minX = -Infinity,
-    maxX = Infinity,
-    minY = -Infinity,
-    maxY = Infinity,
-    minZoom = 0,
-    maxZoom = Infinity,
-  } = options;
-
+export function usePanZoom(options?: Options) {
   const dragManager = useDragManager();
 
   const [pan, setPan] = useState({x: 0, y: 0});
@@ -31,52 +12,61 @@ export function usePanZoom(options: Options = defaultOptions) {
   const containerRef = useRef();
   const panZoomRef = useRef({...pan, zoom});
 
-  const clampX = useCallback(clamp(minX, maxX), [minX, maxX]);
-  const clampY = useCallback(clamp(minY, maxY), [minY, maxY]);
-  const clampZoom = useCallback(clamp(minZoom, maxZoom), [minZoom, maxZoom]);
+  const setContainer = useCallback(
+    (
+      container,
+      {
+        minX = -Infinity,
+        minY = -Infinity,
+        maxX = Infinity,
+        maxY = Infinity,
+        // minZoom = 0,
+        // maxZoom = Infinity,
+      } = {}
+    ) => {
+      let startPosition;
 
-  const setContainer = useCallback((container) => {
-    let startPosition;
-
-    function handleDragStart() {
-      startPosition = panZoomRef.current;
-    }
-
-    function handleDragMove(event, dragDelta, dragData) {
-      if (dragData.type === "panzoom") {
-        setPan({
-          x: clampX(startPosition.x + dragDelta.x),
-          y: clampY(startPosition.y + dragDelta.y),
-        });
+      function handleDragStart() {
+        startPosition = panZoomRef.current;
       }
-    }
 
-    function onWheel(event) {
-      const {deltaX, deltaY} = event;
+      function handleDragMove(event, dragDelta, dragData) {
+        if (dragData.type === "panzoom") {
+          setPan({
+            x: clamp(minX, maxX, startPosition.x + dragDelta.x),
+            y: clamp(minY, maxY, startPosition.y + dragDelta.y),
+          });
+        }
+      }
 
-      event.preventDefault();
-      setPan((pan) => ({
-        x: clampX(pan.x - deltaX),
-        y: clampY(pan.y - deltaY),
-      }));
-    }
+      function onWheel(event) {
+        const {deltaX, deltaY} = event;
 
-    function onGesture(event) {
-      event.preventDefault();
-    }
+        event.preventDefault();
+        setPan((pan) => ({
+          x: clamp(minX, maxX, pan.x - deltaX),
+          y: clamp(minY, maxY, pan.y - deltaY),
+        }));
+      }
 
-    if (container && !containerRef.current) {
-      container.addEventListener("wheel", onWheel);
-      container.addEventListener("gesturestart", onGesture);
-      container.addEventListener("gesturechange", onGesture);
-      container.addEventListener("gestureend", onGesture);
+      function onGesture(event) {
+        event.preventDefault();
+      }
 
-      dragManager.subscribeToDragStart("panZoom", handleDragStart);
-      dragManager.subscribeToDragMove("panZoom", handleDragMove);
+      if (container && !containerRef.current) {
+        container.addEventListener("wheel", onWheel);
+        container.addEventListener("gesturestart", onGesture);
+        container.addEventListener("gesturechange", onGesture);
+        container.addEventListener("gestureend", onGesture);
 
-      containerRef.current = container;
-    }
-  }, []);
+        dragManager.subscribeToDragStart("panZoom", handleDragStart);
+        dragManager.subscribeToDragMove("panZoom", handleDragMove);
+
+        containerRef.current = container;
+      }
+    },
+    []
+  );
 
   panZoomRef.current = {...pan, zoom};
 
@@ -89,6 +79,6 @@ export function usePanZoom(options: Options = defaultOptions) {
   };
 }
 
-function clamp(min, max) {
-  return (value) => Math.max(min, Math.min(value, max));
+function clamp(min, max, value) {
+  return Math.max(min, Math.min(value, max));
 }

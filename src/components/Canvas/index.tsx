@@ -95,6 +95,7 @@ function getSelectBoxCoordinates(element) {
 
 function drawSelectBox(dragDelta, dragData, element) {
   const {style} = element;
+
   style.left = `${Math.min(
     dragData.startPosition.x,
     dragData.startPosition.x + dragDelta.x
@@ -105,15 +106,11 @@ function drawSelectBox(dragDelta, dragData, element) {
   )}px`;
   style.width = `${Math.abs(dragDelta.x)}px`;
   style.height = `${Math.abs(dragDelta.y)}px`;
+  style.opacity = 1;
 }
 
 function clearSelectBox(element) {
-  element.style = {
-    left: 0,
-    top: 0,
-    width: 0,
-    height: 0,
-  };
+  element.style = "";
 }
 
 export default Canvas;
