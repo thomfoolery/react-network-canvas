@@ -14,3 +14,7 @@
 .isHovered .Edge {
   stroke: red;
 }
+
+.isDraft .EdgeArea {
+  cursor: default;
+}

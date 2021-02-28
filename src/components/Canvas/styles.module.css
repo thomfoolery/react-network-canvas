@@ -5,7 +5,11 @@
   background-image: radial-gradient(lightgrey, white 1px);
   background-size: var(--grid-size) var(--grid-size);
   background-position: calc(var(--canvas-size) / 2) calc(var(--canvas-size) / 2);
+
+  box-shadow: 0 0 0 1px lightgray;
+
   user-select: none;
+  transform-origin: 0 0;
 }
 
 .CanvasEdges {

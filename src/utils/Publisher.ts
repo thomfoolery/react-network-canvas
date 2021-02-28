@@ -8,6 +8,7 @@ class Publisher {
   notifyIds(ids: string[] = [], ...args) {
     ids.forEach((id) => {
       const subscriptions = this._private.subscriptionsById.get(id) || [];
+
       subscriptions.forEach((fn) => fn(...args));
     });
   }
@@ -20,11 +21,13 @@ class Publisher {
 
   addListenerForId(id, fn) {
     const subscriptions = this._private.subscriptionsById.get(id) || [];
+
     this._private.subscriptionsById.set(id, subscriptions.concat(fn));
   }
 
   removeListenerForId(id, fn) {
     const subscriptions = this._private.subscriptionsById.get(id) || [];
+
     this._private.subscriptionsById.set(
       id,
       subscriptions.filter((f) => f !== fn)

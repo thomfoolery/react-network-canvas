@@ -50,10 +50,11 @@ function Background(props: BackgroundProps) {
   const handleMouseDown = useCallback(
     (event) => {
       if (event.target === containerRef.current) {
+        dragManager.dragData = {type: "panzoom"};
         graphManager.selectedNodeIds = [];
       }
     },
-    [graphManager]
+    [dragManager, graphManager, containerRef]
   );
 
   const handleMouseUp = useCallback(

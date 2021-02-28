@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useRef} from "react";
 import Workspace from "./components/Workspace";
 import {
   GraphManagerProvider,
@@ -20,16 +20,18 @@ interface Props {
 
 function NodeCanvas(props: Props) {
   const {nodes, edges, bridge, gridSize = 10, canvasSize = 2000} = props;
+  const containerRef = useRef();
   const style = {
     "--grid-size": `${gridSize}px`,
     "--canvas-size": `${canvasSize}px`,
   };
+
   return (
     <BridgeProvider value={bridge}>
       <DragManagerProvider>
-        <div className={styles.NodeCanvas} style={style}>
+        <div style={style} ref={containerRef} className={styles.NodeCanvas}>
           <GraphManagerProvider nodes={nodes} edges={edges}>
-            <Workspace />
+            <Workspace canvasSize={canvasSize} />
           </GraphManagerProvider>
         </div>
       </DragManagerProvider>

@@ -27,7 +27,7 @@ function Canvas(props: Props) {
         startPosition: workspace.getCanvasPosition(event),
       };
     }
-  });
+  }, []);
 
   useEffect(() => {
     function handleDragMove(event, dragDelta, dragData) {

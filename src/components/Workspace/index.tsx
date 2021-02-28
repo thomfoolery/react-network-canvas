@@ -1,23 +1,39 @@
-import React, {useRef, useMemo, useEffect} from "react";
+import React, {useRef, useMemo, useEffect, useCallback} from "react";
 import Canvas from "../Canvas";
 import {
   WorkspaceProvider,
   useBridge,
+  usePanZoom,
   useDragManager,
   useGraphManager,
 } from "@app/hooks";
 
 import styles from "./styles.module.css";
 
-interface Props {}
+interface Props {
+  canvasSize: number;
+  containerWidth?: number;
+  containerHeight?: number;
+}
 
 function Workspace(props: Props) {
+  const {canvasSize, containerWidth = 0, containerHeight = 0} = props;
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
   const bridge = useBridge();
 
   const workspaceDivRef = useRef();
   const shiftKeyDownRef = useRef(false);
+
+  const {transform, setContainer, panZoomRef} = usePanZoom({
+    container: workspaceDivRef.current,
+    // minX: canvasSize * -1 + containerWidth,
+    // minY: canvasSize * -1 + containerHeight,
+    // maxX: 0,
+    // maxY: 0,
+  });
+
+  setContainer(workspaceDivRef.current);
 
   const workspace = useMemo(() => {
     return {
@@ -35,29 +51,49 @@ function Workspace(props: Props) {
           return workspaceDivRef.current.getBoundingClientRect().top;
         },
       },
-      scrollPosition: {
+      canvasPanZoom: {
         get x() {
-          return workspaceDivRef.current.scrollLeft;
+          return panZoomRef.current.x;
         },
         get y() {
-          return workspaceDivRef.current.scrollTop;
+          return panZoomRef.current.y;
+        },
+        get zoom() {
+          return panZoomRef.current.zoom;
         },
       },
       getCanvasPosition(object) {
         if (object instanceof DOMRect) {
           return {
-            x: object.left - this.offset.x + this.scrollPosition.x,
-            y: object.top - this.offset.y + this.scrollPosition.y,
+            x: object.left - this.offset.x - this.canvasPanZoom.x,
+            y: object.top - this.offset.y - this.canvasPanZoom.y,
           };
         } else {
           return {
-            x: object.clientX - this.offset.x + this.scrollPosition.x,
-            y: object.clientY - this.offset.y + this.scrollPosition.y,
+            x: object.clientX - this.offset.x - this.canvasPanZoom.x,
+            y: object.clientY - this.offset.y - this.canvasPanZoom.y,
           };
         }
       },
     };
-  }, [workspaceDivRef, shiftKeyDownRef]);
+  }, [panZoomRef, workspaceDivRef, shiftKeyDownRef]);
+
+  const handleMouseDown = useCallback(
+    (event) => {
+      if (event.target === workspaceDivRef.current) {
+        dragManager.dragData = {type: "panzoom"};
+      }
+    },
+    [dragManager, graphManager, workspaceDivRef]
+  );
+
+  const handleRef = useCallback(
+    (el) => {
+      workspaceDivRef.current = el;
+      setContainer(el);
+    },
+    [workspaceDivRef, setContainer]
+  );
 
   useEffect(() => {
     graphManager.dragManager = dragManager;
@@ -90,11 +126,17 @@ function Workspace(props: Props) {
   }, [shiftKeyDownRef]);
 
   return (
-    <div ref={workspaceDivRef} className={styles.Workspace}>
-      <WorkspaceProvider value={workspace}>
-        <Canvas />
-      </WorkspaceProvider>
-    </div>
+    <WorkspaceProvider value={workspace}>
+      <div
+        ref={handleRef}
+        className={styles.Workspace}
+        onMouseDown={handleMouseDown}
+      >
+        <div style={{transform}}>
+          <Canvas />
+        </div>
+      </div>
+    </WorkspaceProvider>
   );
 }
 

@@ -5,7 +5,7 @@ interface Workspace {
   isShiftKeyDown: boolean;
   getCanvasPosition(object: any): Position;
   offset: Position;
-  scrollPosition: Position;
+  canvasPanZoom: Position;
 }
 
 export {Workspace};

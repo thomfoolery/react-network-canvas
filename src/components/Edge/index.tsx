@@ -27,6 +27,9 @@ function Edge(props: Props) {
 
   const classList: string[] = [];
 
+  if (isDraft) {
+    classList.push(styles.isDraft);
+  }
   if (!isDraft && isHovered) {
     classList.push(styles.isHovered);
   }
