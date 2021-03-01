@@ -12,7 +12,9 @@
   background-image: var(--NC-canvas-background-image);
   background-position: var(--NC-canvas-background-position);
 
+  -webkit-user-select: none;
   user-select: none;
+
   transform-origin: 0 0;
   transition: transform 200ms ease-out;
 }

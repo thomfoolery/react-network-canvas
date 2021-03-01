@@ -6,6 +6,8 @@ interface Options {
   maxZoom: number;
   canvasSize: number;
   canvasMargin: number;
+  zoomWheelKey?: "Shift" | "Control" | "Meta" | "Alt";
+  zoomSensitivity: number;
   startAtCanvasCenter: boolean;
 }
 
@@ -15,14 +17,19 @@ export function usePanZoom(options: Options) {
     maxZoom,
     canvasSize,
     canvasMargin,
+    zoomWheelKey,
+    zoomSensitivity,
     startAtCanvasCenter,
   } = options;
+
   const dragManager = useDragManager();
   const bridge = useBridge();
 
   const [transform, setTransform] = useState({x: 0, y: 0, zoom: 1});
   const [container, setContainer] = useState();
+  const [workspace, setWorkspace] = useState();
 
+  const isZoomKeyDownRef = useRef(false);
   const panZoomRef = useRef({...transform});
   const boundaryRef = useRef({
     minX: -Infinity,
@@ -50,8 +57,7 @@ export function usePanZoom(options: Options) {
         }
 
         const {x, y} = transform;
-
-        const center = {
+        const center = arg[1] || {
           x: container.offsetWidth / 2,
           y: container.offsetHeight / 2,
         };
@@ -104,8 +110,8 @@ export function usePanZoom(options: Options) {
         const {minX, minY, maxX, maxY} = boundaryRef.current;
 
         if (dragData.type === "panzoom") {
-          setTransform((tranform) => ({
-            ...tranform,
+          setTransform((transform) => ({
+            ...transform,
             x: clamp(minX, maxX, dragStartPosition.x + dragDelta.x),
             y: clamp(minY, maxY, dragStartPosition.y + dragDelta.y),
           }));
@@ -113,15 +119,26 @@ export function usePanZoom(options: Options) {
       }
 
       function onWheel(event) {
-        const {minX, minY, maxX, maxY} = boundaryRef.current;
-        const {deltaX, deltaY} = event;
-
         event.preventDefault();
-        setTransform((tranform) => ({
-          ...tranform,
-          x: clamp(minX, maxX, tranform.x - deltaX),
-          y: clamp(minY, maxY, tranform.y - deltaY),
-        }));
+
+        if (isZoomKeyDownRef.current) {
+          const {deltaY} = event;
+          const postion = workspace.getCanvasPosition(event);
+
+          setZoom(
+            (zoom) => zoom * Math.pow(1 - zoomSensitivity, deltaY),
+            postion
+          );
+        } else {
+          const {minX, minY, maxX, maxY} = boundaryRef.current;
+          const {deltaX, deltaY} = event;
+
+          setTransform((transform) => ({
+            ...transform,
+            x: clamp(minX, maxX, transform.x - deltaX),
+            y: clamp(minY, maxY, transform.y - deltaY),
+          }));
+        }
       }
 
       function onGesture(event) {
@@ -138,8 +155,8 @@ export function usePanZoom(options: Options) {
       }
 
       if (startAtCanvasCenter) {
-        setTransform((tranform) => ({
-          ...tranform,
+        setTransform((transform) => ({
+          ...transform,
           x: (canvasSize / 2 - container.clientWidth / 2) * -1,
           y: (canvasSize / 2 - container.clientHeight / 2) * -1,
         }));
@@ -167,13 +184,33 @@ export function usePanZoom(options: Options) {
         dragManager.unsubscribeToDragMove("panZoom", handleDragMove);
       };
     }
-  }, [container, canvasSize, canvasMargin]);
+  }, [container, workspace, canvasSize, canvasMargin, setZoom, setTransform]);
+
+  useEffect(() => {
+    if (zoomWheelKey) {
+      function handleKeyDown({key}) {
+        console.log(key);
+        if (key === zoomWheelKey) isZoomKeyDownRef.current = true;
+      }
+      function handleKeyUp({key}) {
+        if (key === zoomWheelKey) isZoomKeyDownRef.current = false;
+      }
+
+      document.addEventListener("keydown", handleKeyDown);
+      document.addEventListener("keyup", handleKeyUp);
+      return () => {
+        document.removeEventListener("keydown", handleKeyDown);
+        document.removeEventListener("keyup", handleKeyUp);
+      };
+    }
+  }, [isZoomKeyDownRef, zoomWheelKey]);
 
   panZoomRef.current = {...transform};
 
   return {
     transform: `translate3d(${transform.x}px,${transform.y}px,0) scale(${transform.zoom})`,
     setContainer,
+    setWorkspace,
     panZoomRef,
     setZoom,
     setPan,

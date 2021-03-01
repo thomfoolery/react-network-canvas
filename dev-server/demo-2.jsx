@@ -131,6 +131,7 @@ function App() {
       minZoom: 0.5,
       maxZoom: 1.5,
       gridSize: 20,
+      zoomWheelKey: "Shift",
       NodeComponent,
       PortComponent,
     }),

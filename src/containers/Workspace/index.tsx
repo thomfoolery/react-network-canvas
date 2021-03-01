@@ -25,17 +25,28 @@ function Workspace(props: Props) {
     maxZoom,
     canvasSize,
     canvasMargin,
+    zoomWheelKey,
+    zoomSensitivity,
     startAtCanvasCenter,
   } = options;
 
   const workspaceDivRef = useRef();
-  const shiftKeyDownRef = useRef(false);
+  const isShiftKeyDownRef = useRef(false);
 
-  const {transform, setContainer, panZoomRef, setPan, setZoom} = usePanZoom({
+  const {
+    setPan,
+    setZoom,
+    transform,
+    panZoomRef,
+    setContainer,
+    setWorkspace,
+  } = usePanZoom({
     minZoom,
     maxZoom,
     canvasSize,
     canvasMargin,
+    zoomWheelKey,
+    zoomSensitivity,
     startAtCanvasCenter,
   });
 
@@ -47,7 +58,7 @@ function Workspace(props: Props) {
         return workspaceDivRef.current;
       },
       get isShiftKeyDown() {
-        return shiftKeyDownRef.current;
+        return isShiftKeyDownRef.current;
       },
       mountContextScreenOffset: {
         get x() {
@@ -95,7 +106,7 @@ function Workspace(props: Props) {
         throw Error("Unsupported object");
       },
     };
-  }, [panZoomRef, workspaceDivRef, shiftKeyDownRef, setPan, setZoom]);
+  }, [panZoomRef, workspaceDivRef, isShiftKeyDownRef, setPan, setZoom]);
 
   const handleMouseDown = useCallback(
     (event) => {
@@ -113,6 +124,8 @@ function Workspace(props: Props) {
     },
     [workspaceDivRef, setContainer]
   );
+
+  useEffect(() => setWorkspace(workspace), [workspace, setWorkspace]);
 
   useEffect(() => {
     graphManager.dragManager = dragManager;
@@ -132,10 +145,10 @@ function Workspace(props: Props) {
 
   useEffect(() => {
     function handleKeyDown({key}) {
-      if (key === "Shift") shiftKeyDownRef.current = true;
+      if (key === "Shift") isShiftKeyDownRef.current = true;
     }
     function handleKeyUp({key}) {
-      if (key === "Shift") shiftKeyDownRef.current = false;
+      if (key === "Shift") isShiftKeyDownRef.current = false;
     }
 
     document.addEventListener("keydown", handleKeyDown);
@@ -144,7 +157,7 @@ function Workspace(props: Props) {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
     };
-  }, [shiftKeyDownRef]);
+  }, [isShiftKeyDownRef]);
 
   return (
     <WorkspaceProvider value={workspace}>

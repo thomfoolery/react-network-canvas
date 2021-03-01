@@ -1,25 +1,43 @@
-import React, {createContext, useContext, ReactNode} from "react";
+import React, {
+  createContext,
+  useContext,
+  ReactNode,
+  ReactComponent,
+} from "react";
 import {Node as NodeComponent, Port as PortComponent} from "@app/components";
 
 const Context = createContext();
 
-interface Props {
-  value?: any;
-  children?: ReactNode;
+interface Options {
+  startAtCanvasCenter: boolean;
+  canvasMargin: number;
+  zoomSensitivity: number;
+  zoomWheelKey?: "Shift" | "Control" | "Meta" | "Alt";
+  maxZoom: number;
+  minZoom: number;
+  NodeComponent: ReactComponent;
+  PortComponent: ReactComponent;
 }
 
-const defaultOptions = {
+const defaultOptions: Options = {
   startAtCanvasCenter: true,
   canvasMargin: 50,
+  zoomSensitivity: 0.001,
+  zoomWheelKey: undefined,
   maxZoom: Infinity,
   minZoom: 0,
   NodeComponent,
   PortComponent,
 };
 
+interface Props {
+  value?: Partial<Options>;
+  children?: ReactNode;
+}
+
 export function OptionsProvider(props: Props) {
   const {value, children} = props;
-  const options = {
+  const options: Options = {
     ...defaultOptions,
     ...value,
   };

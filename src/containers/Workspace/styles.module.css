@@ -5,4 +5,7 @@
   background-size: var(--NC-workspace-background-size);
   background-color: var(--NC-workspace-background-color);
   background-image: var(--NC-workspace-background-image);
+
+  -webkit-user-select: none;
+  user-select: none;
 }

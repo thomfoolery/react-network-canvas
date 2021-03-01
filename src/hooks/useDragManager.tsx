@@ -59,6 +59,7 @@ class DragManager {
 
   // event handlers
   handleDragStart(event) {
+    document.addEventListener("selectstart", handleOnSelectStart);
     event.currentTarget.addEventListener("mousemove", this.handleDragMove);
     this.__.dragStartPosition = {x: event.screenX, y: event.screenY};
     this.__.dragDelta = {x: 0, y: 0};
@@ -86,6 +87,7 @@ class DragManager {
     );
   }
   handleDragEnd(event) {
+    document.removeEventListener("selectstart", handleOnSelectStart);
     event.currentTarget.removeEventListener("mousemove", this.handleDragMove);
 
     if (this.__.dragStartPosition) {
@@ -130,6 +132,10 @@ class DragManager {
   unsubscribeToDragEnd(id, fn) {
     this.__.subscriptions.dragEndById.removeListenerForId(id, fn);
   }
+}
+
+function handleOnSelectStart() {
+  return false;
 }
 
 interface Props {
