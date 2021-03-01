@@ -4,7 +4,12 @@ import {createElement} from "react";
 
 import NodeCanvas from "../src/index";
 
-import graph from "./public/graph.json";
+// import graph from "./public/graph.json";
+
+const graph = {
+  nodes: [],
+  edges: [],
+};
 
 function App() {
   const {nodes, edges} = graph;

@@ -72,8 +72,8 @@ function Background(props: BackgroundProps) {
   );
 
   useEffect(() => {
-    graphManager.subscribeToEdgesChange(setEdges);
-    return () => graphManager.unsubscribeToEdgesChange(setEdges);
+    graphManager.subscribeToEdgesChange("canvas", setEdges);
+    return () => graphManager.unsubscribeToEdgesChange("canvas", setEdges);
   }, [graphManager]);
 
   return (

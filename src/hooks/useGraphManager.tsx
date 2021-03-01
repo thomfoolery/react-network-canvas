@@ -48,7 +48,7 @@ interface GraphManagerPrivateProps {
   edgesByIdHash: {[id: string]: Types.Edge};
   edgesByNodeIdHash: {[id: string]: Types.Edge[]};
   selectedNodeIds: string[];
-  dragDelta: Types.Position;
+  bridge?: Types.Bridge;
   dragManager?: any;
   workspace?: Types.Workspace;
   subscriptions: {
@@ -72,9 +72,9 @@ class GraphManager {
     edgesByIdHash: {},
     edgesByNodeIdHash: {},
     selectedNodeIds: [],
-    dragDelta: {x: 0, y: 0},
-    dragManager: undefined,
+    bridge: undefined,
     workspace: undefined,
+    dragManager: undefined,
     subscriptions: {
       nodePositionChangeById: new Publisher(),
       isSelectedById: new Publisher(),
@@ -92,9 +92,16 @@ class GraphManager {
     this.handleDragEnd = this.handleDragEnd.bind(this);
   }
 
+  // bridge
+  get bridge() {
+    return {...this._private.bridge};
+  }
+  set bridge(bridge: any) {
+    this._private.bridge = bridge;
+  }
   // workspace
   get workspace() {
-    return this._private.workspace;
+    return {...this._private.workspace};
   }
   set workspace(workspace: any) {
     this._private.workspace = workspace;
@@ -131,6 +138,15 @@ class GraphManager {
 
     this.nodes = [...this.nodes, node];
 
+    this.bridge.onUpdateGraph({
+      action: "CREATE_NODE",
+      subject: node,
+      graph: {
+        nodes: this.nodes,
+        edges: this.edges,
+      },
+    });
+
     return node;
   }
   removeNodeById(id: string) {
@@ -140,11 +156,19 @@ class GraphManager {
     this._private.selectedNodeIds = this._private.selectedNodeIds.filter(
       (selectedNodeId) => selectedNodeId !== id
     );
-
     this.edges = this._private.edges.filter(
       (edge) => !removedEdgeIds.includes(edge.id)
     );
     this.nodes = this._private.nodes.filter((node) => node.id != id);
+
+    this.bridge.onUpdateGraph({
+      action: "DELETE_NODE",
+      subject: this._private.nodesByIdHash[id],
+      graph: {
+        nodes: this.nodes,
+        edges: this.edges,
+      },
+    });
   }
   removeNodesByIds(removedNodeIds: string[]) {
     const removedEdgeIds: string[] = removedNodeIds.reduce(
@@ -158,13 +182,23 @@ class GraphManager {
     this._private.selectedNodeIds = this._private.selectedNodeIds.filter(
       (selectedNodeId) => !removedNodeIds.includes(selectedNodeId)
     );
-
     this.edges = this._private.edges.filter(
       (edge) => !removedEdgeIds.includes(edge.id)
     );
     this.nodes = this._private.nodes.filter(
       (node) => !removedNodeIds.includes(node.id)
     );
+
+    removedNodeIds.forEach((id) => {
+      this.bridge.onUpdateGraph({
+        action: "DELETE_NODE",
+        subject: this._private.nodesByIdHash[id],
+        graph: {
+          nodes: this.nodes,
+          edges: this.edges,
+        },
+      });
+    });
   }
   subscribeToNodesChange(fn: Function) {
     this._private.subscriptions.nodesChange.addListenerForId("default", fn);
@@ -334,6 +368,15 @@ class GraphManager {
     // trigger render to draw edges
     this.updateNodePositionById(edge.from.nodeId, {x: 0, y: 0});
 
+    this.bridge.onUpdateGraph({
+      action: "CREATE_EDGE",
+      subject: edge,
+      graph: {
+        nodes: this.nodes,
+        edges: this.edges,
+      },
+    });
+
     return edge;
   }
   removeEdgeById(id: string) {
@@ -351,6 +394,15 @@ class GraphManager {
     // redraw from and to nodes
     this.updateNodePositionById(edge.from.nodeId, {x: 0, y: 0});
     this.updateNodePositionById(edge.to.nodeId, {x: 0, y: 0});
+
+    this.bridge.onUpdateGraph({
+      action: "DELETE_EDGE",
+      subject: edge,
+      graph: {
+        nodes: this.nodes,
+        edges: this.edges,
+      },
+    });
   }
   updateDraftEdgePath(x1: number, y1: number, x2: number, y2: number) {
     const svgPath = document.querySelector(`#Edge-${DRAFT_EDGE_ID}`);
@@ -367,11 +419,11 @@ class GraphManager {
     svgPath?.setAttribute("d", "");
     svgPath?.nextElementSibling?.setAttribute("d", "");
   }
-  subscribeToEdgesChange(fn: Function) {
-    this._private.subscriptions.edgesChange.addListenerForId("default", fn);
+  subscribeToEdgesChange(id: string, fn: Function) {
+    this._private.subscriptions.edgesChange.addListenerForId(id, fn);
   }
-  unsubscribeToEdgesChange(fn: Function) {
-    this._private.subscriptions.edgesChange.removeListenerForId("default", fn);
+  unsubscribeToEdgesChange(id: string, fn: Function) {
+    this._private.subscriptions.edgesChange.removeListenerForId(id, fn);
   }
 }
 

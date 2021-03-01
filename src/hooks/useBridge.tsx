@@ -8,16 +8,16 @@ interface Props {
   children?: ReactNode;
 }
 
-class Bridge implements Types.Bridge {
-  onClickCanvas(event, position, graphManager) {}
-  onClickPort(event, port, node, graphManager) {}
-  onKeyPress(event, key, graphManager) {}
-}
+const defaultBridge: Types.Bridge = {
+  onUpdateGraph() {},
+  onClickCanvas() {},
+  onClickPort() {},
+  onKeyPress() {},
+};
 
 export function BridgeProvider(props: Props) {
   const {value, children} = props;
   const bridge = useMemo(() => {
-    const defaultBridge = new Bridge();
     return {
       ...defaultBridge,
       ...value,

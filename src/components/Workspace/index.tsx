@@ -25,9 +25,7 @@ function Workspace(props: Props) {
   const workspaceDivRef = useRef();
   const shiftKeyDownRef = useRef(false);
 
-  const {transform, setContainer, panZoomRef} = usePanZoom();
-
-  setContainer(workspaceDivRef.current);
+  const {transform, setContainer, panZoomRef} = usePanZoom({canvasSize});
 
   const workspace = useMemo(() => {
     return {
@@ -84,12 +82,7 @@ function Workspace(props: Props) {
   const handleRef = useCallback(
     (el) => {
       workspaceDivRef.current = el;
-      setContainer(el, {
-        minX: (canvasSize - workspaceDivRef.current.offsetWidth) * -1 - 10,
-        minY: (canvasSize - workspaceDivRef.current.offsetHeight) * -1 - 10,
-        maxX: 10,
-        maxY: 10,
-      });
+      setContainer(el);
     },
     [workspaceDivRef, setContainer]
   );
@@ -97,7 +90,8 @@ function Workspace(props: Props) {
   useEffect(() => {
     graphManager.dragManager = dragManager;
     graphManager.workspace = workspace;
-  }, [graphManager, dragManager, workspace]);
+    graphManager.bridge = bridge;
+  }, [graphManager, dragManager, workspace, bridge]);
 
   useEffect(() => {
     function handleKeyUp(event) {
