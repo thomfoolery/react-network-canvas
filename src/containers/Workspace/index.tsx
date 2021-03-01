@@ -52,6 +52,15 @@ function Workspace(props: Props) {
       get panZoom() {
         return panZoomRef.current;
       },
+      getElementDimensions(element) {
+        const {zoom} = this.panZoom;
+        const BCR = element.getBoundingClientRect();
+
+        return {
+          width: BCR.width / zoom,
+          height: BCR.height / zoom,
+        };
+      },
       getCanvasPosition(object) {
         const {zoom} = this.panZoom;
 

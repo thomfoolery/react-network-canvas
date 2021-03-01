@@ -13,7 +13,7 @@ function ZoomControls(props) {
         className={styles.ZoomControlsButton}
         onClick={() =>
           graphManager.workspace.setZoom((zoom) => {
-            const newZoom = zoom * 1.2;
+            const newZoom = zoom + 0.1;
 
             setZoom(newZoom);
             return newZoom;
@@ -27,7 +27,7 @@ function ZoomControls(props) {
         className={styles.ZoomControlsButton}
         onClick={() =>
           graphManager.workspace.setZoom((zoom) => {
-            const newZoom = zoom * 0.8;
+            const newZoom = zoom - 0.1;
 
             setZoom(newZoom);
             return newZoom;

@@ -42,22 +42,28 @@ function App() {
         .filter(({from}) => from.nodeId === parentNode.id);
 
       const BCR = parentNodeElement.getBoundingClientRect();
+      const nodeDimensions = graphManager.workspace.getElementDimensions(
+        parentNodeElement
+      );
       const initialPosition = graphManager.workspace.getCanvasPosition(BCR);
       const position = edgesOut.reduce(
         (acc, edge) => {
           const nodeElement = document.querySelector(`#Node-${edge.to.nodeId}`);
           const BCR = nodeElement.getBoundingClientRect();
+          const nodeDimensions = graphManager.workspace.getElementDimensions(
+            nodeElement
+          );
           const position = graphManager.workspace.getCanvasPosition(BCR);
           if (position.y >= acc.y) {
             return {
               ...acc,
-              y: position.y + BCR.height + 20,
+              y: position.y + nodeDimensions.height + 20,
             };
           }
           return acc;
         },
         {
-          x: initialPosition.x + BCR.width + 50,
+          x: initialPosition.x + nodeDimensions.width + 50,
           y: initialPosition.y,
         }
       );
