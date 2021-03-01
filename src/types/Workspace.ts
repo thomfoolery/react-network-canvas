@@ -5,7 +5,9 @@ interface Workspace {
   isShiftKeyDown: boolean;
   getCanvasPosition(object: any): Position;
   mountContextScreenOffset: Position;
-  panZoom: Position;
+  panZoom: {
+    zoom: number;
+  } & Position;
 }
 
 export {Workspace};

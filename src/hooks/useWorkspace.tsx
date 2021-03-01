@@ -4,7 +4,7 @@ import * as Types from "@app/types";
 const Context = createContext();
 
 interface Props {
-  value?: Types.Bridge;
+  value?: Types.Workspace;
   children?: ReactNode;
 }
 

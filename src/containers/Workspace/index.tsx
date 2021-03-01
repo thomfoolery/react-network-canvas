@@ -53,22 +53,29 @@ function Workspace(props: Props) {
         return panZoomRef.current;
       },
       getCanvasPosition(object) {
-        const {x, y, zoom} = this.panZoom;
-        const position =
-          object instanceof DOMRect
-            ? {
-                x: object.left,
-                y: object.top,
-              }
-            : {
-                x: object.clientX,
-                y: object.clientY,
-              };
+        const {zoom} = this.panZoom;
 
-        return {
-          x: position.x - this.mountContextScreenOffset.x - x,
-          y: position.y - this.mountContextScreenOffset.y - y,
-        };
+        if (object instanceof DOMRect) {
+          return {
+            x:
+              (object.left - this.mountContextScreenOffset.x) / zoom -
+              this.panZoom.x / zoom,
+            y:
+              (object.top - this.mountContextScreenOffset.y) / zoom -
+              this.panZoom.y / zoom,
+          };
+        } else if ("clientX" in object && "clientY" in object) {
+          return {
+            x:
+              (object.clientX - this.mountContextScreenOffset.x) / zoom -
+              this.panZoom.x / zoom,
+            y:
+              (object.clientY - this.mountContextScreenOffset.y) / zoom -
+              this.panZoom.y / zoom,
+          };
+        }
+
+        throw Error("Unsupported object");
       },
     };
   }, [panZoomRef, workspaceDivRef, shiftKeyDownRef, setPan, setZoom]);
@@ -93,6 +100,7 @@ function Workspace(props: Props) {
   useEffect(() => {
     graphManager.dragManager = dragManager;
     graphManager.workspace = workspace;
+    dragManager.workspace = workspace;
     graphManager.bridge = bridge;
   }, [graphManager, dragManager, workspace, bridge]);
 
@@ -128,9 +136,7 @@ function Workspace(props: Props) {
         className={styles.Workspace}
         onMouseDown={handleMouseDown}
       >
-        <div>
-          <Canvas transform={transform} />
-        </div>
+        <Canvas transform={transform} />
       </div>
     </WorkspaceProvider>
   );

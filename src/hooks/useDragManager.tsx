@@ -14,6 +14,7 @@ interface DragManagerPrivateProps {
   dragData: any;
   dragDelta: Types.Position;
   dragStartPosition: Types.Position | null;
+  workspace?: Types.Workspace;
   subscriptions: {
     dragStartById: Publisher;
     dragMoveById: Publisher;
@@ -26,6 +27,7 @@ class DragManager {
     dragData: null,
     dragDelta: {x: 0, y: 0},
     dragStartPosition: null,
+    workspace: undefined,
     subscriptions: {
       dragStartById: new Publisher(),
       dragMoveById: new Publisher(),
@@ -37,6 +39,10 @@ class DragManager {
     this.handleDragEnd = this.handleDragEnd.bind(this);
     this.handleDragMove = this.handleDragMove.bind(this);
     this.handleDragStart = this.handleDragStart.bind(this);
+  }
+
+  set workspace(workspace: Types.Workspace) {
+    this._private.workspace = workspace;
   }
 
   get dragDelta() {
@@ -61,11 +67,15 @@ class DragManager {
   handleDragMove(event) {
     if (!this._private.dragStartPosition) return;
 
-    const {dragStartPosition} = this._private;
+    const {workspace, dragStartPosition} = this._private;
     const currentPosition = {x: event.screenX, y: event.screenY};
     const dragDelta = {
-      x: currentPosition.x - dragStartPosition.x,
-      y: currentPosition.y - dragStartPosition.y,
+      x:
+        (currentPosition.x - dragStartPosition.x) /
+        (workspace?.panZoom.zoom || 1),
+      y:
+        (currentPosition.y - dragStartPosition.y) /
+        (workspace?.panZoom.zoom || 1),
     };
 
     this._private.dragDelta = dragDelta;
@@ -79,11 +89,15 @@ class DragManager {
     event.currentTarget.removeEventListener("mousemove", this.handleDragMove);
 
     if (this._private.dragStartPosition) {
-      const {dragStartPosition} = this._private;
+      const {workspace, dragStartPosition} = this._private;
       const currentPosition = {x: event.screenX, y: event.screenY};
       const dragDelta = {
-        x: currentPosition.x - dragStartPosition.x,
-        y: currentPosition.y - dragStartPosition.y,
+        x:
+          (currentPosition.x - dragStartPosition.x) /
+          (workspace?.panZoom.zoom || 1),
+        y:
+          (currentPosition.y - dragStartPosition.y) /
+          (workspace?.panZoom.zoom || 1),
       };
 
       this._private.subscriptions.dragEndById.notifyAll(
