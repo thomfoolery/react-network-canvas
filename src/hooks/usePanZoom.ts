@@ -1,4 +1,4 @@
-import {useRef, useState, useCallback} from "react";
+import {useRef, useState, useEffect, useCallback} from "react";
 import {useDragManager} from "@app/hooks";
 
 interface Options {
@@ -11,65 +11,85 @@ export function usePanZoom(options: Options) {
   const {canvasSize, canvasMargin = 50, startAtCanvasCenter = true} = options;
   const dragManager = useDragManager();
 
-  const [pan, setPan] = useState({x: 0, y: 0});
   const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({x: 0, y: 0});
+  const [container, setContainer] = useState();
 
-  const containerRef = useRef();
   const panZoomRef = useRef({...pan, zoom});
 
-  const setContainer = useCallback((container) => {
-    const minX = (canvasSize - container.offsetWidth) * -1 - canvasMargin;
-    const minY = (canvasSize - container.offsetHeight) * -1 - canvasMargin;
-    const maxX = canvasMargin;
-    const maxY = canvasMargin;
+  useEffect(() => {
+    if (container) {
+      let minX = (canvasSize - container.offsetWidth) * -1 - canvasMargin;
+      let minY = (canvasSize - container.offsetHeight) * -1 - canvasMargin;
+      let maxX = canvasMargin;
+      let maxY = canvasMargin;
 
-    let dragStartPosition;
+      let dragStartPosition;
 
-    function handleDragStart() {
-      dragStartPosition = panZoomRef.current;
-    }
-
-    function handleDragMove(event, dragDelta, dragData) {
-      if (dragData.type === "panzoom") {
-        setPan({
-          x: clamp(minX, maxX, dragStartPosition.x + dragDelta.x),
-          y: clamp(minY, maxY, dragStartPosition.y + dragDelta.y),
-        });
+      function handleDragStart() {
+        dragStartPosition = panZoomRef.current;
       }
-    }
 
-    function onWheel(event) {
-      const {deltaX, deltaY} = event;
+      function handleDragMove(event, dragDelta, dragData) {
+        if (dragData.type === "panzoom") {
+          setPan({
+            x: clamp(minX, maxX, dragStartPosition.x + dragDelta.x),
+            y: clamp(minY, maxY, dragStartPosition.y + dragDelta.y),
+          });
+        }
+      }
 
-      event.preventDefault();
-      setPan((pan) => ({
-        x: clamp(minX, maxX, pan.x - deltaX),
-        y: clamp(minY, maxY, pan.y - deltaY),
-      }));
-    }
+      function onWheel(event) {
+        const {deltaX, deltaY} = event;
 
-    function onGesture(event) {
-      event.preventDefault();
-    }
+        event.preventDefault();
+        setPan((pan) => ({
+          x: clamp(minX, maxX, pan.x - deltaX),
+          y: clamp(minY, maxY, pan.y - deltaY),
+        }));
+      }
 
-    if (container && !containerRef.current) {
+      function onGesture(event) {
+        event.preventDefault();
+      }
+
+      function handleResizeWindow() {
+        minX = (canvasSize - container.offsetWidth) * -1 - canvasMargin;
+        minY = (canvasSize - container.offsetHeight) * -1 - canvasMargin;
+        maxX = canvasMargin;
+        maxY = canvasMargin;
+      }
+
       if (startAtCanvasCenter) {
         setPan({
           x: (canvasSize / 2 - container.clientWidth / 2) * -1,
           y: (canvasSize / 2 - container.clientHeight / 2) * -1,
         });
       }
+
       container.addEventListener("wheel", onWheel);
       container.addEventListener("gesturestart", onGesture);
       container.addEventListener("gesturechange", onGesture);
       container.addEventListener("gestureend", onGesture);
 
+      window.addEventListener("resize", handleResizeWindow);
+
       dragManager.subscribeToDragStart("panZoom", handleDragStart);
       dragManager.subscribeToDragMove("panZoom", handleDragMove);
 
-      containerRef.current = container;
+      return () => {
+        container.removeEventListener("wheel", onWheel);
+        container.removeEventListener("gesturestart", onGesture);
+        container.removeEventListener("gesturechange", onGesture);
+        container.removeEventListener("gestureend", onGesture);
+
+        window.removeEventListener("resize", handleResizeWindow);
+
+        dragManager.unsubscribeToDragStart("panZoom", handleDragStart);
+        dragManager.unsubscribeToDragMove("panZoom", handleDragMove);
+      };
     }
-  }, []);
+  }, [container, canvasSize, canvasMargin]);
 
   panZoomRef.current = {...pan, zoom};
 
