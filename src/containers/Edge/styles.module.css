@@ -1,6 +1,6 @@
 .Edge {
-  stroke: black;
-  stroke-width: 3px;
+  stroke: var(--NC-edge-stroke);
+  stroke-width: var(--NC-edge-stroke-width);
   fill: transparent;
 }
 
@@ -12,7 +12,11 @@
 }
 
 .isHovered .Edge {
-  stroke: red;
+  stroke: var(--NC-edge-hover-stroke);
+}
+
+.isDraft .Edge {
+  stroke: var(--NC-edge-draft-stroke);
 }
 
 .isDraft .EdgeArea {

@@ -19,6 +19,16 @@ const defaultTheme = {
       "radial-gradient(lightgray, lightgray 1px, transparent 1px)",
     backgroundPosition: "50% 50%",
   },
+  edge: {
+    stroke: "black",
+    strokeWidth: "3px",
+    hover: {
+      stroke: "red",
+    },
+    draft: {
+      stroke: "black",
+    },
+  },
 };
 
 function flattenThemeObject(theme, prefix = "--NC", styles = {}) {

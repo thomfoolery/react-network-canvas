@@ -1,15 +1,17 @@
 import React, {useRef} from "react";
-import Workspace from "./components/Workspace";
+import {Workspace} from "@app/containers";
 import {
   GraphManagerProvider,
   DragManagerProvider,
+  OptionsProvider,
   BridgeProvider,
 } from "@app/hooks";
 
 import * as Types from "@app/types";
+import {themeToStyles} from "@app/theme";
+import {defaultOptions} from "@app/options";
 
 import styles from "./styles.module.css";
-import {themeToStyles} from "./theme";
 
 interface Props {
   nodes: any[];
@@ -23,7 +25,12 @@ function NodeCanvas(props: Props) {
   const {nodes, edges, bridge, theme = {}, options = {}} = props;
   const containerRef = useRef();
 
-  const {gridSize = 10, canvasSize = 2000} = options;
+  const finalOptions = {
+    ...defaultOptions,
+    ...options,
+  };
+
+  const {gridSize, canvasSize} = finalOptions;
 
   const style = {
     ...themeToStyles({
@@ -34,15 +41,17 @@ function NodeCanvas(props: Props) {
   };
 
   return (
-    <BridgeProvider value={bridge}>
-      <DragManagerProvider>
-        <div style={style} ref={containerRef} className={styles.NodeCanvas}>
-          <GraphManagerProvider nodes={nodes} edges={edges}>
-            <Workspace canvasSize={canvasSize} />
-          </GraphManagerProvider>
-        </div>
-      </DragManagerProvider>
-    </BridgeProvider>
+    <OptionsProvider value={finalOptions}>
+      <BridgeProvider value={bridge}>
+        <DragManagerProvider>
+          <div style={style} ref={containerRef} className={styles.NodeCanvas}>
+            <GraphManagerProvider nodes={nodes} edges={edges}>
+              <Workspace />
+            </GraphManagerProvider>
+          </div>
+        </DragManagerProvider>
+      </BridgeProvider>
+    </OptionsProvider>
   );
 }
 

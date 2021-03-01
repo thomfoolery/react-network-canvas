@@ -15,7 +15,7 @@ import {
 } from "@app/hooks";
 
 import {DRAFT_EDGE_ID} from "@app/constants";
-import Edge from "@app/components/Edge";
+import {Edge} from "@app/containers";
 import * as Types from "@app/types";
 import {isClick} from "@app/utils";
 
@@ -33,11 +33,11 @@ const draftEdge = {
   },
 };
 
-interface BackgroundProps {
+interface CanvasBackgroundProps {
   onClick?(event: SyntheticEvent, position: Types.Position): void;
 }
 
-function Background(props: BackgroundProps) {
+function Component(props: CanvasBackgroundProps) {
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
   const workspace = useWorkspace();
@@ -92,4 +92,6 @@ function Background(props: BackgroundProps) {
   );
 }
 
-export default memo(Background);
+const CanvasBackground = memo(Component);
+
+export {CanvasBackground};

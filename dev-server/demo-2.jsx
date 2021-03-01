@@ -1,8 +1,13 @@
-import React, {useEffect} from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import {createElement} from "react";
+import {v1 as generateUuid} from "uuid";
 
 import NodeCanvas from "../src/index";
+import {
+  Node as NodeComponent,
+  Port as PortComponent,
+} from "./custom-components";
 
 // import graph from "./public/graph.json";
 
@@ -15,7 +20,10 @@ function App() {
   const {nodes, edges} = graph;
   const bridge = {
     onClickCanvas(event, position, graphManager) {
-      const node = graphManager.createNode({position});
+      const node = graphManager.createNode({
+        position,
+        outputPorts: [{id: generateUuid()}, {id: generateUuid()}],
+      });
 
       graphManager.selectedNodeIds = [node.id];
     },
@@ -69,7 +77,46 @@ function App() {
     },
   };
 
-  return <NodeCanvas nodes={nodes} edges={edges} bridge={bridge} />;
+  const theme = {
+    workspace: {
+      backgroundColor: "#222",
+    },
+    canvas: {
+      boxShadow: "0 0 0 1px rgba(255,255,255,0.2)",
+      backgroundColor: "#333",
+      backgroundImage: [
+        "radial-gradient(rgba(255,255,255,0.2)",
+        "rgba(255,255,255,0.2) 1.5px,transparent 1.5px)",
+      ].join(","),
+      backgroundPosition: "-10px -10px",
+    },
+    edge: {
+      stroke: "grey",
+      strokeWidth: "3px",
+      hover: {
+        stroke: "red",
+      },
+      draft: {
+        stroke: "cornflowerblue",
+      },
+    },
+  };
+
+  const options = {
+    gridSize: 20,
+    NodeComponent,
+    PortComponent,
+  };
+
+  return (
+    <NodeCanvas
+      nodes={nodes}
+      edges={edges}
+      theme={theme}
+      bridge={bridge}
+      options={options}
+    />
+  );
 }
 
 ReactDOM.render(createElement(App), document.getElementById("app"));

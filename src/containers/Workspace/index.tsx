@@ -1,31 +1,34 @@
 import React, {useRef, useMemo, useEffect, useCallback} from "react";
-import Canvas from "../Canvas";
+import {Canvas} from "@app/containers";
 import {
   WorkspaceProvider,
   useBridge,
   usePanZoom,
+  useOptions,
   useDragManager,
   useGraphManager,
 } from "@app/hooks";
 
 import styles from "./styles.module.css";
 
-interface Props {
-  canvasSize: number;
-  containerWidth?: number;
-  containerHeight?: number;
-}
+interface Props {}
 
 function Workspace(props: Props) {
-  const {canvasSize} = props;
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
+  const options = useOptions();
   const bridge = useBridge();
+
+  const {canvasSize, canvasMargin = 50, startAtCanvasCenter = true} = options;
 
   const workspaceDivRef = useRef();
   const shiftKeyDownRef = useRef(false);
 
-  const {transform, setContainer, panZoomRef} = usePanZoom({canvasSize});
+  const {transform, setContainer, panZoomRef} = usePanZoom({
+    canvasSize,
+    canvasMargin,
+    startAtCanvasCenter,
+  });
 
   const workspace = useMemo(() => {
     return {
@@ -133,4 +136,4 @@ function Workspace(props: Props) {
   );
 }
 
-export default Workspace;
+export {Workspace};

@@ -4,7 +4,7 @@ import * as Types from "@app/types";
 import {useDragManager, useGraphManager, useWorkspace} from "@app/hooks";
 import {isClick} from "@app/utils";
 
-import {Background, Foreground} from "./components";
+import {CanvasBackground, CanvasForeground} from "@app/containers";
 
 import styles from "./styles.module.css";
 
@@ -77,8 +77,8 @@ function Canvas(props: Props) {
       onMouseDown={handleMouseDown}
     >
       <div ref={selectBoxRef} className={styles.SelectBox} />
-      <Background />
-      <Foreground />
+      <CanvasBackground />
+      <CanvasForeground />
     </div>
   );
 }
@@ -113,4 +113,4 @@ function clearSelectBox(element) {
   element.style = "";
 }
 
-export default Canvas;
+export {Canvas};

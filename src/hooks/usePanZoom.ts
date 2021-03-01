@@ -3,12 +3,12 @@ import {useDragManager} from "@app/hooks";
 
 interface Options {
   canvasSize: number;
-  canvasMargin?: number;
-  startAtCanvasCenter?: boolean;
+  canvasMargin: number;
+  startAtCanvasCenter: boolean;
 }
 
 export function usePanZoom(options: Options) {
-  const {canvasSize, canvasMargin = 50, startAtCanvasCenter = true} = options;
+  const {canvasSize, canvasMargin, startAtCanvasCenter} = options;
   const dragManager = useDragManager();
 
   const [zoom, setZoom] = useState(1);

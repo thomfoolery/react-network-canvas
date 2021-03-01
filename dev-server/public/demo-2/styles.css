@@ -1,0 +1,12 @@
+html,
+body {
+  margin: 0;
+}
+
+#app {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  box-shadow: 0 0 0 1px lightgray;
+  overflow: hidden;
+}

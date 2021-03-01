@@ -48,4 +48,4 @@ function Edge(props: Props) {
   );
 }
 
-export default Edge;
+export {Edge};

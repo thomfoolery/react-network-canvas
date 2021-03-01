@@ -1,6 +1,7 @@
-import React, {useEffect} from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import {createElement} from "react";
+import {v1 as generateUuid} from "uuid";
 
 import NodeCanvas from "../src/index";
 
@@ -15,7 +16,10 @@ function App() {
   const {nodes, edges} = graph;
   const bridge = {
     onClickCanvas(event, position, graphManager) {
-      const node = graphManager.createNode({position});
+      const node = graphManager.createNode({
+        position,
+        outputPorts: [{id: generateUuid()}, {id: generateUuid()}],
+      });
 
       graphManager.selectedNodeIds = [node.id];
     },
@@ -69,34 +73,7 @@ function App() {
     },
   };
 
-  const theme = {
-    workspace: {
-      backgroundColor: "#222",
-    },
-    canvas: {
-      boxShadow: "0 0 0 1px rgba(255,255,255,0.2)",
-      backgroundColor: "#333",
-      backgroundImage: [
-        "radial-gradient(rgba(255,255,255,0.2)",
-        "rgba(255,255,255,0.2) 1.5px,transparent 1.5px)",
-      ].join(","),
-      backgroundPosition: "-10px -10px",
-    },
-  };
-
-  const options = {
-    gridSize: 20,
-  };
-
-  return (
-    <NodeCanvas
-      nodes={nodes}
-      edges={edges}
-      theme={theme}
-      bridge={bridge}
-      options={options}
-    />
-  );
+  return <NodeCanvas nodes={nodes} edges={edges} bridge={bridge} />;
 }
 
 ReactDOM.render(createElement(App), document.getElementById("app"));

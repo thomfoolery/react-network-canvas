@@ -1,0 +1,24 @@
+html,
+body {
+  margin: 0;
+}
+
+#app {
+  --margin: 1vmax;
+
+  position: relative;
+  width: calc(100vw - calc(var(--margin) * 2));
+  height: calc(100vh - calc(var(--margin) * 2));
+  margin: var(--margin);
+  box-shadow: 0 0 0 1px lightgray;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+#demo {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  box-shadow: 0 0 0 1px lightgray;
+  overflow: hidden;
+}

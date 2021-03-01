@@ -1,0 +1,22 @@
+.Port {
+  position: relative;
+  display: block;
+}
+
+.Port + .Port {
+  margin-top: 10px;
+}
+
+.Port::after {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 20px;
+
+  border-radius: 50%;
+  background-color: white;
+}
+
+.Output {
+  cursor: pointer;
+}

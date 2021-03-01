@@ -1,9 +1,9 @@
 import React, {memo, useState, useEffect} from "react";
-import Node from "@app/components/Node";
+import {Node} from "@app/containers";
 
 import {useGraphManager} from "@app/hooks";
 
-function Foreground() {
+function Component() {
   const graphManager = useGraphManager();
 
   const [nodes, setNodes] = useState(graphManager.nodes);
@@ -22,4 +22,6 @@ function Foreground() {
   );
 }
 
-export default memo(Foreground);
+const CanvasForeground = memo(Component);
+
+export {CanvasForeground};
