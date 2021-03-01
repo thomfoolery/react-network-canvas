@@ -1,5 +1,5 @@
 import {useRef, useState, useEffect, useCallback} from "react";
-import {useDragManager} from "@app/hooks";
+import {useDragManager, useBridge} from "@app/hooks";
 
 interface Options {
   minZoom: number;
@@ -18,6 +18,7 @@ export function usePanZoom(options: Options) {
     startAtCanvasCenter,
   } = options;
   const dragManager = useDragManager();
+  const bridge = useBridge();
 
   const [transform, setTransform] = useState({x: 0, y: 0, zoom: 1});
   const [container, setContainer] = useState();
@@ -39,9 +40,16 @@ export function usePanZoom(options: Options) {
 
   const setZoom = useCallback(
     (...arg) => {
-      setTransform(({x, y, zoom}) => {
+      setTransform((transform) => {
+        const {zoom} = transform;
         const newZoom = typeof arg[0] === "function" ? arg[0](zoom) : zoom;
         const clampedZoom = clamp(minZoom, maxZoom, newZoom);
+
+        if (clampedZoom === zoom) {
+          return transform;
+        }
+
+        const {x, y} = transform;
 
         const center = {
           x: container.offsetWidth / 2,
@@ -57,9 +65,19 @@ export function usePanZoom(options: Options) {
 
         let {minX, minY, maxX, maxY} = boundaryRef.current;
 
+        requestAnimationFrame(() => bridge.onChangeZoom(clampedZoom));
+
         return {
-          x: clamp(minX, maxX, x + ((center.x - x) * (zoom - newZoom)) / zoom),
-          y: clamp(minY, maxY, y + ((center.y - y) * (zoom - newZoom)) / zoom),
+          x: clamp(
+            minX,
+            maxX,
+            x + ((center.x - x) * (zoom - clampedZoom)) / zoom
+          ),
+          y: clamp(
+            minY,
+            maxY,
+            y + ((center.y - y) * (zoom - clampedZoom)) / zoom
+          ),
           zoom: clampedZoom,
         };
       });

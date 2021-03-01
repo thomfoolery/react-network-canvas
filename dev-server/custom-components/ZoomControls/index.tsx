@@ -3,8 +3,7 @@ import React, {useState} from "react";
 import styles from "./styles.module.css";
 
 function ZoomControls(props) {
-  const {graphManager} = props;
-  const [zoom, setZoom] = useState(1);
+  const {zoom, graphManager} = props;
 
   return (
     <div className={styles.ZoomControls}>
@@ -30,9 +29,9 @@ function ZoomControls(props) {
       >
         –
       </button>
-      {/* <span className={styles.ZoomControlsLabel}>
+      <span className={styles.ZoomControlsLabel}>
         {(zoom * 100).toFixed(0)}%
-      </span> */}
+      </span>
     </div>
   );
 }

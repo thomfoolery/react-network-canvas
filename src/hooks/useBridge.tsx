@@ -10,6 +10,7 @@ interface Props {
 
 const defaultBridge: Types.Bridge = {
   connect() {},
+  onChangeZoom() {},
   onUpdateGraph() {},
   onClickCanvas() {},
   onClickPort() {},

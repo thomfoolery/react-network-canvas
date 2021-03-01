@@ -15,6 +15,7 @@ interface GraphEvent {
 
 interface Bridge {
   connect(graphEvent: GraphEvent): void;
+  onChangeZoom(zoom: number): void;
   onUpdateGraph(graphEvent: GraphEvent): void;
   onClickCanvas(
     event: React.SyntheticEvent,
