@@ -157,10 +157,17 @@ function calculateBoundary(container, canvasSize, canvasMargin, zoom = 1) {
   const adjustedMargin = canvasMargin * zoom;
   const adjustedCanvas = canvasSize * zoom;
 
-  const minX = (adjustedCanvas - container.offsetWidth) * -1 - adjustedMargin;
-  const minY = (adjustedCanvas - container.offsetHeight) * -1 - adjustedMargin;
-  const maxX = adjustedMargin;
-  const maxY = adjustedMargin;
+  let minX = (adjustedCanvas - container.offsetWidth) * -1 - adjustedMargin;
+  let minY = (adjustedCanvas - container.offsetHeight) * -1 - adjustedMargin;
+  let maxX = adjustedMargin;
+  let maxY = adjustedMargin;
+
+  if (minX > maxX) {
+    minX = maxX = (container.offsetWidth - adjustedCanvas) / 2;
+  }
+  if (minY > maxY) {
+    minY = maxY = (container.offsetHeight - adjustedCanvas) / 2;
+  }
 
   return {
     minX,
