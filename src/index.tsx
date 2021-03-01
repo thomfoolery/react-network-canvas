@@ -9,21 +9,28 @@ import {
 import * as Types from "@app/types";
 
 import styles from "./styles.module.css";
+import {themeToStyles} from "./theme";
 
 interface Props {
   nodes: any[];
   edges: any[];
+  theme?: any;
+  options?: any;
   bridge?: Types.Bridge;
-  gridSize?: number;
-  canvasSize?: number;
 }
 
 function NodeCanvas(props: Props) {
-  const {nodes, edges, bridge, gridSize = 10, canvasSize = 2000} = props;
+  const {nodes, edges, bridge, theme = {}, options = {}} = props;
   const containerRef = useRef();
+
+  const {gridSize = 10, canvasSize = 2000} = options;
+
   const style = {
-    "--grid-size": `${gridSize}px`,
-    "--canvas-size": `${canvasSize}px`,
+    ...themeToStyles({
+      ...theme,
+      gridSize: `${gridSize}px`,
+      canvasSize: `${canvasSize}px`,
+    }),
   };
 
   return (

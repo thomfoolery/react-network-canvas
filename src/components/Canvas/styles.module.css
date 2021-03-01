@@ -1,13 +1,16 @@
 .Canvas {
   position: relative;
-  width: var(--canvas-size);
-  height: var(--canvas-size);
-  border-radius: 5px;
-  background-image: radial-gradient(lightgrey, white 1px);
-  background-size: var(--grid-size) var(--grid-size);
-  background-position: calc(var(--canvas-size) / 2) calc(var(--canvas-size) / 2);
 
-  box-shadow: 0 0 0 1px lightgray;
+  width: var(--NC-canvas-size);
+  height: var(--NC-canvas-size);
+
+  box-shadow: var(--NC-canvas-box-shadow);
+  border-radius: var(--NC-canvas-border-radius);
+
+  background-size: var(--NC-canvas-background-size);
+  background-color: var(--NC-canvas-background-color);
+  background-image: var(--NC-canvas-background-image);
+  background-position: var(--NC-canvas-background-position);
 
   user-select: none;
   transform-origin: 0 0;
