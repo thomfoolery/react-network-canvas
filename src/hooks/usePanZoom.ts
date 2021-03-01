@@ -2,13 +2,21 @@ import {useRef, useState, useEffect, useCallback} from "react";
 import {useDragManager} from "@app/hooks";
 
 interface Options {
+  minZoom: number;
+  maxZoom: number;
   canvasSize: number;
   canvasMargin: number;
   startAtCanvasCenter: boolean;
 }
 
 export function usePanZoom(options: Options) {
-  const {canvasSize, canvasMargin, startAtCanvasCenter} = options;
+  const {
+    minZoom,
+    maxZoom,
+    canvasSize,
+    canvasMargin,
+    startAtCanvasCenter,
+  } = options;
   const dragManager = useDragManager();
 
   const [transform, setTransform] = useState({x: 0, y: 0, zoom: 1});
@@ -33,6 +41,7 @@ export function usePanZoom(options: Options) {
     (...arg) => {
       setTransform(({x, y, zoom}) => {
         const newZoom = typeof arg[0] === "function" ? arg[0](zoom) : zoom;
+        const clampedZoom = clamp(minZoom, maxZoom, newZoom);
 
         const center = {
           x: container.offsetWidth / 2,
@@ -43,7 +52,7 @@ export function usePanZoom(options: Options) {
           container,
           canvasSize,
           canvasMargin,
-          newZoom
+          clampedZoom
         );
 
         let {minX, minY, maxX, maxY} = boundaryRef.current;
@@ -51,7 +60,7 @@ export function usePanZoom(options: Options) {
         return {
           x: clamp(minX, maxX, x + ((center.x - x) * (zoom - newZoom)) / zoom),
           y: clamp(minY, maxY, y + ((center.y - y) * (zoom - newZoom)) / zoom),
-          zoom: newZoom,
+          zoom: clampedZoom,
         };
       });
     },

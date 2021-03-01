@@ -11,6 +11,8 @@ interface Props {
 const defaultOptions = {
   startAtCanvasCenter: true,
   canvasMargin: 50,
+  maxZoom: Infinity,
+  minZoom: 0,
   NodeComponent,
   PortComponent,
 };

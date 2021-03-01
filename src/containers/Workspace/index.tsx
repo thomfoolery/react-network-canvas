@@ -20,12 +20,20 @@ function Workspace(props: Props) {
   const options = useOptions();
   const bridge = useBridge();
 
-  const {canvasSize, canvasMargin, startAtCanvasCenter} = options;
+  const {
+    minZoom,
+    maxZoom,
+    canvasSize,
+    canvasMargin,
+    startAtCanvasCenter,
+  } = options;
 
   const workspaceDivRef = useRef();
   const shiftKeyDownRef = useRef(false);
 
   const {transform, setContainer, panZoomRef, setPan, setZoom} = usePanZoom({
+    minZoom,
+    maxZoom,
     canvasSize,
     canvasMargin,
     startAtCanvasCenter,

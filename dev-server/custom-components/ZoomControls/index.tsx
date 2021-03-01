@@ -13,10 +13,7 @@ function ZoomControls(props) {
         className={styles.ZoomControlsButton}
         onClick={() =>
           graphManager.workspace.setZoom((zoom) => {
-            const newZoom = zoom + 0.1;
-
-            setZoom(newZoom);
-            return newZoom;
+            return zoom + 0.1;
           })
         }
       >
@@ -27,18 +24,15 @@ function ZoomControls(props) {
         className={styles.ZoomControlsButton}
         onClick={() =>
           graphManager.workspace.setZoom((zoom) => {
-            const newZoom = zoom - 0.1;
-
-            setZoom(newZoom);
-            return newZoom;
+            return zoom - 0.1;
           })
         }
       >
         –
       </button>
-      <span className={styles.ZoomControlsLabel}>
+      {/* <span className={styles.ZoomControlsLabel}>
         {(zoom * 100).toFixed(0)}%
-      </span>
+      </span> */}
     </div>
   );
 }
