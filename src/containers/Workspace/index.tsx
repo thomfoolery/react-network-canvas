@@ -1,5 +1,6 @@
 import React, {useRef, useMemo, useEffect, useCallback} from "react";
 import {Canvas} from "@app/containers";
+import * as Types from "@app/types";
 import {
   WorkspaceProvider,
   useBridge,
@@ -19,26 +20,28 @@ function Workspace(props: Props) {
   const options = useOptions();
   const bridge = useBridge();
 
-  const {canvasSize, canvasMargin = 50, startAtCanvasCenter = true} = options;
+  const {canvasSize, canvasMargin, startAtCanvasCenter} = options;
 
   const workspaceDivRef = useRef();
   const shiftKeyDownRef = useRef(false);
 
-  const {transform, setContainer, panZoomRef} = usePanZoom({
+  const {transform, setContainer, panZoomRef, setPan, setZoom} = usePanZoom({
     canvasSize,
     canvasMargin,
     startAtCanvasCenter,
   });
 
-  const workspace = useMemo(() => {
+  const workspace: Types.Workspace = useMemo(() => {
     return {
+      setPan,
+      setZoom,
       get container() {
         return workspaceDivRef.current;
       },
       get isShiftKeyDown() {
         return shiftKeyDownRef.current;
       },
-      offset: {
+      mountContextScreenOffset: {
         get x() {
           return workspaceDivRef.current.getBoundingClientRect().left;
         },
@@ -46,32 +49,29 @@ function Workspace(props: Props) {
           return workspaceDivRef.current.getBoundingClientRect().top;
         },
       },
-      canvasPanZoom: {
-        get x() {
-          return panZoomRef.current.x;
-        },
-        get y() {
-          return panZoomRef.current.y;
-        },
-        get zoom() {
-          return panZoomRef.current.zoom;
-        },
+      get panZoom() {
+        return panZoomRef.current;
       },
       getCanvasPosition(object) {
-        if (object instanceof DOMRect) {
-          return {
-            x: object.left - this.offset.x - this.canvasPanZoom.x,
-            y: object.top - this.offset.y - this.canvasPanZoom.y,
-          };
-        } else {
-          return {
-            x: object.clientX - this.offset.x - this.canvasPanZoom.x,
-            y: object.clientY - this.offset.y - this.canvasPanZoom.y,
-          };
-        }
+        const {x, y, zoom} = this.panZoom;
+        const position =
+          object instanceof DOMRect
+            ? {
+                x: object.left,
+                y: object.top,
+              }
+            : {
+                x: object.clientX,
+                y: object.clientY,
+              };
+
+        return {
+          x: position.x - this.mountContextScreenOffset.x - x,
+          y: position.y - this.mountContextScreenOffset.y - y,
+        };
       },
     };
-  }, [panZoomRef, workspaceDivRef, shiftKeyDownRef]);
+  }, [panZoomRef, workspaceDivRef, shiftKeyDownRef, setPan, setZoom]);
 
   const handleMouseDown = useCallback(
     (event) => {
@@ -128,8 +128,8 @@ function Workspace(props: Props) {
         className={styles.Workspace}
         onMouseDown={handleMouseDown}
       >
-        <div style={{transform}}>
-          <Canvas />
+        <div>
+          <Canvas transform={transform} />
         </div>
       </div>
     </WorkspaceProvider>

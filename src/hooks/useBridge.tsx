@@ -9,6 +9,7 @@ interface Props {
 }
 
 const defaultBridge: Types.Bridge = {
+  connect() {},
   onUpdateGraph() {},
   onClickCanvas() {},
   onClickPort() {},

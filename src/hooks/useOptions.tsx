@@ -8,11 +8,17 @@ interface Props {
   children?: ReactNode;
 }
 
+const defaultOptions = {
+  startAtCanvasCenter: true,
+  canvasMargin: 50,
+  NodeComponent,
+  PortComponent,
+};
+
 export function OptionsProvider(props: Props) {
   const {value, children} = props;
   const options = {
-    NodeComponent,
-    PortComponent,
+    ...defaultOptions,
     ...value,
   };
 

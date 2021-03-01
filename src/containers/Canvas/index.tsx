@@ -9,11 +9,12 @@ import {CanvasBackground, CanvasForeground} from "@app/containers";
 import styles from "./styles.module.css";
 
 interface Props {
+  transform: string;
   onClick?(event: SyntheticEvent, position: Types.Position): void;
 }
 
 function Canvas(props: Props) {
-  const {onClick = () => null} = props;
+  const {transform, onClick = () => null} = props;
   const workspace = useWorkspace();
   const dragManager = useDragManager();
   const graphManager = useGraphManager();
@@ -73,6 +74,7 @@ function Canvas(props: Props) {
   return (
     <div
       onClick={onClick}
+      style={{transform}}
       className={styles.Canvas}
       onMouseDown={handleMouseDown}
     >

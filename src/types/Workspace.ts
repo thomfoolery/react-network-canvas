@@ -4,8 +4,8 @@ interface Workspace {
   container: HTMLDivElement;
   isShiftKeyDown: boolean;
   getCanvasPosition(object: any): Position;
-  offset: Position;
-  canvasPanZoom: Position;
+  mountContextScreenOffset: Position;
+  panZoom: Position;
 }
 
 export {Workspace};

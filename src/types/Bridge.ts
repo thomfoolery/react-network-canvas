@@ -14,6 +14,7 @@ interface GraphEvent {
 }
 
 interface Bridge {
+  connect(graphEvent: GraphEvent): void;
   onUpdateGraph(graphEvent: GraphEvent): void;
   onClickCanvas(
     event: React.SyntheticEvent,

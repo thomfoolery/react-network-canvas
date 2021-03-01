@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import ReactDOM from "react-dom";
 import {createElement} from "react";
 import {v1 as generateUuid} from "uuid";
@@ -7,6 +7,7 @@ import NodeCanvas from "../src/index";
 import {
   Node as NodeComponent,
   Port as PortComponent,
+  ZoomControls,
 } from "./custom-components";
 
 // import graph from "./public/graph.json";
@@ -18,7 +19,12 @@ const graph = {
 
 function App() {
   const {nodes, edges} = graph;
+  const [graphManager, setGraphManager] = useState();
+
   const bridge = {
+    connect(graphManager) {
+      setGraphManager(graphManager);
+    },
     onClickCanvas(event, position, graphManager) {
       const node = graphManager.createNode({
         position,
@@ -109,13 +115,16 @@ function App() {
   };
 
   return (
-    <NodeCanvas
-      nodes={nodes}
-      edges={edges}
-      theme={theme}
-      bridge={bridge}
-      options={options}
-    />
+    <div style={{width: "100%", height: "100%"}}>
+      <NodeCanvas
+        nodes={nodes}
+        edges={edges}
+        theme={theme}
+        bridge={bridge}
+        options={options}
+      />
+      <ZoomControls graphManager={graphManager} />
+    </div>
   );
 }
 

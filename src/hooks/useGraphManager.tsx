@@ -7,8 +7,8 @@ import React, {
 } from "react";
 
 import {Publisher, svgGeneratePath} from "@app/utils";
+import {useDragManager, useBridge} from "@app/hooks";
 import {DRAFT_EDGE_ID} from "@app/constants";
-import {useDragManager} from "@app/hooks";
 import * as Types from "@app/types";
 
 import {v1 as generateUuid} from "uuid";
@@ -437,10 +437,12 @@ export function GraphManagerProvider(props: Props) {
   const {nodes, edges, children} = props;
   const graphManager = useMemo(() => new GraphManager({nodes, edges}), []);
   const dragManager = useDragManager();
+  const bridge = useBridge();
 
   useEffect(() => {
     const id = "graphManager";
 
+    bridge.connect(graphManager);
     dragManager.subscribeToDragMove(id, graphManager.handleDragMove);
     dragManager.subscribeToDragEnd(id, graphManager.handleDragEnd);
 
@@ -448,7 +450,7 @@ export function GraphManagerProvider(props: Props) {
       dragManager.unsubscribeToDragMove(id, graphManager.handleDragMove);
       dragManager.unsubscribeToDragEnd(id, graphManager.handleDragEnd);
     };
-  }, [dragManager]);
+  }, [bridge, dragManager]);
 
   return <Context.Provider value={graphManager}>{children}</Context.Provider>;
 }

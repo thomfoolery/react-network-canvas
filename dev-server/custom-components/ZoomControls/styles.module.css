@@ -1,0 +1,35 @@
+.ZoomControls {
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  bottom: 0;
+  left: 0;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 20px;
+  background-color: white;
+}
+
+.ZoomControlsButton {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  width: 25px;
+  height: 25px;
+  padding: 0;
+  border: none;
+  font-size: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.ZoomControlsLabel {
+  color: black;
+  font-size: 14px;
+  margin: 0 10px;
+  font-family: Arial, Helvetica, sans-serif;
+}
