@@ -36,6 +36,6 @@
   },
   "scripts": {
     "start": "snowpack dev",
-    "build": "rollup -c"
+    "build": "rm -rf dist && rollup -c"
   }
 }

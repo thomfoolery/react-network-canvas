@@ -1,4 +1,5 @@
 import React, {useMemo, useState, useCallback, useEffect} from "react";
+import {Port as PortComponent} from "../Port";
 import * as Types from "@component/types";
 
 import {
@@ -101,6 +102,7 @@ function Node(props: Props) {
       outputPorts={outputPorts}
       onMouseUp={handleMouseUp}
       onMouseDown={handleMouseDown}
+      PortComponent={PortComponent}
     />
   );
 }

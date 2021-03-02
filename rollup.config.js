@@ -34,7 +34,7 @@ export default {
       plugins: [autoprefixer()],
       sourceMap: true,
       minimize: true,
-      extract: true,
+      inject: true,
       modules: true,
     }),
     alias({

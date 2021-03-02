@@ -1,5 +1,4 @@
 import React from "react";
-import {Port} from "@component/containers";
 
 import styles from "./styles.module.css";
 
@@ -12,6 +11,7 @@ function Node(props) {
     outputPorts,
     onMouseUp,
     onMouseDown,
+    PortComponent,
   } = props;
 
   const style = {
@@ -33,7 +33,7 @@ function Node(props) {
     >
       <div className={styles.NodeInputPorts}>
         {inputPorts.map((port) => (
-          <Port key={port.id} node={node} port={port} type="input" />
+          <PortComponent key={port.id} node={node} port={port} type="input" />
         ))}
       </div>
       <div
@@ -43,7 +43,7 @@ function Node(props) {
       ></div>
       <div className={styles.NodeOutputPorts}>
         {outputPorts.map((port) => (
-          <Port key={port.id} node={node} port={port} type="output" />
+          <PortComponent key={port.id} node={node} port={port} type="output" />
         ))}
       </div>
     </div>

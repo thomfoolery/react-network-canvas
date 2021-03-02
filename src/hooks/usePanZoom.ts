@@ -189,7 +189,6 @@ export function usePanZoom(options: Options) {
   useEffect(() => {
     if (zoomWheelKey) {
       function handleKeyDown({key}) {
-        console.log(key);
         if (key === zoomWheelKey) isZoomKeyDownRef.current = true;
       }
       function handleKeyUp({key}) {
