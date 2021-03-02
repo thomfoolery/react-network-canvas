@@ -3,6 +3,8 @@
     "baseUrl": ".",
     "rootDir": ".",
     "outDir": "./dist",
+    "declaration": true,
+    "declarationDir": "./dist",
     "pretty": true,
     "jsx": "react",
     "strict": true,
@@ -13,9 +15,10 @@
     "noImplicitAny": false,
     "moduleResolution": "node",
     "paths": {
-      "@app/*": ["./src/*"]
-    }
+      "@component/*": ["./src/*"]
+    },
+    "plugins": [{"name": "typescript-plugin-css-modules"}]
   },
   "include": ["./src/**/*"],
-  "exclude": ["**/*.test.ts", "**/*.test.tsx", "node_modules"]
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "node_modules", "dist"]
 }

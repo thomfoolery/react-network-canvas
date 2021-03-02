@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import {createElement} from "react";
 import {v1 as generateUuid} from "uuid";
 
-import NodeCanvas from "../src/index";
+import {NodeCanvas} from "@component";
 
 // import graph from "./public/graph.json";
 

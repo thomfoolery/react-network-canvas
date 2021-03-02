@@ -1,23 +1,41 @@
 {
   "name": "react-component-node-canvas",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "dependencies": {
     "uuid": "^8.3.2"
   },
   "peerDependencies": {
-    "react": "17.x"
+    "react": "17.x",
+    "react-dom": "17.x"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-node-resolve": "^11.2.0",
+    "@snowpack/plugin-react-refresh": "^2.4.0",
+    "autoprefixer": "^9.0.0",
     "eslint": "^7.20.0",
+    "postcss": "^8.2.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "rollup": "^2.40.0",
+    "rollup-plugin-alias": "^2.2.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss-modules": "^2.0.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.30.0",
     "snowpack": "^3.0.11",
-    "tslib": "^2.1.0"
+    "tslib": "^2.1.0",
+    "typescript": "^4.2.2",
+    "typescript-plugin-css-modules": "^3.2.0"
   },
   "scripts": {
     "start": "snowpack dev",
-    "build": "snowpack build"
+    "build": "rollup -c"
   }
 }

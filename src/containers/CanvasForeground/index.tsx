@@ -1,7 +1,7 @@
 import React, {memo, useState, useEffect} from "react";
-import {Node} from "@app/containers";
+import {Node} from "@component/containers";
 
-import {useGraphManager} from "@app/hooks";
+import {useGraphManager} from "@component/hooks";
 
 function Component() {
   const graphManager = useGraphManager();

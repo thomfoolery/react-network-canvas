@@ -1,5 +1,5 @@
 import {useRef, useState, useEffect, useCallback} from "react";
-import {useDragManager, useBridge} from "@app/hooks";
+import {useDragManager, useBridge} from "@component/hooks";
 
 interface Options {
   minZoom: number;

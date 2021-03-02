@@ -5,11 +5,12 @@ import {
   useWorkspace,
   useDragManager,
   useGraphManager,
-} from "@app/hooks";
-import {isClick} from "@app/utils";
-import * as Types from "@app/types";
+} from "@component/hooks";
+import {isClick} from "@component/utils";
+import * as Types from "@component/types";
 
 interface Props {
+  key: string;
   node: Types.Node;
   port: Types.Port;
   type: "input" | "output";

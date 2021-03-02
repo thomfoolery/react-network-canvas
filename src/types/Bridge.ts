@@ -1,5 +1,5 @@
 import React from "react";
-import * as Types from "@app/types";
+import * as Types from "@component/types";
 
 interface GraphEvent {
   action:

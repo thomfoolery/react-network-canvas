@@ -1,4 +1,4 @@
-import * as Types from "@app/types";
+import * as Types from "@component/types";
 
 const LIMIT = 5;
 

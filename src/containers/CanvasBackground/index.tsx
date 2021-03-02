@@ -12,12 +12,12 @@ import {
   useGraphManager,
   useWorkspace,
   useBridge,
-} from "@app/hooks";
+} from "@component/hooks";
 
-import {DRAFT_EDGE_ID} from "@app/constants";
-import {Edge} from "@app/containers";
-import * as Types from "@app/types";
-import {isClick} from "@app/utils";
+import {DRAFT_EDGE_ID} from "@component/constants";
+import {Edge} from "@component/containers";
+import * as Types from "@component/types";
+import {isClick} from "@component/utils";
 
 import styles from "./styles.module.css";
 

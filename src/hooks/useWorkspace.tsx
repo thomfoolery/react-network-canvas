@@ -1,5 +1,5 @@
 import React, {createContext, useContext, ReactNode} from "react";
-import * as Types from "@app/types";
+import * as Types from "@component/types";
 
 const Context = createContext();
 

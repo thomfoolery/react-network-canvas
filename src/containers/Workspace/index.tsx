@@ -1,6 +1,6 @@
 import React, {useRef, useMemo, useEffect, useCallback} from "react";
-import {Canvas} from "@app/containers";
-import * as Types from "@app/types";
+import {Canvas} from "@component/containers";
+import * as Types from "@component/types";
 import {
   WorkspaceProvider,
   useBridge,
@@ -8,7 +8,7 @@ import {
   useOptions,
   useDragManager,
   useGraphManager,
-} from "@app/hooks";
+} from "@component/hooks";
 
 import styles from "./styles.module.css";
 

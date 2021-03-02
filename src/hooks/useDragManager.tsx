@@ -5,8 +5,8 @@ import React, {
   useContext,
   ReactNode,
 } from "react";
-import {Publisher} from "@app/utils";
-import * as Types from "@app/types";
+import {Publisher} from "@component/utils";
+import * as Types from "@component/types";
 
 const Context = createContext();
 

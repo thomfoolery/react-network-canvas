@@ -4,7 +4,10 @@ import React, {
   ReactNode,
   ReactComponent,
 } from "react";
-import {Node as NodeComponent, Port as PortComponent} from "@app/components";
+import {
+  Node as NodeComponent,
+  Port as PortComponent,
+} from "@component/components";
 
 const Context = createContext();
 

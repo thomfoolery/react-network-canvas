@@ -1,10 +1,10 @@
 import React, {useRef, useEffect, useCallback, SyntheticEvent} from "react";
-import * as Types from "@app/types";
+import * as Types from "@component/types";
 
-import {useDragManager, useGraphManager, useWorkspace} from "@app/hooks";
-import {isClick} from "@app/utils";
+import {useDragManager, useGraphManager, useWorkspace} from "@component/hooks";
+import {isClick} from "@component/utils";
 
-import {CanvasBackground, CanvasForeground} from "@app/containers";
+import {CanvasBackground, CanvasForeground} from "@component/containers";
 
 import styles from "./styles.module.css";
 

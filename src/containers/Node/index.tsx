@@ -1,17 +1,18 @@
 import React, {useMemo, useState, useCallback, useEffect} from "react";
-import * as Types from "@app/types";
+import * as Types from "@component/types";
 
 import {
   useOptions,
   useWorkspace,
   useDragManager,
   useGraphManager,
-} from "@app/hooks";
-import {isClick, svgGeneratePath} from "@app/utils";
+} from "@component/hooks";
+import {isClick, svgGeneratePath} from "@component/utils";
 
 import styles from "./styles.module.css";
 
 interface Props {
+  key: string;
   node: Types.Node;
 }
 

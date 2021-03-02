@@ -1,15 +1,15 @@
 import React, {useRef} from "react";
-import {Workspace} from "@app/containers";
+import {Workspace} from "@component/containers";
 import {
   GraphManagerProvider,
   DragManagerProvider,
   OptionsProvider,
   BridgeProvider,
-} from "@app/hooks";
+} from "@component/hooks";
 
-import * as Types from "@app/types";
-import {themeToStyles} from "@app/theme";
-import {defaultOptions} from "@app/options";
+import * as Types from "@component/types";
+import {themeToStyles} from "@component/theme";
+import {defaultOptions} from "@component/options";
 
 import styles from "./styles.module.css";
 
@@ -55,4 +55,4 @@ function NodeCanvas(props: Props) {
   );
 }
 
-export default NodeCanvas;
+export {NodeCanvas};

@@ -1,16 +1,17 @@
 import React, {useState, useCallback} from "react";
-import {useGraphManager} from "@app/hooks";
-import * as Types from "@app/types";
+import {useGraphManager} from "@component/hooks";
+import * as Types from "@component/types";
 
 import styles from "./styles.module.css";
 
 interface Props {
+  key?: string;
   edge: Types.Edge;
-  isDraft: boolean;
+  isDraft?: boolean;
 }
 
 function Edge(props: Props) {
-  const {edge, isDraft} = props;
+  const {edge, isDraft = false} = props;
   const graphManager = useGraphManager();
   const [isHovered, setIsHovered] = useState(false);
 

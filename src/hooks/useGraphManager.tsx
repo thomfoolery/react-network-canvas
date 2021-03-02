@@ -6,10 +6,10 @@ import React, {
   ReactNode,
 } from "react";
 
-import {Publisher, svgGeneratePath} from "@app/utils";
-import {useDragManager, useBridge} from "@app/hooks";
-import {DRAFT_EDGE_ID} from "@app/constants";
-import * as Types from "@app/types";
+import {Publisher, svgGeneratePath} from "@component/utils";
+import {useDragManager, useBridge} from "@component/hooks";
+import {DRAFT_EDGE_ID} from "@component/constants";
+import * as Types from "@component/types";
 
 import {v1 as generateUuid} from "uuid";
 

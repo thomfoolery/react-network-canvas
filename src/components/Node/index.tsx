@@ -1,5 +1,5 @@
 import React from "react";
-import {Port} from "@app/containers";
+import {Port} from "@component/containers";
 
 import styles from "./styles.module.css";
 

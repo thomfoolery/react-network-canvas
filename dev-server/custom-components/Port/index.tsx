@@ -1,5 +1,5 @@
 import React from "react";
-import * as Types from "@app/types";
+import * as Types from "@component/types";
 
 import styles from "./styles.module.css";
 

@@ -1,4 +1,4 @@
-import * as Types from "@app/types";
+import * as Types from "@component/types";
 
 export interface Graph {
   nodes: Types.Node[];

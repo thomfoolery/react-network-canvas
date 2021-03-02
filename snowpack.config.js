@@ -15,9 +15,7 @@ module.exports = {
       url: "/",
     },
   },
-  plugins: [
-    /* ... */
-  ],
+  plugins: ["@snowpack/plugin-react-refresh"],
   packageOptions: {
     /* ... */
   },
@@ -27,7 +25,13 @@ module.exports = {
   buildOptions: {
     out: "dist",
   },
+  optimize: {
+    bundle: true,
+    minify: false,
+    target: "es2015",
+    entrypoints: ["src/index.tsx"],
+  },
   alias: {
-    "@app": "./src",
+    "@component": "./src",
   },
 };
