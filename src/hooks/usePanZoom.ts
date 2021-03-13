@@ -47,10 +47,11 @@ export function usePanZoom(options: Options) {
   }, []);
 
   const setZoom = useCallback(
-    (...arg) => {
+    (firstArgument, possibleCenter) => {
       setTransform((transform) => {
         const {zoom} = transform;
-        const newZoom = typeof arg[0] === "function" ? arg[0](zoom) : zoom;
+        const newZoom =
+          typeof firstArgument === "function" ? firstArgument(zoom) : zoom;
         const clampedZoom = clamp(minZoom, maxZoom, newZoom);
 
         if (clampedZoom === zoom) {
@@ -58,7 +59,7 @@ export function usePanZoom(options: Options) {
         }
 
         const {x, y} = transform;
-        const center = arg[1] || {
+        const center = possibleCenter || {
           x: container.offsetWidth / 2,
           y: container.offsetHeight / 2,
         };
@@ -140,7 +141,10 @@ export function usePanZoom(options: Options) {
 
         if (isZoomKeyDownRef.current) {
           const {deltaY} = event;
-          const postion = workspace.getCanvasPosition(event);
+          const postion = {
+            x: event.clientX,
+            y: event.clientY,
+          };
 
           setZoom(
             (zoom) => zoom * Math.pow(1 - zoomSensitivity, deltaY),
