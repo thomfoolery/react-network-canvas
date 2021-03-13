@@ -22,8 +22,8 @@ interface DragManagerPrivateProps {
   };
 }
 
-class DragManager {
-  __: DragManagerPrivateProps = {
+function createDragManager() {
+  const __: DragManagerPrivateProps = {
     dragData: null,
     dragDelta: {x: 0, y: 0},
     dragStartPosition: null,
@@ -35,40 +35,18 @@ class DragManager {
     },
   };
 
-  constructor() {
-    this.handleDragEnd = this.handleDragEnd.bind(this);
-    this.handleDragMove = this.handleDragMove.bind(this);
-    this.handleDragStart = this.handleDragStart.bind(this);
-  }
-
-  set workspace(workspace: Types.Workspace) {
-    this.__.workspace = workspace;
-  }
-
-  get dragDelta() {
-    return {...this.__.dragDelta};
-  }
-
-  get dragData() {
-    return {...this.__.dragData};
-  }
-
-  set dragData(dragData: any) {
-    this.__.dragData = dragData;
-  }
-
-  // event handlers
-  handleDragStart(event) {
+  function handleDragStart(event) {
     document.addEventListener("selectstart", handleOnSelectStart);
-    event.currentTarget.addEventListener("mousemove", this.handleDragMove);
-    this.__.dragStartPosition = {x: event.screenX, y: event.screenY};
-    this.__.dragDelta = {x: 0, y: 0};
-    this.__.subscriptions.dragStartById.notifyAll(event);
+    event.currentTarget.addEventListener("mousemove", handleDragMove);
+    __.dragStartPosition = {x: event.screenX, y: event.screenY};
+    __.dragDelta = {x: 0, y: 0};
+    __.subscriptions.dragStartById.notifyAll(event);
   }
-  handleDragMove(event) {
-    if (!this.__.dragStartPosition) return;
 
-    const {workspace, dragStartPosition} = this.__;
+  function handleDragMove(event) {
+    if (!__.dragStartPosition) return;
+
+    const {workspace, dragStartPosition} = __;
     const currentPosition = {x: event.screenX, y: event.screenY};
     const dragDelta = {
       x:
@@ -78,20 +56,15 @@ class DragManager {
         (currentPosition.y - dragStartPosition.y) /
         (workspace?.panZoom.zoom || 1),
     };
-
-    this.__.dragDelta = dragDelta;
-    this.__.subscriptions.dragMoveById.notifyAll(
-      event,
-      dragDelta,
-      this.dragData
-    );
+    __.dragDelta = dragDelta;
+    __.subscriptions.dragMoveById.notifyAll(event, dragDelta, __.dragData);
   }
-  handleDragEnd(event) {
-    document.removeEventListener("selectstart", handleOnSelectStart);
-    event.currentTarget.removeEventListener("mousemove", this.handleDragMove);
 
-    if (this.__.dragStartPosition) {
-      const {workspace, dragStartPosition} = this.__;
+  function handleDragEnd(event) {
+    document.removeEventListener("selectstart", handleOnSelectStart);
+    event.currentTarget.removeEventListener("mousemove", handleDragMove);
+    if (__.dragStartPosition) {
+      const {workspace, dragStartPosition} = __;
       const currentPosition = {x: event.screenX, y: event.screenY};
       const dragDelta = {
         x:
@@ -101,37 +74,51 @@ class DragManager {
           (currentPosition.y - dragStartPosition.y) /
           (workspace?.panZoom.zoom || 1),
       };
-
-      this.__.subscriptions.dragEndById.notifyAll(
-        event,
-        dragDelta,
-        this.dragData
-      );
+      __.subscriptions.dragEndById.notifyAll(event, dragDelta, __.dragData);
     }
-
-    this.__.dragStartPosition = null;
-    this.__.dragData = null;
+    __.dragStartPosition = null;
+    __.dragData = null;
   }
 
-  // subscriptions
-  subscribeToDragStart(id, fn) {
-    this.__.subscriptions.dragStartById.addListenerForId(id, fn);
-  }
-  unsubscribeToDragStart(id, fn) {
-    this.__.subscriptions.dragStartById.removeListenerForId(id, fn);
-  }
-  subscribeToDragMove(id, fn) {
-    this.__.subscriptions.dragMoveById.addListenerForId(id, fn);
-  }
-  unsubscribeToDragMove(id, fn) {
-    this.__.subscriptions.dragMoveById.removeListenerForId(id, fn);
-  }
-  subscribeToDragEnd(id, fn) {
-    this.__.subscriptions.dragEndById.addListenerForId(id, fn);
-  }
-  unsubscribeToDragEnd(id, fn) {
-    this.__.subscriptions.dragEndById.removeListenerForId(id, fn);
-  }
+  return {
+    set workspace(workspace: Types.Workspace) {
+      __.workspace = workspace;
+    },
+    get dragDelta() {
+      return {...__.dragDelta};
+    },
+    get dragData() {
+      return {...__.dragData};
+    },
+    set dragData(dragData: any) {
+      __.dragData = dragData;
+    },
+
+    // event handlers
+    handleDragStart,
+    handleDragMove,
+    handleDragEnd,
+
+    // subscriptions
+    subscribeToDragStart(id, fn) {
+      __.subscriptions.dragStartById.addListenerForId(id, fn);
+    },
+    unsubscribeToDragStart(id, fn) {
+      __.subscriptions.dragStartById.removeListenerForId(id, fn);
+    },
+    subscribeToDragMove(id, fn) {
+      __.subscriptions.dragMoveById.addListenerForId(id, fn);
+    },
+    unsubscribeToDragMove(id, fn) {
+      __.subscriptions.dragMoveById.removeListenerForId(id, fn);
+    },
+    subscribeToDragEnd(id, fn) {
+      __.subscriptions.dragEndById.addListenerForId(id, fn);
+    },
+    unsubscribeToDragEnd(id, fn) {
+      __.subscriptions.dragEndById.removeListenerForId(id, fn);
+    },
+  };
 }
 
 function handleOnSelectStart() {
@@ -143,7 +130,7 @@ interface Props {
 }
 
 export function DragManagerProvider(props: Props) {
-  const dragManager = useMemo(() => new DragManager(), []);
+  const dragManager = useMemo(() => createDragManager(), []);
   const containerRef = useRef();
   const {children} = props;
   const style = {
