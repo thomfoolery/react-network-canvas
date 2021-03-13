@@ -6,3 +6,5 @@
 # production
 /build
 /dist
+
+.DS_Store

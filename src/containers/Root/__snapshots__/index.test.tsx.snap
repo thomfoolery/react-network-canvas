@@ -1,0 +1,139 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  onMouseDown={[Function]}
+  onMouseLeave={[Function]}
+  onMouseUp={[Function]}
+  style={
+    Object {
+      "height": "100%",
+      "width": "100%",
+    }
+  }
+>
+  <div
+    style={
+      Object {
+        "--NC-canvas-background-color": "white",
+        "--NC-canvas-background-image": "radial-gradient(lightgray, lightgray 1px, transparent 1px)",
+        "--NC-canvas-background-position": "50% 50%",
+        "--NC-canvas-background-size": "var(--NC-grid-size) var(--NC-grid-size)",
+        "--NC-canvas-border-radius": "5px",
+        "--NC-canvas-box-shadow": "0 0 0 1px lightgrey",
+        "--NC-canvas-size": "undefinedpx",
+        "--NC-edge-draft-stroke": "black",
+        "--NC-edge-hover-stroke": "red",
+        "--NC-edge-stroke": "black",
+        "--NC-edge-stroke-width": "3px",
+        "--NC-grid-size": "undefinedpx",
+        "--NC-workspace-background-color": "#f6f6f6",
+        "--NC-workspace-background-image": "",
+        "--NC-workspace-background-size": "",
+      }
+    }
+  >
+    <div
+      onMouseDown={[Function]}
+    >
+      <div
+        onClick={[Function]}
+        onMouseDown={[Function]}
+        style={
+          Object {
+            "transform": "translate3d(0px,0px,0) scale(1)",
+          }
+        }
+      >
+        <div />
+        <svg
+          onMouseDown={[Function]}
+          onMouseUp={[Function]}
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g
+            onClick={[Function]}
+            onMouseDown={[Function]}
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            <path
+              id="Edge-edge-1"
+            />
+            <path />
+          </g>
+          <g
+            onClick={[Function]}
+            onMouseDown={[Function]}
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            <path
+              id="Edge-e3327200-8456-11eb-ad94-117561157804"
+            />
+            <path />
+          </g>
+        </svg>
+        <div
+          className=""
+          id="Node-node-1"
+          style={
+            Object {
+              "left": 0,
+              "top": 0,
+            }
+          }
+        >
+          <div>
+            <div
+              id="Port-node-1-input-1"
+              onMouseDown={[Function]}
+              onMouseUp={[Function]}
+            />
+          </div>
+          <div
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+          />
+          <div>
+            <div
+              id="Port-node-1-output-1"
+              onMouseDown={[Function]}
+              onMouseUp={[Function]}
+            />
+          </div>
+        </div>
+        <div
+          className=""
+          id="Node-node-2"
+          style={
+            Object {
+              "left": 100,
+              "top": 100,
+            }
+          }
+        >
+          <div>
+            <div
+              id="Port-node-2-input-1"
+              onMouseDown={[Function]}
+              onMouseUp={[Function]}
+            />
+          </div>
+          <div
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+          />
+          <div>
+            <div
+              id="Port-node-2-output-1"
+              onMouseDown={[Function]}
+              onMouseUp={[Function]}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

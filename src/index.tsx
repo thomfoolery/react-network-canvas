@@ -1,17 +1,7 @@
-import React, {useRef} from "react";
-import {Workspace} from "@component/containers";
-import {
-  GraphManagerProvider,
-  DragManagerProvider,
-  OptionsProvider,
-  BridgeProvider,
-} from "@component/hooks";
-
+import React from "react";
 import * as Types from "@component/types";
-import {themeToStyles} from "@component/theme";
-import {defaultOptions} from "@component/options";
-
-import styles from "./styles.module.css";
+import {Root} from "@component/containers";
+import {DEFAULT_OPTIONS} from "@component/constants";
 
 interface Props {
   nodes: any[];
@@ -23,35 +13,19 @@ interface Props {
 
 function NodeCanvas(props: Props) {
   const {nodes, edges, bridge, theme = {}, options = {}} = props;
-  const containerRef = useRef();
-
-  const finalOptions = {
-    ...defaultOptions,
+  const mergedOptions = {
+    ...DEFAULT_OPTIONS,
     ...options,
   };
 
-  const {gridSize, canvasSize} = finalOptions;
-
-  const style = {
-    ...themeToStyles({
-      ...theme,
-      gridSize: `${gridSize}px`,
-      canvasSize: `${canvasSize}px`,
-    }),
-  };
-
   return (
-    <OptionsProvider value={finalOptions}>
-      <BridgeProvider value={bridge}>
-        <DragManagerProvider>
-          <div style={style} ref={containerRef} className={styles.NodeCanvas}>
-            <GraphManagerProvider nodes={nodes} edges={edges}>
-              <Workspace />
-            </GraphManagerProvider>
-          </div>
-        </DragManagerProvider>
-      </BridgeProvider>
-    </OptionsProvider>
+    <Root
+      nodes={nodes}
+      edges={edges}
+      theme={theme}
+      bridge={bridge}
+      options={mergedOptions}
+    />
   );
 }
 

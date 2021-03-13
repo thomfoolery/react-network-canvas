@@ -1,35 +1,4 @@
-export function themeToStyles(providedTheme) {
-  const theme = mergeDeep(defaultTheme, providedTheme);
-
-  return flattenThemeObject(theme);
-}
-
-const defaultTheme = {
-  workspace: {
-    backgroundSize: "",
-    backgroundImage: "",
-    backgroundColor: "#f6f6f6",
-  },
-  canvas: {
-    borderRadius: "5px",
-    boxShadow: "0 0 0 1px lightgrey",
-    backgroundColor: "white",
-    backgroundSize: "var(--NC-grid-size) var(--NC-grid-size)",
-    backgroundImage:
-      "radial-gradient(lightgray, lightgray 1px, transparent 1px)",
-    backgroundPosition: "50% 50%",
-  },
-  edge: {
-    stroke: "black",
-    strokeWidth: "3px",
-    hover: {
-      stroke: "red",
-    },
-    draft: {
-      stroke: "black",
-    },
-  },
-};
+import {DEFAULT_THEME} from "@component/constants";
 
 function flattenThemeObject(theme, prefix = "--NC", styles = {}) {
   Object.keys(theme).forEach((key) => {
@@ -83,3 +52,11 @@ function isPOJO(arg) {
 function camelToKebabCase(str: string) {
   return str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, "$1-$2").toLowerCase();
 }
+
+function themeToStyles(providedTheme) {
+  const theme = mergeDeep(DEFAULT_THEME, providedTheme);
+
+  return flattenThemeObject(theme);
+}
+
+export {themeToStyles};

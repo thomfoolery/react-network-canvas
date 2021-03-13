@@ -1,5 +1,6 @@
 import React, {useState, useCallback} from "react";
 import {useGraphManager} from "@component/hooks";
+import {joinClassList} from "@component/utils";
 import * as Types from "@component/types";
 
 import styles from "./styles.module.css";
@@ -26,22 +27,18 @@ function Edge(props: Props) {
   const handleMouseEnter = useCallback(() => setIsHovered(true), []);
   const handleMouseLeave = useCallback(() => setIsHovered(false), []);
 
-  const classList: string[] = [];
-
-  if (isDraft) {
-    classList.push(styles.isDraft);
-  }
-  if (!isDraft && isHovered) {
-    classList.push(styles.isHovered);
-  }
+  const className = joinClassList(
+    isDraft && styles.isDraft,
+    !isDraft && isHovered && styles.isHovered
+  );
 
   return (
     <g
+      className={className}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={classList.join(" ")}
     >
       <path id={`Edge-${edge.id}`} className={styles.Edge} />
       <path className={styles.EdgeArea} />

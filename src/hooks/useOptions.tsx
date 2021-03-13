@@ -22,7 +22,7 @@ interface Options {
   PortComponent: ReactComponent;
 }
 
-const defaultOptions: Options = {
+const DEFAULT_OPTIONS: Options = {
   startAtCanvasCenter: true,
   canvasMargin: 50,
   zoomSensitivity: 0.001,
@@ -41,7 +41,7 @@ interface Props {
 export function OptionsProvider(props: Props) {
   const {value, children} = props;
   const options: Options = {
-    ...defaultOptions,
+    ...DEFAULT_OPTIONS,
     ...value,
   };
 
