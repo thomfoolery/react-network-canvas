@@ -64,10 +64,10 @@ interface GraphManagerArguments {
   nodes: Types.Node[];
   edges: Types.Edge[];
 }
-class GraphManager {
-  __: GraphManagerPrivateProps = {
-    nodes: [],
-    edges: [],
+function createGraphManager({nodes = [], edges = []}: GraphManagerArguments) {
+  const __: GraphManagerPrivateProps = {
+    nodes,
+    edges,
     nodesByIdHash: {},
     edgesByIdHash: {},
     edgesByNodeIdHash: {},
@@ -84,335 +84,332 @@ class GraphManager {
     },
   };
 
-  constructor({nodes = [], edges = []}: GraphManagerArguments) {
-    this.nodes = nodes;
-    this.edges = edges;
-
-    this.handleDragMove = this.handleDragMove.bind(this);
-    this.handleDragEnd = this.handleDragEnd.bind(this);
+  function setNodes(nodes: Types.Node[]) {
+    __.nodes = [...nodes];
+    __.nodesByIdHash = getObjectsByIdHash(__.nodes);
+    __.subscriptions.nodesChange.notifyAll(__.nodes);
   }
 
-  // bridge
-  get bridge() {
-    return {...this.__.bridge};
+  function setEdges(edges: Types.Edge[]) {
+    __.edges = [...edges];
+    __.edgesByIdHash = getObjectsByIdHash(__.edges);
+    __.edgesByNodeIdHash = getEdgesByNodeIdHash(__.edges);
+    __.subscriptions.edgesChange.notifyAll(__.edges);
   }
-  set bridge(bridge: any) {
-    this.__.bridge = bridge;
-  }
-  // workspace
-  get workspace() {
-    return {...this.__.workspace};
-  }
-  set workspace(workspace: any) {
-    this.__.workspace = workspace;
-  }
-  // nodes
-  get nodes() {
-    return [...this.__.nodes];
-  }
-  set nodes(nodes: Types.Node[]) {
-    this.__.nodes = nodes;
-    this.__.nodesByIdHash = getObjectsByIdHash(nodes);
-    this.__.subscriptions.nodesChange.notifyAll(nodes);
-  }
-  getNodeById(id: string): Types.Node {
-    return {...this.__.nodesByIdHash[id]};
-  }
-  getNodesByEdgeId(id: string): {from?: Types.Node; to?: Types.Node} {
-    const edge: Types.Edge = this.__.edgesByIdHash[id];
-    if (edge) {
-      const from = this.__.nodesByIdHash[edge.from.nodeId];
-      const to = this.__.nodesByIdHash[edge.to.nodeId];
-      return {from, to};
-    }
-    return {from: undefined, to: undefined};
-  }
-  createNode(nodeProps: Partial<Types.Node>): Types.Node {
-    const node = {
-      id: generateUuid(),
-      inputPorts: [{id: generateUuid()}],
-      outputPorts: [{id: generateUuid()}],
-      position: {x: 0, y: 0},
-      ...nodeProps,
-    };
 
-    this.nodes = [...this.nodes, node];
-
-    this.bridge.onUpdateGraph({
-      action: "CREATE_NODE",
-      subject: node,
-      graph: {
-        nodes: this.nodes,
-        edges: this.edges,
-      },
-    });
-
-    return node;
-  }
-  removeNodeById(id: string) {
-    const edges = this.__.edgesByNodeIdHash[id] || [];
-    const removedEdgeIds = edges.map(({id}) => id);
-
-    this.__.selectedNodeIds = this.__.selectedNodeIds.filter(
-      (selectedNodeId) => selectedNodeId !== id
-    );
-    this.edges = this.__.edges.filter(
-      (edge) => !removedEdgeIds.includes(edge.id)
-    );
-    this.nodes = this.__.nodes.filter((node) => node.id != id);
-
-    this.bridge.onUpdateGraph({
-      action: "DELETE_NODE",
-      subject: this.__.nodesByIdHash[id],
-      graph: {
-        nodes: this.nodes,
-        edges: this.edges,
-      },
-    });
-  }
-  removeNodesByIds(removedNodeIds: string[]) {
-    const removedEdgeIds: string[] = removedNodeIds.reduce(
-      (acc: string[], id: string) => {
-        const edges = this.__.edgesByNodeIdHash[id] || [];
-        return [...acc, ...edges.map(({id}) => id)];
-      },
-      []
-    );
-
-    this.__.selectedNodeIds = this.__.selectedNodeIds.filter(
-      (selectedNodeId) => !removedNodeIds.includes(selectedNodeId)
-    );
-    this.edges = this.__.edges.filter(
-      (edge) => !removedEdgeIds.includes(edge.id)
-    );
-    this.nodes = this.__.nodes.filter(
-      (node) => !removedNodeIds.includes(node.id)
-    );
-
-    removedNodeIds.forEach((id) => {
-      this.bridge.onUpdateGraph({
-        action: "DELETE_NODE",
-        subject: this.__.nodesByIdHash[id],
-        graph: {
-          nodes: this.nodes,
-          edges: this.edges,
-        },
-      });
-    });
-  }
-  subscribeToNodesChange(fn: Function) {
-    this.__.subscriptions.nodesChange.addListenerForId("default", fn);
-  }
-  unsubscribeToNodesChange(fn: Function) {
-    this.__.subscriptions.nodesChange.removeListenerForId("default", fn);
-  }
-  // position
-  set dragManager(dragManager: any) {
-    this.__.dragManager = dragManager;
-  }
-  handleDragMove(event, dragDelta: Types.Position, dragData: any) {
-    const {selectedNodeIds, dragManager, workspace} = this.__;
-
-    this.__.subscriptions.dragDeltaById.notifyIds(selectedNodeIds, dragDelta);
-
-    if (workspace && dragManager?.dragData?.dragType === "port") {
-      const position = workspace.getCanvasPosition(event);
-
-      const x1 = dragData.port.position.x;
-      const y1 = dragData.port.position.y;
-      const x2 = position.x;
-      const y2 = position.y;
-
-      this.updateDraftEdgePath(x1, y1, x2, y2);
-    }
-  }
-  handleDragEnd(event, dragDelta: Types.Position, dragData: any) {
-    const {selectedNodeIds, subscriptions} = this.__;
-
-    subscriptions.dragDeltaById.notifyIds(selectedNodeIds, {
-      x: 0,
-      y: 0,
-    });
-
-    if (dragData?.dragType === "node") {
-      selectedNodeIds.forEach((id) =>
-        this.updateNodePositionById(id, dragDelta)
-      );
-    }
-    if (dragData?.dragType === "port") {
-      this.clearDraftEdgePath();
-    }
-  }
-  updateNodePositionById(id: string, dragDelta: Types.Position) {
-    const node = this.__.nodesByIdHash[id];
+  function updateNodePositionById(id: string, dragDelta: Types.Position) {
+    const node = __.nodesByIdHash[id];
     const position = {
       x: node.position.x + dragDelta.x,
       y: node.position.y + dragDelta.y,
     };
 
     node.position = position;
-    this.__.subscriptions.nodePositionChangeById.notifyIds([id], position);
+    __.subscriptions.nodePositionChangeById.notifyIds([id], position);
   }
-  subscribeToDragDeltaById(id: string, fn: Function) {
-    this.__.subscriptions.dragDeltaById.addListenerForId(id, fn);
-  }
-  unsubscribeToDragDeltaById(id: string, fn: Function) {
-    this.__.subscriptions.dragDeltaById.removeListenerForId(id, fn);
-  }
-  subscribeToNodePositionChangeById(id: string, fn: Function) {
-    this.__.subscriptions.nodePositionChangeById.addListenerForId(id, fn);
-  }
-  unsubscribeToNodePositionChangeById(id: string, fn: Function) {
-    this.__.subscriptions.nodePositionChangeById.addListenerForId(id, fn);
-  }
-  // selected ids
-  get selectedNodeIds(): string[] {
-    return [...this.__.selectedNodeIds];
-  }
-  set selectedNodeIds(selectedNodeIds: string[]) {
-    const unselectedNodeIds = this.__.selectedNodeIds.filter(
-      (id) => !selectedNodeIds.includes(id)
-    );
-    const newSelectedNodeIds = selectedNodeIds.filter(
-      (id) => !this.__.selectedNodeIds.includes(id)
-    );
 
-    this.__.selectedNodeIds = [...selectedNodeIds];
-
-    requestAnimationFrame(() => {
-      this.__.subscriptions.isSelectedById.notifyIds(newSelectedNodeIds, true);
-      this.__.subscriptions.isSelectedById.notifyIds(unselectedNodeIds, false);
-    });
-  }
-  appendSelectedNodeId(id: string) {
-    if (this.__.selectedNodeIds.includes(id)) return;
-    const selectedNodeIds = Array.from(
-      new Set([...this.__.selectedNodeIds, id])
-    );
-
-    this.selectedNodeIds = selectedNodeIds;
-  }
-  appendSelectedNodeIds(appendedNodeIds: string[]) {
-    const selectedNodeIds = Array.from(
-      new Set([...this.__.selectedNodeIds, ...appendedNodeIds])
-    );
-
-    this.selectedNodeIds = selectedNodeIds;
-  }
-  removeSelectedNodeId(id: string) {
-    if (!this.__.selectedNodeIds.includes(id)) return;
-    const selectedNodeIds = this.__.selectedNodeIds.filter(
-      (selectedNodeId) => selectedNodeId !== id
-    );
-
-    this.selectedNodeIds = selectedNodeIds;
-  }
-  removeSelectedNodeIds(unselectedNodeIds: string[]) {
-    const selectedNodeIds = this.__.selectedNodeIds.filter(
-      (id) => !unselectedNodeIds.includes(id)
-    );
-
-    this.selectedNodeIds = selectedNodeIds;
-  }
-  subscribeToIsSelectedById(id: string, fn: Function) {
-    this.__.subscriptions.isSelectedById.addListenerForId(id, fn);
-  }
-  unsubscribeToIsSelectedById(id: string, fn: Function) {
-    this.__.subscriptions.isSelectedById.removeListenerForId(id, fn);
-  }
-  // edges
-  get edges() {
-    return [...this.__.edges];
-  }
-  set edges(edges: Types.Edge[]) {
-    this.__.edges = edges;
-    this.__.edgesByIdHash = getObjectsByIdHash(edges);
-    this.__.edgesByNodeIdHash = getEdgesByNodeIdHash(edges);
-    this.__.subscriptions.edgesChange.notifyAll(edges);
-  }
-  getEdgeById(id: string): Types.Edge {
-    return {...this.__.edgesByIdHash[id]};
-  }
-  getEdgesByNodeId(id: string): Types.Edge[] {
-    return this.__.edgesByNodeIdHash[id]
-      ? [...this.__.edgesByNodeIdHash[id]]
-      : [];
-  }
-  createEdge(edgeProps: Partial<Types.Edge>): Types.Edge {
-    const edge: Types.Edge = {
-      id: generateUuid(),
-      from: {
-        nodeId: "",
-        portId: "",
-      },
-      to: {
-        nodeId: "",
-        portId: "",
-      },
-      ...edgeProps,
-    };
-
-    this.edges = [...this.__.edges, edge];
-    // trigger render to draw edges
-    this.updateNodePositionById(edge.from.nodeId, {x: 0, y: 0});
-
-    this.bridge.onUpdateGraph({
-      action: "CREATE_EDGE",
-      subject: edge,
-      graph: {
-        nodes: this.nodes,
-        edges: this.edges,
-      },
-    });
-
-    return edge;
-  }
-  removeEdgeById(id: string) {
-    const filter = (edge) => edge.id != id;
-    const {edgesByNodeIdHash} = this.__;
-    const edge = this.__.edgesByIdHash[id];
-    const fromNodeEdges = edgesByNodeIdHash[edge.from.nodeId];
-    const toNodeEdges = edgesByNodeIdHash[edge.to.nodeId];
-
-    edgesByNodeIdHash[edge.from.nodeId] = fromNodeEdges.filter(filter);
-    edgesByNodeIdHash[edge.to.nodeId] = toNodeEdges.filter(filter);
-
-    this.edges = this.__.edges.filter(filter);
-
-    // redraw from and to nodes
-    this.updateNodePositionById(edge.from.nodeId, {x: 0, y: 0});
-    this.updateNodePositionById(edge.to.nodeId, {x: 0, y: 0});
-
-    this.bridge.onUpdateGraph({
-      action: "DELETE_EDGE",
-      subject: edge,
-      graph: {
-        nodes: this.nodes,
-        edges: this.edges,
-      },
-    });
-  }
-  updateDraftEdgePath(x1: number, y1: number, x2: number, y2: number) {
-    const svgPath = document.querySelector(`#Edge-${DRAFT_EDGE_ID}`);
-    const {dragData} = this.__.dragManager;
-
-    const path = svgGeneratePath(x1, y1, x2, y2);
-
-    svgPath?.setAttribute("d", path);
-    svgPath?.nextElementSibling?.setAttribute("d", path);
-  }
-  clearDraftEdgePath() {
+  function clearDraftEdgePath() {
     const svgPath = document.querySelector(`#Edge-${DRAFT_EDGE_ID}`);
 
     svgPath?.setAttribute("d", "");
     svgPath?.nextElementSibling?.setAttribute("d", "");
   }
-  subscribeToEdgesChange(id: string, fn: Function) {
-    this.__.subscriptions.edgesChange.addListenerForId(id, fn);
+
+  function updateDraftEdgePath(x1: number, y1: number, x2: number, y2: number) {
+    const svgPath = document.querySelector(`#Edge-${DRAFT_EDGE_ID}`);
+    const path = svgGeneratePath(x1, y1, x2, y2);
+
+    svgPath?.setAttribute("d", path);
+    svgPath?.nextElementSibling?.setAttribute("d", path);
   }
-  unsubscribeToEdgesChange(id: string, fn: Function) {
-    this.__.subscriptions.edgesChange.removeListenerForId(id, fn);
-  }
+  // this.handleDragMove = this.handleDragMove.bind(this);
+  // this.handleDragEnd = this.handleDragEnd.bind(this);
+
+  return {
+    // bridge
+    get bridge() {
+      return {...__.bridge};
+    },
+    set bridge(bridge: any) {
+      __.bridge = bridge;
+    },
+    // workspace
+    get workspace() {
+      return {...__.workspace};
+    },
+    set workspace(workspace: any) {
+      __.workspace = workspace;
+    },
+    // nodes
+    get nodes() {
+      return [...__.nodes];
+    },
+    set nodes(nodes: Types.Node[]) {
+      setNodes(nodes);
+    },
+    getNodeById(id: string): Types.Node {
+      return {...__.nodesByIdHash[id]};
+    },
+    getNodesByEdgeId(id: string): {from?: Types.Node; to?: Types.Node} {
+      const edge: Types.Edge = __.edgesByIdHash[id];
+      if (edge) {
+        const from = __.nodesByIdHash[edge.from.nodeId];
+        const to = __.nodesByIdHash[edge.to.nodeId];
+        return {from, to};
+      }
+      return {from: undefined, to: undefined};
+    },
+    createNode(nodeProps: Partial<Types.Node>): Types.Node {
+      const node = {
+        id: generateUuid(),
+        inputPorts: [{id: generateUuid()}],
+        outputPorts: [{id: generateUuid()}],
+        position: {x: 0, y: 0},
+        ...nodeProps,
+      };
+
+      setNodes([...__.nodes, node]);
+
+      __.bridge?.onUpdateGraph({
+        action: "CREATE_NODE",
+        subject: node,
+        graph: {
+          nodes: [...__.nodes],
+          edges: [...__.edges],
+        },
+      });
+
+      return node;
+    },
+    removeNodeById(id: string) {
+      const edges = __.edgesByNodeIdHash[id] || [];
+      const removedEdgeIds = edges.map(({id}) => id);
+
+      __.selectedNodeIds = __.selectedNodeIds.filter(
+        (selectedNodeId) => selectedNodeId !== id
+      );
+      setEdges(__.edges.filter((edge) => !removedEdgeIds.includes(edge.id)));
+      setNodes(__.nodes.filter((node) => node.id != id));
+
+      __.bridge?.onUpdateGraph({
+        action: "DELETE_NODE",
+        subject: __.nodesByIdHash[id],
+        graph: {
+          nodes: [...__.nodes],
+          edges: [...__.edges],
+        },
+      });
+    },
+    removeNodesByIds(removedNodeIds: string[]) {
+      const removedEdgeIds: string[] = removedNodeIds.reduce(
+        (acc: string[], id: string) => {
+          const edges = __.edgesByNodeIdHash[id] || [];
+          return [...acc, ...edges.map(({id}) => id)];
+        },
+        []
+      );
+
+      __.selectedNodeIds = __.selectedNodeIds.filter(
+        (selectedNodeId) => !removedNodeIds.includes(selectedNodeId)
+      );
+      setEdges(__.edges.filter((edge) => !removedEdgeIds.includes(edge.id)));
+      setNodes(__.nodes.filter((node) => !removedNodeIds.includes(node.id)));
+
+      removedNodeIds.forEach((id) => {
+        __.bridge?.onUpdateGraph({
+          action: "DELETE_NODE",
+          subject: __.nodesByIdHash[id],
+          graph: {
+            nodes: __.nodes,
+            edges: __.edges,
+          },
+        });
+      });
+    },
+    subscribeToNodesChange(fn: Function) {
+      __.subscriptions.nodesChange.addListenerForId("default", fn);
+    },
+    unsubscribeToNodesChange(fn: Function) {
+      __.subscriptions.nodesChange.removeListenerForId("default", fn);
+    },
+    // position
+    set dragManager(dragManager: any) {
+      __.dragManager = dragManager;
+    },
+    handleDragMove(event, dragDelta: Types.Position, dragData: any) {
+      const {selectedNodeIds, dragManager, workspace} = __;
+
+      __.subscriptions.dragDeltaById.notifyIds(selectedNodeIds, dragDelta);
+
+      if (workspace && dragManager?.dragData?.dragType === "port") {
+        const position = workspace.getCanvasPosition(event);
+
+        const x1 = dragData.port.position.x;
+        const y1 = dragData.port.position.y;
+        const x2 = position.x;
+        const y2 = position.y;
+
+        updateDraftEdgePath(x1, y1, x2, y2);
+      }
+    },
+    handleDragEnd(event, dragDelta: Types.Position, dragData: any) {
+      const {selectedNodeIds, subscriptions} = __;
+
+      subscriptions.dragDeltaById.notifyIds(selectedNodeIds, {
+        x: 0,
+        y: 0,
+      });
+
+      if (dragData?.dragType === "node") {
+        selectedNodeIds.forEach((id) => updateNodePositionById(id, dragDelta));
+      }
+      if (dragData?.dragType === "port") {
+        clearDraftEdgePath();
+      }
+    },
+    updateNodePositionById,
+    subscribeToDragDeltaById(id: string, fn: Function) {
+      __.subscriptions.dragDeltaById.addListenerForId(id, fn);
+    },
+    unsubscribeToDragDeltaById(id: string, fn: Function) {
+      __.subscriptions.dragDeltaById.removeListenerForId(id, fn);
+    },
+    subscribeToNodePositionChangeById(id: string, fn: Function) {
+      __.subscriptions.nodePositionChangeById.addListenerForId(id, fn);
+    },
+    unsubscribeToNodePositionChangeById(id: string, fn: Function) {
+      __.subscriptions.nodePositionChangeById.addListenerForId(id, fn);
+    },
+    // selected ids
+    get selectedNodeIds(): string[] {
+      return [...__.selectedNodeIds];
+    },
+    set selectedNodeIds(selectedNodeIds: string[]) {
+      const unselectedNodeIds = __.selectedNodeIds.filter(
+        (id) => !selectedNodeIds.includes(id)
+      );
+      const newSelectedNodeIds = selectedNodeIds.filter(
+        (id) => !__.selectedNodeIds.includes(id)
+      );
+
+      __.selectedNodeIds = [...selectedNodeIds];
+
+      requestAnimationFrame(() => {
+        __.subscriptions.isSelectedById.notifyIds(newSelectedNodeIds, true);
+        __.subscriptions.isSelectedById.notifyIds(unselectedNodeIds, false);
+      });
+    },
+    appendSelectedNodeId(id: string) {
+      if (__.selectedNodeIds.includes(id)) return;
+      const selectedNodeIds = Array.from(new Set([...__.selectedNodeIds, id]));
+
+      __.selectedNodeIds = selectedNodeIds;
+    },
+    appendSelectedNodeIds(appendedNodeIds: string[]) {
+      const selectedNodeIds = Array.from(
+        new Set([...__.selectedNodeIds, ...appendedNodeIds])
+      );
+
+      __.selectedNodeIds = selectedNodeIds;
+    },
+    removeSelectedNodeId(id: string) {
+      if (!__.selectedNodeIds.includes(id)) return;
+      const selectedNodeIds = __.selectedNodeIds.filter(
+        (selectedNodeId) => selectedNodeId !== id
+      );
+
+      __.selectedNodeIds = selectedNodeIds;
+    },
+    removeSelectedNodeIds(unselectedNodeIds: string[]) {
+      const selectedNodeIds = __.selectedNodeIds.filter(
+        (id) => !unselectedNodeIds.includes(id)
+      );
+
+      __.selectedNodeIds = selectedNodeIds;
+    },
+    subscribeToIsSelectedById(id: string, fn: Function) {
+      __.subscriptions.isSelectedById.addListenerForId(id, fn);
+    },
+    unsubscribeToIsSelectedById(id: string, fn: Function) {
+      __.subscriptions.isSelectedById.removeListenerForId(id, fn);
+    },
+    // edges
+    get edges() {
+      return [...__.edges];
+    },
+    set edges(edges: Types.Edge[]) {
+      setEdges(edges);
+    },
+    getEdgeById(id: string): Types.Edge {
+      return {...__.edgesByIdHash[id]};
+    },
+    getEdgesByNodeId(id: string): Types.Edge[] {
+      return __.edgesByNodeIdHash[id] ? [...__.edgesByNodeIdHash[id]] : [];
+    },
+    createEdge(edgeProps: Partial<Types.Edge>): Types.Edge {
+      const edge: Types.Edge = {
+        id: generateUuid(),
+        from: {
+          nodeId: "",
+          portId: "",
+        },
+        to: {
+          nodeId: "",
+          portId: "",
+        },
+        ...edgeProps,
+      };
+
+      setEdges([...__.edges, edge]);
+
+      // trigger render to draw edges
+      updateNodePositionById(edge.from.nodeId, {x: 0, y: 0});
+
+      __.bridge?.onUpdateGraph({
+        action: "CREATE_EDGE",
+        subject: edge,
+        graph: {
+          nodes: [...__.nodes],
+          edges: [...__.edges],
+        },
+      });
+
+      return edge;
+    },
+    removeEdgeById(id: string) {
+      const filter = (edge) => edge.id != id;
+      const {edgesByNodeIdHash} = __;
+      const edge = __.edgesByIdHash[id];
+      const fromNodeEdges = edgesByNodeIdHash[edge.from.nodeId];
+      const toNodeEdges = edgesByNodeIdHash[edge.to.nodeId];
+
+      edgesByNodeIdHash[edge.from.nodeId] = fromNodeEdges.filter(filter);
+      edgesByNodeIdHash[edge.to.nodeId] = toNodeEdges.filter(filter);
+
+      setEdges(__.edges.filter(filter));
+
+      // redraw from and to nodes
+      updateNodePositionById(edge.from.nodeId, {x: 0, y: 0});
+      updateNodePositionById(edge.to.nodeId, {x: 0, y: 0});
+
+      __.bridge?.onUpdateGraph({
+        action: "DELETE_EDGE",
+        subject: edge,
+        graph: {
+          nodes: [...__.nodes],
+          edges: [...__.edges],
+        },
+      });
+    },
+    clearDraftEdgePath,
+    updateDraftEdgePath,
+    subscribeToEdgesChange(id: string, fn: Function) {
+      __.subscriptions.edgesChange.addListenerForId(id, fn);
+    },
+    unsubscribeToEdgesChange(id: string, fn: Function) {
+      __.subscriptions.edgesChange.removeListenerForId(id, fn);
+    },
+  };
 }
 
 interface Props {
@@ -423,7 +420,7 @@ interface Props {
 
 export function GraphManagerProvider(props: Props) {
   const {nodes, edges, children} = props;
-  const graphManager = useMemo(() => new GraphManager({nodes, edges}), []);
+  const graphManager = useMemo(() => createGraphManager({nodes, edges}), []);
   const dragManager = useDragManager();
   const bridge = useBridge();
 
