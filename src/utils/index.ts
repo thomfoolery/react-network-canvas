@@ -1,3 +1,3 @@
-export {isClick} from "./isClick";
-export {Publisher} from "./Publisher";
-export {svgGeneratePath} from "./svgGeneratePath";
+export * from "./isClick";
+export * from "./createPublisher";
+export * from "./svgGeneratePath";

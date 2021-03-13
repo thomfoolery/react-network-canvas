@@ -6,7 +6,7 @@ import React, {
   ReactNode,
 } from "react";
 
-import {Publisher, svgGeneratePath} from "@component/utils";
+import {createPublisher, svgGeneratePath} from "@component/utils";
 import {useDragManager, useBridge} from "@component/hooks";
 import {DRAFT_EDGE_ID} from "@component/constants";
 import * as Types from "@component/types";
@@ -52,11 +52,11 @@ interface GraphManagerPrivateProps {
   dragManager?: any;
   workspace?: Types.Workspace;
   subscriptions: {
-    nodePositionChangeById: Publisher;
-    isSelectedById: Publisher;
-    dragDeltaById: Publisher;
-    nodesChange: Publisher;
-    edgesChange: Publisher;
+    nodePositionChangeById: Types.Publisher;
+    isSelectedById: Types.Publisher;
+    dragDeltaById: Types.Publisher;
+    nodesChange: Types.Publisher;
+    edgesChange: Types.Publisher;
   };
 }
 
@@ -76,11 +76,11 @@ function createGraphManager({nodes = [], edges = []}: GraphManagerArguments) {
     workspace: undefined,
     dragManager: undefined,
     subscriptions: {
-      nodePositionChangeById: new Publisher(),
-      isSelectedById: new Publisher(),
-      dragDeltaById: new Publisher(),
-      nodesChange: new Publisher(),
-      edgesChange: new Publisher(),
+      nodePositionChangeById: createPublisher(),
+      isSelectedById: createPublisher(),
+      dragDeltaById: createPublisher(),
+      nodesChange: createPublisher(),
+      edgesChange: createPublisher(),
     },
   };
 
@@ -122,8 +122,6 @@ function createGraphManager({nodes = [], edges = []}: GraphManagerArguments) {
     svgPath?.setAttribute("d", path);
     svgPath?.nextElementSibling?.setAttribute("d", path);
   }
-  // this.handleDragMove = this.handleDragMove.bind(this);
-  // this.handleDragEnd = this.handleDragEnd.bind(this);
 
   return {
     // bridge

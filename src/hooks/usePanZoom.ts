@@ -1,5 +1,5 @@
 import {useRef, useState, useEffect, useCallback} from "react";
-import {useDragManager, useBridge} from "@component/hooks";
+import {useDragManager} from "@component/hooks";
 
 interface Options {
   minZoom: number;
@@ -9,6 +9,7 @@ interface Options {
   zoomWheelKey?: "Shift" | "Control" | "Meta" | "Alt";
   zoomSensitivity: number;
   startAtCanvasCenter: boolean;
+  onChangeZoom?(zoom: number): void;
 }
 
 export function usePanZoom(options: Options) {
@@ -20,10 +21,10 @@ export function usePanZoom(options: Options) {
     zoomWheelKey,
     zoomSensitivity,
     startAtCanvasCenter,
+    onChangeZoom = () => undefined,
   } = options;
 
   const dragManager = useDragManager();
-  const bridge = useBridge();
 
   const [transform, setTransform] = useState({x: 0, y: 0, zoom: 1});
   const [container, setContainer] = useState();
@@ -71,7 +72,7 @@ export function usePanZoom(options: Options) {
 
         let {minX, minY, maxX, maxY} = boundaryRef.current;
 
-        requestAnimationFrame(() => bridge.onChangeZoom(clampedZoom));
+        requestAnimationFrame(() => onChangeZoom(clampedZoom));
 
         return {
           x: clamp(
@@ -99,7 +100,11 @@ export function usePanZoom(options: Options) {
         canvasMargin,
         panZoomRef.current.zoom
       );
+    }
+  }, [container, canvasSize, canvasMargin]);
 
+  useEffect(() => {
+    if (container) {
       let dragStartPosition;
 
       function handleDragStart() {
@@ -118,6 +123,18 @@ export function usePanZoom(options: Options) {
         }
       }
 
+      dragManager.subscribeToDragStart("panZoom", handleDragStart);
+      dragManager.subscribeToDragMove("panZoom", handleDragMove);
+
+      return () => {
+        dragManager.unsubscribeToDragStart("panZoom", handleDragStart);
+        dragManager.unsubscribeToDragMove("panZoom", handleDragMove);
+      };
+    }
+  }, [container, canvasSize, canvasMargin, setTransform]);
+
+  useEffect(() => {
+    if (container) {
       function onWheel(event) {
         event.preventDefault();
 
@@ -141,19 +158,6 @@ export function usePanZoom(options: Options) {
         }
       }
 
-      function onGesture(event) {
-        event.preventDefault();
-      }
-
-      function handleResizeWindow() {
-        boundaryRef.current = calculateBoundary(
-          container,
-          canvasSize,
-          canvasMargin,
-          panZoomRef.current.zoom
-        );
-      }
-
       if (startAtCanvasCenter) {
         setTransform((transform) => ({
           ...transform,
@@ -163,28 +167,47 @@ export function usePanZoom(options: Options) {
       }
 
       container.addEventListener("wheel", onWheel);
+
+      return () => {
+        container.removeEventListener("wheel", onWheel);
+      };
+    }
+  }, [container, workspace, canvasSize, canvasMargin, setZoom, setTransform]);
+
+  useEffect(() => {
+    if (container) {
+      function onGesture(event) {
+        event.preventDefault();
+      }
+
       container.addEventListener("gesturestart", onGesture);
       container.addEventListener("gesturechange", onGesture);
       container.addEventListener("gestureend", onGesture);
 
-      window.addEventListener("resize", handleResizeWindow);
-
-      dragManager.subscribeToDragStart("panZoom", handleDragStart);
-      dragManager.subscribeToDragMove("panZoom", handleDragMove);
-
       return () => {
-        container.removeEventListener("wheel", onWheel);
         container.removeEventListener("gesturestart", onGesture);
         container.removeEventListener("gesturechange", onGesture);
         container.removeEventListener("gestureend", onGesture);
-
-        window.removeEventListener("resize", handleResizeWindow);
-
-        dragManager.unsubscribeToDragStart("panZoom", handleDragStart);
-        dragManager.unsubscribeToDragMove("panZoom", handleDragMove);
       };
     }
-  }, [container, workspace, canvasSize, canvasMargin, setZoom, setTransform]);
+  }, [container]);
+
+  useEffect(() => {
+    function handleResizeWindow() {
+      boundaryRef.current = calculateBoundary(
+        container,
+        canvasSize,
+        canvasMargin,
+        panZoomRef.current.zoom
+      );
+    }
+
+    window.addEventListener("resize", handleResizeWindow);
+
+    return () => {
+      window.removeEventListener("resize", handleResizeWindow);
+    };
+  }, [container, canvasSize, canvasMargin]);
 
   useEffect(() => {
     if (zoomWheelKey) {

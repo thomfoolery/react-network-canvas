@@ -5,7 +5,7 @@ import React, {
   useContext,
   ReactNode,
 } from "react";
-import {Publisher} from "@component/utils";
+import {createPublisher} from "@component/utils";
 import * as Types from "@component/types";
 
 const Context = createContext();
@@ -29,9 +29,9 @@ function createDragManager() {
     dragStartPosition: null,
     workspace: undefined,
     subscriptions: {
-      dragStartById: new Publisher(),
-      dragMoveById: new Publisher(),
-      dragEndById: new Publisher(),
+      dragStartById: createPublisher(),
+      dragMoveById: createPublisher(),
+      dragEndById: createPublisher(),
     },
   };
 

@@ -33,6 +33,10 @@ function Workspace(props: Props) {
   const workspaceDivRef = useRef();
   const isShiftKeyDownRef = useRef(false);
 
+  const onChangeZoom = useCallback((zoom) => bridge.onChangeZoom(zoom), [
+    bridge,
+  ]);
+
   const {
     setPan,
     setZoom,
@@ -48,6 +52,7 @@ function Workspace(props: Props) {
     zoomWheelKey,
     zoomSensitivity,
     startAtCanvasCenter,
+    onChangeZoom,
   });
 
   const workspace: Types.Workspace = useMemo(() => {
