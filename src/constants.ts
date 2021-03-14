@@ -1,4 +1,8 @@
-import {v1 as generateUuid} from "uuid";
+import * as Types from "@component/types";
+import {
+  Node as NodeComponent,
+  Port as PortComponent,
+} from "@component/components";
 
 const DRAFT_EDGE_ID = "cc77e2e0-598e-4cb0-813c-516666955e42";
 
@@ -29,9 +33,19 @@ const DEFAULT_THEME = {
   },
 };
 
-const DEFAULT_OPTIONS = {
+const DEFAULT_OPTIONS: Types.Options = {
   gridSize: 10,
   canvasSize: 2000,
+  isRoundToGridEnabled: false,
+  startAtCanvasCenter: true,
+  canvasMargin: 50,
+  zoomSensitivity: 0.001,
+  zoomWheelKey: undefined,
+  selectBoxKey: "Shift",
+  maxZoom: Infinity,
+  minZoom: 0,
+  NodeComponent,
+  PortComponent,
 };
 
 export {DRAFT_EDGE_ID, DEFAULT_THEME, DEFAULT_OPTIONS};

@@ -1,47 +1,15 @@
-import React, {
-  useMemo,
-  useContext,
-  createContext,
-  ReactNode,
-  ReactComponent,
-} from "react";
-import {
-  Node as NodeComponent,
-  Port as PortComponent,
-} from "@component/components";
+import React, {useContext, createContext, ReactNode} from "react";
+import {DEFAULT_OPTIONS} from "@component/constants";
+import * as Types from "@component/types";
 
 const Context = createContext();
 
-interface Options {
-  startAtCanvasCenter: boolean;
-  canvasMargin: number;
-  zoomSensitivity: number;
-  selectBoxKey?: "Shift" | "Control" | "Alt" | "Meta";
-  zoomWheelKey?: "Shift" | "Control" | "Alt" | "Meta";
-  maxZoom: number;
-  minZoom: number;
-  NodeComponent: ReactComponent;
-  PortComponent: ReactComponent;
-}
-
-const DEFAULT_OPTIONS: Options = {
-  startAtCanvasCenter: true,
-  canvasMargin: 50,
-  zoomSensitivity: 0.001,
-  zoomWheelKey: undefined,
-  selectBoxKey: "Shift",
-  maxZoom: Infinity,
-  minZoom: 0,
-  NodeComponent,
-  PortComponent,
-};
-
 interface Props {
-  value?: Partial<Options>;
+  value?: Partial<Types.Options>;
   children?: ReactNode;
 }
 
-function createOptions(value: Partial<Options> = {}) {
+function createOptions(value: Partial<Types.Options> = {}): Types.Options {
   return {
     ...DEFAULT_OPTIONS,
     ...value,
@@ -50,9 +18,8 @@ function createOptions(value: Partial<Options> = {}) {
 
 function OptionsProvider(props: Props) {
   const {value, children} = props;
-  const options: Options = useMemo(() => createOptions(value), [value]);
 
-  return <Context.Provider value={options}>{children}</Context.Provider>;
+  return <Context.Provider value={value}>{children}</Context.Provider>;
 }
 
 function useOptions() {

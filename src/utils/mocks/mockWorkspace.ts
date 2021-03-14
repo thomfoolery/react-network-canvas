@@ -1,6 +1,6 @@
 import {createWorkspace} from "@component/hooks/useWorkspace";
 
-function useWorkspaceMock() {
+function mockWorkspace() {
   return createWorkspace({
     panZoomRef: {
       current: {},
@@ -16,4 +16,4 @@ function useWorkspaceMock() {
   });
 }
 
-export {useWorkspaceMock};
+export {mockWorkspace};

@@ -1,7 +1,7 @@
 import {createDragManager} from "@component/hooks/useDragManager";
 
-function useDragManagerMock() {
+function mockDragManager() {
   return createDragManager();
 }
 
-export {useDragManagerMock};
+export {mockDragManager};

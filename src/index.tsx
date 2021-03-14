@@ -1,22 +1,19 @@
-import React from "react";
+import React, {useMemo} from "react";
 import * as Types from "@component/types";
 import {Root} from "@component/containers";
-import {DEFAULT_OPTIONS} from "@component/constants";
+import {createOptions} from "@component/hooks";
 
 interface Props {
-  nodes: any[];
-  edges: any[];
-  theme?: any;
-  options?: any;
+  nodes: Types.Node[];
+  edges: Types.Edge[];
   bridge?: Types.Bridge;
+  options?: any;
+  theme?: any;
 }
 
 function NodeCanvas(props: Props) {
-  const {nodes, edges, bridge, theme = {}, options = {}} = props;
-  const mergedOptions = {
-    ...DEFAULT_OPTIONS,
-    ...options,
-  };
+  const {nodes = [], edges = [], bridge, theme = {}, options = {}} = props;
+  const mergedOptions = useMemo(() => createOptions(options), [options]);
 
   return (
     <Root

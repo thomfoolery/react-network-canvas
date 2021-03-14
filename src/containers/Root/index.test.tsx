@@ -1,5 +1,7 @@
 import React from "react";
 import renderer from "react-test-renderer";
+import {createOptions} from "@component/hooks";
+
 import {Root} from "./index";
 
 it("renders correctly", () => {
@@ -36,7 +38,10 @@ it("renders correctly", () => {
       },
     },
   ];
-  const tree = renderer.create(<Root nodes={nodes} edges={edges} />).toJSON();
+  const options = createOptions();
+  const tree = renderer
+    .create(<Root nodes={nodes} edges={edges} options={options} />)
+    .toJSON();
 
   expect(tree).toMatchSnapshot();
 });

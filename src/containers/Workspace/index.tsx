@@ -89,11 +89,9 @@ function Workspace(props: Props) {
   useEffect(() => setWorkspace(workspace), [workspace, setWorkspace]);
 
   useEffect(() => {
-    graphManager.dragManager = dragManager;
     graphManager.workspace = workspace;
     dragManager.workspace = workspace;
-    graphManager.bridge = bridge;
-  }, [graphManager, dragManager, workspace, bridge]);
+  }, [graphManager, workspace]);
 
   useEffect(() => {
     function handleKeyUp(event) {

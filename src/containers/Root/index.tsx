@@ -7,16 +7,25 @@ import {
   OptionsProvider,
   BridgeProvider,
 } from "@component/hooks";
+import * as Types from "@component/types";
 
 import styles from "./styles.module.css";
 
-function Root(props) {
-  const {nodes, edges, bridge, theme = {}, options = {}} = props;
+interface Props {
+  nodes: Types.Node[];
+  edges: Types.Edge[];
+  options: Partial<Types.Options>;
+  bridge?: Types.Bridge;
+  theme?: any;
+}
+
+function Root(props: Props) {
+  const {nodes, edges, bridge, options = {}, theme = {}} = props;
   const containerRef = useRef();
 
   const {gridSize, canvasSize} = options;
 
-  const style = {
+  const cssVars = {
     ...themeToCssVars({
       ...theme,
       gridSize: `${gridSize}px`,
@@ -28,7 +37,7 @@ function Root(props) {
     <OptionsProvider value={options}>
       <BridgeProvider value={bridge}>
         <DragManagerProvider>
-          <div style={style} ref={containerRef} className={styles.NodeCanvas}>
+          <div style={cssVars} ref={containerRef} className={styles.NodeCanvas}>
             <GraphManagerProvider nodes={nodes} edges={edges}>
               <Workspace />
             </GraphManagerProvider>

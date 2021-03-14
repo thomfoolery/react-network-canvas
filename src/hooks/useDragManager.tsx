@@ -141,8 +141,8 @@ function DragManagerProvider(props: Props) {
   return (
     <Context.Provider value={dragManager}>
       <div
-        ref={containerRef}
         style={style}
+        ref={containerRef}
         onMouseUp={dragManager.handleDragEnd}
         onMouseLeave={dragManager.handleDragEnd}
         onMouseDown={dragManager.handleDragStart}

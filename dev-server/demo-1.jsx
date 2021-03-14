@@ -80,8 +80,10 @@ function App() {
   };
 
   const options = {
+    gridSize: 20,
     zoomWheelKey: "Meta",
     selectBoxKey: "Meta",
+    isRoundToGridEnabled: true,
   };
 
   return (

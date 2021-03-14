@@ -1,11 +1,11 @@
 import React from "react";
 import renderer from "react-test-renderer";
 import {
-  useDragManagerMock,
-  useGraphManagerMock,
-  useWorkspaceMock,
-  useOptionsMock,
-  useBridgeMock,
+  mockDragManager,
+  mockGraphManager,
+  mockWorkspace,
+  mockOptions,
+  mockBridge,
 } from "@component/utils/mocks";
 import {
   useDragManager,
@@ -25,11 +25,11 @@ jest.mock("@component/hooks", () => ({
   useBridge: jest.fn(),
 }));
 
-useDragManager.mockImplementation(() => useDragManagerMock());
-useGraphManager.mockImplementation(() => useGraphManagerMock());
-useWorkspace.mockImplementation(() => useWorkspaceMock());
-useOptions.mockImplementation(() => useOptionsMock());
-useBridge.mockImplementation(() => useBridgeMock());
+useDragManager.mockImplementation(() => mockDragManager());
+useGraphManager.mockImplementation(() => mockGraphManager());
+useWorkspace.mockImplementation(() => mockWorkspace());
+useOptions.mockImplementation(() => mockOptions());
+useBridge.mockImplementation(() => mockBridge());
 
 describe("Node", () => {
   it("renders correctly", () => {

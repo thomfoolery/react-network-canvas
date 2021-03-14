@@ -6,8 +6,8 @@ import React, {
   ReactNode,
 } from "react";
 
-import {createPublisher, svgGeneratePath} from "@component/utils";
-import {useDragManager, useBridge} from "@component/hooks";
+import {createPublisher, svgGeneratePath, roundToGrid} from "@component/utils";
+import {useDragManager, useBridge, useOptions} from "@component/hooks";
 import {DRAFT_EDGE_ID} from "@component/constants";
 import * as Types from "@component/types";
 
@@ -49,6 +49,7 @@ interface GraphManagerPrivateProps {
   edgesByNodeIdHash: {[id: string]: Types.Edge[]};
   selectedNodeIds: string[];
   bridge?: Types.Bridge;
+  options: Types.Options;
   dragManager?: any;
   workspace?: Types.Workspace;
   subscriptions: {
@@ -61,14 +62,20 @@ interface GraphManagerPrivateProps {
 }
 
 interface GraphManagerArguments {
+  options: Types.Options;
   nodes?: Types.Node[];
   edges?: Types.Edge[];
+  bridge?: Types.Bridge;
+  dragManager?: any;
 }
 
 function createGraphManager({
+  options,
   nodes = [],
   edges = [],
-}: GraphManagerArguments = {}) {
+  bridge,
+  dragManager,
+}: GraphManagerArguments) {
   const __: GraphManagerPrivateProps = {
     nodes,
     edges,
@@ -76,9 +83,10 @@ function createGraphManager({
     edgesByIdHash: {},
     edgesByNodeIdHash: {},
     selectedNodeIds: [],
-    bridge: undefined,
+    bridge,
+    options,
+    dragManager,
     workspace: undefined,
-    dragManager: undefined,
     subscriptions: {
       nodePositionChangeById: createPublisher(),
       isSelectedById: createPublisher(),
@@ -118,11 +126,20 @@ function createGraphManager({
   }
 
   function updateNodePositionById(id: string, dragDelta: Types.Position) {
+    const {isRoundToGridEnabled} = options;
     const node = __.nodesByIdHash[id];
-    const position = {
-      x: node.position.x + dragDelta.x,
-      y: node.position.y + dragDelta.y,
-    };
+    const position = isRoundToGridEnabled
+      ? roundToGrid(
+          {
+            x: node.position.x + dragDelta.x,
+            y: node.position.y + dragDelta.y,
+          },
+          options.gridSize
+        )
+      : {
+          x: node.position.x + dragDelta.x,
+          y: node.position.y + dragDelta.y,
+        };
 
     node.position = position;
     __.subscriptions.nodePositionChangeById.notifyIds([id], position);
@@ -178,12 +195,17 @@ function createGraphManager({
       return {from: undefined, to: undefined};
     },
     createNode(nodeProps: Partial<Types.Node>): Types.Node {
+      const {isRoundToGridEnabled, gridSize} = options;
+      const position = isRoundToGridEnabled
+        ? roundToGrid(nodeProps.position || {x: 0, y: 0}, gridSize)
+        : nodeProps.position || {x: 0, y: 0};
+
       const node = {
         id: generateUuid(),
         inputPorts: [{id: generateUuid()}],
         outputPorts: [{id: generateUuid()}],
-        position: {x: 0, y: 0},
         ...nodeProps,
+        position,
       };
 
       setNodes([...__.nodes, node]);
@@ -430,9 +452,14 @@ interface Props {
 
 function GraphManagerProvider(props: Props) {
   const {nodes, edges, children} = props;
-  const graphManager = useMemo(() => createGraphManager({nodes, edges}), []);
   const dragManager = useDragManager();
+  const options = useOptions();
   const bridge = useBridge();
+
+  const graphManager = useMemo(
+    () => createGraphManager({options, nodes, edges, bridge, dragManager}),
+    []
+  );
 
   useEffect(() => {
     const id = "graphManager";

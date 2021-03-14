@@ -1,7 +1,7 @@
 import {createBridge} from "@component/hooks/useBridge";
 
-function useBridgeMock() {
+function mockBridge() {
   return createBridge();
 }
 
-export {useBridgeMock};
+export {mockBridge};

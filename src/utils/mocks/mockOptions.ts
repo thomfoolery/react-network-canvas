@@ -1,7 +1,7 @@
 import {createOptions} from "@component/hooks/useOptions";
 
-function useOptionsMock() {
+function mockOptions() {
   return createOptions();
 }
 
-export {useOptionsMock};
+export {mockOptions};
