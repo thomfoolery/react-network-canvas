@@ -2,7 +2,7 @@
 
 exports[`Node renders correctly 1`] = `
 <div
-  className=""
+  className="Node"
   id="Node-node-1"
   style={
     Object {
@@ -11,19 +11,28 @@ exports[`Node renders correctly 1`] = `
     }
   }
 >
-  <div>
+  <div
+    className="NodeInputPorts"
+  >
     <div
+      className="Port Input"
+      data-testid="node-1-input-1"
       id="Port-node-1-input-1"
       onMouseDown={[Function]}
       onMouseUp={[Function]}
     />
   </div>
   <div
+    className="NodeBody"
     onMouseDown={[Function]}
     onMouseUp={[Function]}
   />
-  <div>
+  <div
+    className="NodeOutputPorts"
+  >
     <div
+      className="Port Output"
+      data-testid="node-1-output-1"
       id="Port-node-1-output-1"
       onMouseDown={[Function]}
       onMouseUp={[Function]}

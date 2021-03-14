@@ -26,6 +26,7 @@ function Port(props: Props) {
       onMouseUp={onMouseUp}
       onMouseDown={onMouseDown}
       className={className}
+      data-testid={`${port.id}`}
     ></div>
   );
 }

@@ -17,13 +17,15 @@ function Edge(props: Props) {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = useCallback(() => {
-    if (isDraft) return;
-    graphManager.removeEdgeById(edge.id);
+    if (!isDraft) {
+      graphManager.removeEdgeById(edge.id);
+    }
   }, [isDraft, graphManager]);
 
   const handleMouseDown = useCallback(() => {
-    if (isDraft) return;
-    graphManager.selectedNodeIds = [];
+    if (!isDraft) {
+      graphManager.selectedNodeIds = [];
+    }
   }, [isDraft]);
 
   const handleMouseEnter = useCallback(() => {
@@ -50,6 +52,7 @@ function Edge(props: Props) {
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      data-testid={`${edge.id}`}
     >
       <path id={`Edge-${edge.id}`} className={styles.Edge} />
       <path className={styles.EdgeArea} />

@@ -2,14 +2,18 @@
 
 exports[`Edge renders correctly 1`] = `
 <g
+  data-testid="edge-1"
   onClick={[Function]}
   onMouseDown={[Function]}
   onMouseEnter={[Function]}
   onMouseLeave={[Function]}
 >
   <path
+    className="Edge"
     id="Edge-edge-1"
   />
-  <path />
+  <path
+    className="EdgeArea"
+  />
 </g>
 `;

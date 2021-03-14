@@ -1,10 +1,10 @@
 import React from "react";
 import renderer from "react-test-renderer";
 import {
-  mockDragManager,
-  mockGraphManager,
-  mockWorkspace,
-  mockBridge,
+  mockUseDragManager,
+  mockUseGraphManager,
+  mockUseWorkspace,
+  mockUseBridge,
 } from "@component/utils/mocks";
 import {
   useDragManager,
@@ -16,16 +16,17 @@ import {
 import {CanvasBackground} from "./index";
 
 jest.mock("@component/hooks", () => ({
+  ...jest.requireActual("@component/hooks"),
   useDragManager: jest.fn(),
   useGraphManager: jest.fn(),
   useWorkspace: jest.fn(),
   useBridge: jest.fn(),
 }));
 
-useDragManager.mockImplementation(() => mockDragManager());
-useGraphManager.mockImplementation(() => mockGraphManager());
-useWorkspace.mockImplementation(() => mockWorkspace());
-useBridge.mockImplementation(() => mockBridge());
+useDragManager.mockImplementation(mockUseDragManager());
+useGraphManager.mockImplementation(mockUseGraphManager());
+useWorkspace.mockImplementation(mockUseWorkspace());
+useBridge.mockImplementation(mockUseBridge());
 
 describe("CanvasBackground", () => {
   it("renders correctly", () => {

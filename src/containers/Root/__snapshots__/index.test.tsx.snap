@@ -13,6 +13,7 @@ exports[`renders correctly 1`] = `
   }
 >
   <div
+    className="NodeCanvas"
     style={
       Object {
         "--NC-canvas-background-color": "white",
@@ -34,9 +35,11 @@ exports[`renders correctly 1`] = `
     }
   >
     <div
+      className="Workspace"
       onMouseDown={[Function]}
     >
       <div
+        className="Canvas"
         onClick={[Function]}
         onMouseDown={[Function]}
         style={
@@ -45,37 +48,49 @@ exports[`renders correctly 1`] = `
           }
         }
       >
-        <div />
+        <div
+          className="SelectBox"
+        />
         <svg
+          className="CanvasBackground"
           onMouseDown={[Function]}
           onMouseUp={[Function]}
           xmlns="http://www.w3.org/2000/svg"
         >
           <g
+            data-testid="edge-1"
             onClick={[Function]}
             onMouseDown={[Function]}
             onMouseEnter={[Function]}
             onMouseLeave={[Function]}
           >
             <path
+              className="Edge"
               id="Edge-edge-1"
             />
-            <path />
+            <path
+              className="EdgeArea"
+            />
           </g>
           <g
+            className="isDraft"
+            data-testid="cc77e2e0-598e-4cb0-813c-516666955e42"
             onClick={[Function]}
             onMouseDown={[Function]}
             onMouseEnter={[Function]}
             onMouseLeave={[Function]}
           >
             <path
+              className="Edge"
               id="Edge-cc77e2e0-598e-4cb0-813c-516666955e42"
             />
-            <path />
+            <path
+              className="EdgeArea"
+            />
           </g>
         </svg>
         <div
-          className=""
+          className="Node"
           id="Node-node-1"
           style={
             Object {
@@ -84,19 +99,28 @@ exports[`renders correctly 1`] = `
             }
           }
         >
-          <div>
+          <div
+            className="NodeInputPorts"
+          >
             <div
+              className="Port Input"
+              data-testid="node-1-input-1"
               id="Port-node-1-input-1"
               onMouseDown={[Function]}
               onMouseUp={[Function]}
             />
           </div>
           <div
+            className="NodeBody"
             onMouseDown={[Function]}
             onMouseUp={[Function]}
           />
-          <div>
+          <div
+            className="NodeOutputPorts"
+          >
             <div
+              className="Port Output"
+              data-testid="node-1-output-1"
               id="Port-node-1-output-1"
               onMouseDown={[Function]}
               onMouseUp={[Function]}
@@ -104,7 +128,7 @@ exports[`renders correctly 1`] = `
           </div>
         </div>
         <div
-          className=""
+          className="Node"
           id="Node-node-2"
           style={
             Object {
@@ -113,19 +137,28 @@ exports[`renders correctly 1`] = `
             }
           }
         >
-          <div>
+          <div
+            className="NodeInputPorts"
+          >
             <div
+              className="Port Input"
+              data-testid="node-2-input-1"
               id="Port-node-2-input-1"
               onMouseDown={[Function]}
               onMouseUp={[Function]}
             />
           </div>
           <div
+            className="NodeBody"
             onMouseDown={[Function]}
             onMouseUp={[Function]}
           />
-          <div>
+          <div
+            className="NodeOutputPorts"
+          >
             <div
+              className="Port Output"
+              data-testid="node-2-output-1"
               id="Port-node-2-output-1"
               onMouseDown={[Function]}
               onMouseUp={[Function]}

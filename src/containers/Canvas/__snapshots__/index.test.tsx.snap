@@ -2,6 +2,7 @@
 
 exports[`Canvas renders correctly 1`] = `
 <div
+  className="Canvas"
   onClick={[Function]}
   onMouseDown={[Function]}
   style={
@@ -10,22 +11,30 @@ exports[`Canvas renders correctly 1`] = `
     }
   }
 >
-  <div />
+  <div
+    className="SelectBox"
+  />
   <svg
+    className="CanvasBackground"
     onMouseDown={[Function]}
     onMouseUp={[Function]}
     xmlns="http://www.w3.org/2000/svg"
   >
     <g
+      className="isDraft"
+      data-testid="cc77e2e0-598e-4cb0-813c-516666955e42"
       onClick={[Function]}
       onMouseDown={[Function]}
       onMouseEnter={[Function]}
       onMouseLeave={[Function]}
     >
       <path
+        className="Edge"
         id="Edge-cc77e2e0-598e-4cb0-813c-516666955e42"
       />
-      <path />
+      <path
+        className="EdgeArea"
+      />
     </g>
   </svg>
 </div>

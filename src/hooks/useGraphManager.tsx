@@ -7,7 +7,12 @@ import React, {
 } from "react";
 
 import {createPublisher, svgGeneratePath, roundToGrid} from "@component/utils";
-import {useDragManager, useBridge, useOptions} from "@component/hooks";
+import {
+  createOptions,
+  useDragManager,
+  useOptions,
+  useBridge,
+} from "@component/hooks";
 import {DRAFT_EDGE_ID} from "@component/constants";
 import * as Types from "@component/types";
 
@@ -62,7 +67,7 @@ interface GraphManagerPrivateProps {
 }
 
 interface GraphManagerArguments {
-  options: Types.Options;
+  options?: Types.Options;
   nodes?: Types.Node[];
   edges?: Types.Edge[];
   bridge?: Types.Bridge;
@@ -70,12 +75,12 @@ interface GraphManagerArguments {
 }
 
 function createGraphManager({
-  options,
+  options = createOptions(),
   nodes = [],
   edges = [],
   bridge,
   dragManager,
-}: GraphManagerArguments) {
+}: GraphManagerArguments = {}) {
   const __: GraphManagerPrivateProps = {
     nodes,
     edges,

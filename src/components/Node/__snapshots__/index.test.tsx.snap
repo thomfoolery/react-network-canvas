@@ -2,7 +2,7 @@
 
 exports[`Node renders correctly 1`] = `
 <div
-  className=""
+  className="Node"
   id="Node-node-1"
   style={
     Object {
@@ -11,11 +11,16 @@ exports[`Node renders correctly 1`] = `
     }
   }
 >
-  <div />
   <div
+    className="NodeInputPorts"
+  />
+  <div
+    className="NodeBody"
     onMouseDown={[Function]}
     onMouseUp={[Function]}
   />
-  <div />
+  <div
+    className="NodeOutputPorts"
+  />
 </div>
 `;
