@@ -101,6 +101,22 @@ function createGraphManager({
     __.subscriptions.edgesChange.notifyAll(__.edges);
   }
 
+  function setSelectedNodeIds(selectedNodeIds: string[]) {
+    const unselectedNodeIds = __.selectedNodeIds.filter(
+      (id) => !selectedNodeIds.includes(id)
+    );
+    const newSelectedNodeIds = selectedNodeIds.filter(
+      (id) => !__.selectedNodeIds.includes(id)
+    );
+
+    __.selectedNodeIds = [...selectedNodeIds];
+
+    requestAnimationFrame(() => {
+      __.subscriptions.isSelectedById.notifyIds(newSelectedNodeIds, true);
+      __.subscriptions.isSelectedById.notifyIds(unselectedNodeIds, false);
+    });
+  }
+
   function updateNodePositionById(id: string, dragDelta: Types.Position) {
     const node = __.nodesByIdHash[id];
     const position = {
@@ -187,8 +203,8 @@ function createGraphManager({
       const edges = __.edgesByNodeIdHash[id] || [];
       const removedEdgeIds = edges.map(({id}) => id);
 
-      __.selectedNodeIds = __.selectedNodeIds.filter(
-        (selectedNodeId) => selectedNodeId !== id
+      setSelectedNodeIds(
+        __.selectedNodeIds.filter((selectedNodeId) => selectedNodeId !== id)
       );
       setEdges(__.edges.filter((edge) => !removedEdgeIds.includes(edge.id)));
       setNodes(__.nodes.filter((node) => node.id != id));
@@ -211,8 +227,10 @@ function createGraphManager({
         []
       );
 
-      __.selectedNodeIds = __.selectedNodeIds.filter(
-        (selectedNodeId) => !removedNodeIds.includes(selectedNodeId)
+      setSelectedNodeIds(
+        __.selectedNodeIds.filter(
+          (selectedNodeId) => !removedNodeIds.includes(selectedNodeId)
+        )
       );
       setEdges(__.edges.filter((edge) => !removedEdgeIds.includes(edge.id)));
       setNodes(__.nodes.filter((node) => !removedNodeIds.includes(node.id)));
@@ -241,7 +259,9 @@ function createGraphManager({
     handleDragMove(event, dragDelta: Types.Position, dragData: any) {
       const {selectedNodeIds, dragManager, workspace} = __;
 
-      __.subscriptions.dragDeltaById.notifyIds(selectedNodeIds, dragDelta);
+      if (dragManager?.dragData?.dragType === "node") {
+        __.subscriptions.dragDeltaById.notifyIds(selectedNodeIds, dragDelta);
+      }
 
       if (workspace && dragManager?.dragData?.dragType === "port") {
         const position = workspace.getCanvasPosition(event);
@@ -287,32 +307,20 @@ function createGraphManager({
       return [...__.selectedNodeIds];
     },
     set selectedNodeIds(selectedNodeIds: string[]) {
-      const unselectedNodeIds = __.selectedNodeIds.filter(
-        (id) => !selectedNodeIds.includes(id)
-      );
-      const newSelectedNodeIds = selectedNodeIds.filter(
-        (id) => !__.selectedNodeIds.includes(id)
-      );
-
-      __.selectedNodeIds = [...selectedNodeIds];
-
-      requestAnimationFrame(() => {
-        __.subscriptions.isSelectedById.notifyIds(newSelectedNodeIds, true);
-        __.subscriptions.isSelectedById.notifyIds(unselectedNodeIds, false);
-      });
+      setSelectedNodeIds(selectedNodeIds);
     },
     appendSelectedNodeId(id: string) {
       if (__.selectedNodeIds.includes(id)) return;
       const selectedNodeIds = Array.from(new Set([...__.selectedNodeIds, id]));
 
-      __.selectedNodeIds = selectedNodeIds;
+      setSelectedNodeIds(selectedNodeIds);
     },
     appendSelectedNodeIds(appendedNodeIds: string[]) {
       const selectedNodeIds = Array.from(
         new Set([...__.selectedNodeIds, ...appendedNodeIds])
       );
 
-      __.selectedNodeIds = selectedNodeIds;
+      setSelectedNodeIds(selectedNodeIds);
     },
     removeSelectedNodeId(id: string) {
       if (!__.selectedNodeIds.includes(id)) return;
@@ -320,14 +328,14 @@ function createGraphManager({
         (selectedNodeId) => selectedNodeId !== id
       );
 
-      __.selectedNodeIds = selectedNodeIds;
+      setSelectedNodeIds(selectedNodeIds);
     },
     removeSelectedNodeIds(unselectedNodeIds: string[]) {
       const selectedNodeIds = __.selectedNodeIds.filter(
         (id) => !unselectedNodeIds.includes(id)
       );
 
-      __.selectedNodeIds = selectedNodeIds;
+      setSelectedNodeIds(selectedNodeIds);
     },
     subscribeToIsSelectedById(id: string, fn: Function) {
       __.subscriptions.isSelectedById.addListenerForId(id, fn);

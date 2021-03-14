@@ -51,7 +51,6 @@ function Component(props: CanvasBackgroundProps) {
     (event) => {
       if (event.target === containerRef.current) {
         dragManager.dragData = {type: "panzoom"};
-        graphManager.selectedNodeIds = [];
       }
     },
     [dragManager, graphManager, containerRef]
@@ -60,6 +59,11 @@ function Component(props: CanvasBackgroundProps) {
   const handleMouseUp = useCallback(
     (event) => {
       if (
+        event.target === containerRef.current &&
+        graphManager.selectedNodeIds.length > 0
+      ) {
+        graphManager.selectedNodeIds = [];
+      } else if (
         isClick(dragManager.dragDelta) &&
         containerRef.current === event.target
       ) {
@@ -68,7 +72,7 @@ function Component(props: CanvasBackgroundProps) {
         bridge.onClickCanvas(event, position, graphManager);
       }
     },
-    [bridge, dragManager, workspace, containerRef]
+    [bridge, workspace, dragManager, graphManager, containerRef]
   );
 
   useEffect(() => {
