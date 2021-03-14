@@ -16,9 +16,9 @@ interface DragManagerPrivateProps {
   dragStartPosition: Types.Position | null;
   workspace?: Types.Workspace;
   subscriptions: {
-    dragStartById: Publisher;
-    dragMoveById: Publisher;
-    dragEndById: Publisher;
+    dragStartById: Types.Publisher;
+    dragMoveById: Types.Publisher;
+    dragEndById: Types.Publisher;
   };
 }
 
@@ -129,7 +129,7 @@ interface Props {
   children?: ReactNode;
 }
 
-export function DragManagerProvider(props: Props) {
+function DragManagerProvider(props: Props) {
   const dragManager = useMemo(() => createDragManager(), []);
   const containerRef = useRef();
   const {children} = props;
@@ -153,6 +153,8 @@ export function DragManagerProvider(props: Props) {
   );
 }
 
-export function useDragManager() {
+function useDragManager() {
   return useContext(Context);
 }
+
+export {createDragManager, useDragManager, DragManagerProvider};

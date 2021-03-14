@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Node renders correctly 1`] = `
+<div
+  className=""
+  id="Node-node-1"
+  style={
+    Object {
+      "left": 0,
+      "top": 0,
+    }
+  }
+>
+  <div />
+  <div
+    onMouseDown={[Function]}
+    onMouseUp={[Function]}
+  />
+  <div />
+</div>
+`;

@@ -1,6 +1,6 @@
 import React, {useRef} from "react";
 import {Workspace} from "@component/containers";
-import {themeToStyles} from "@component/utils";
+import {themeToCssVars} from "@component/utils";
 import {
   GraphManagerProvider,
   DragManagerProvider,
@@ -17,7 +17,7 @@ function Root(props) {
   const {gridSize, canvasSize} = options;
 
   const style = {
-    ...themeToStyles({
+    ...themeToCssVars({
       ...theme,
       gridSize: `${gridSize}px`,
       canvasSize: `${canvasSize}px`,

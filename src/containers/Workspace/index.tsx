@@ -2,12 +2,13 @@ import React, {useRef, useMemo, useEffect, useCallback} from "react";
 import {Canvas} from "@component/containers";
 import * as Types from "@component/types";
 import {
-  WorkspaceProvider,
   useBridge,
   usePanZoom,
   useOptions,
   useDragManager,
   useGraphManager,
+  createWorkspace,
+  WorkspaceProvider,
 } from "@component/hooks";
 
 import styles from "./styles.module.css";
@@ -56,63 +57,17 @@ function Workspace(props: Props) {
     onChangeZoom,
   });
 
-  const workspace: Types.Workspace = useMemo(() => {
-    return {
-      setPan,
-      setZoom,
-      get container() {
-        return workspaceDivRef.current;
-      },
-      get isSelectBoxKeyDown() {
-        return isSelectBoxKeyDownRef.current;
-      },
-      mountContextScreenOffset: {
-        get x() {
-          return workspaceDivRef.current.getBoundingClientRect().left;
-        },
-        get y() {
-          return workspaceDivRef.current.getBoundingClientRect().top;
-        },
-      },
-      get panZoom() {
-        return panZoomRef.current;
-      },
-      getElementDimensions(element) {
-        const {zoom} = this.panZoom;
-        const BCR = element.getBoundingClientRect();
-
-        return {
-          width: BCR.width / zoom,
-          height: BCR.height / zoom,
-        };
-      },
-      getCanvasPosition(object) {
-        const {zoom} = this.panZoom;
-
-        if (object instanceof DOMRect) {
-          return {
-            x:
-              (object.left - this.mountContextScreenOffset.x) / zoom -
-              this.panZoom.x / zoom,
-            y:
-              (object.top - this.mountContextScreenOffset.y) / zoom -
-              this.panZoom.y / zoom,
-          };
-        } else if ("clientX" in object && "clientY" in object) {
-          return {
-            x:
-              (object.clientX - this.mountContextScreenOffset.x) / zoom -
-              this.panZoom.x / zoom,
-            y:
-              (object.clientY - this.mountContextScreenOffset.y) / zoom -
-              this.panZoom.y / zoom,
-          };
-        }
-
-        throw Error("Unsupported object");
-      },
-    };
-  }, [panZoomRef, workspaceDivRef, isSelectBoxKeyDownRef, setPan, setZoom]);
+  const workspace: Types.Workspace = useMemo(
+    () =>
+      createWorkspace({
+        panZoomRef,
+        workspaceDivRef,
+        isSelectBoxKeyDownRef,
+        setPan,
+        setZoom,
+      }),
+    [panZoomRef, workspaceDivRef, isSelectBoxKeyDownRef, setPan, setZoom]
+  );
 
   const handleMouseDown = useCallback(
     (event) => {

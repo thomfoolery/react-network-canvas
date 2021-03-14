@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Node renders correctly 1`] = `
+<div
+  className=""
+  id="Node-node-1"
+  style={
+    Object {
+      "left": 0,
+      "top": 0,
+    }
+  }
+>
+  <div>
+    <div
+      id="Port-node-1-input-1"
+      onMouseDown={[Function]}
+      onMouseUp={[Function]}
+    />
+  </div>
+  <div
+    onMouseDown={[Function]}
+    onMouseUp={[Function]}
+  />
+  <div>
+    <div
+      id="Port-node-1-output-1"
+      onMouseDown={[Function]}
+      onMouseUp={[Function]}
+    />
+  </div>
+</div>
+`;

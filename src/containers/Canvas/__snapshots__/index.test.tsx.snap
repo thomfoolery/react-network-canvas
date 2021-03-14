@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Canvas renders correctly 1`] = `
+<div
+  onClick={[Function]}
+  onMouseDown={[Function]}
+  style={
+    Object {
+      "transform": "translate3d(100px, 100px, 0) scale(1)",
+    }
+  }
+>
+  <div />
+  <svg
+    onMouseDown={[Function]}
+    onMouseUp={[Function]}
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <g
+      onClick={[Function]}
+      onMouseDown={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+    >
+      <path
+        id="Edge-cc77e2e0-598e-4cb0-813c-516666955e42"
+      />
+      <path />
+    </g>
+  </svg>
+</div>
+`;

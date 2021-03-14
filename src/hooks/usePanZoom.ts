@@ -12,7 +12,7 @@ interface Options {
   onChangeZoom?(zoom: number): void;
 }
 
-export function usePanZoom(options: Options) {
+function usePanZoom(options: Options) {
   const {
     minZoom,
     maxZoom,
@@ -270,3 +270,5 @@ function calculateBoundary(container, canvasSize, canvasMargin, zoom = 1) {
 function clamp(min, max, value) {
   return Math.max(min, Math.min(value, max));
 }
+
+export {usePanZoom};

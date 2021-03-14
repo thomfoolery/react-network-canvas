@@ -1,6 +1,7 @@
 import React, {
-  createContext,
+  useMemo,
   useContext,
+  createContext,
   ReactNode,
   ReactComponent,
 } from "react";
@@ -40,16 +41,22 @@ interface Props {
   children?: ReactNode;
 }
 
-export function OptionsProvider(props: Props) {
-  const {value, children} = props;
-  const options: Options = {
+function createOptions(value: Partial<Options> = {}) {
+  return {
     ...DEFAULT_OPTIONS,
     ...value,
   };
+}
+
+function OptionsProvider(props: Props) {
+  const {value, children} = props;
+  const options: Options = useMemo(() => createOptions(value), [value]);
 
   return <Context.Provider value={options}>{children}</Context.Provider>;
 }
 
-export function useOptions() {
+function useOptions() {
   return useContext(Context);
 }
+
+export {createOptions, useOptions, OptionsProvider};

@@ -13,7 +13,7 @@ import {isClick, svgGeneratePath} from "@component/utils";
 import styles from "./styles.module.css";
 
 interface Props {
-  key: string;
+  key?: string;
   node: Types.Node;
 }
 

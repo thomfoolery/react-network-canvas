@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Port renders correctly 1`] = `
+<div
+  id="Port-node-1-input-1"
+  onMouseDown={[Function]}
+  onMouseUp={[Function]}
+/>
+`;

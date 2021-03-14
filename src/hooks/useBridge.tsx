@@ -17,18 +17,22 @@ const defaultBridge: Types.Bridge = {
   onKeyPress() {},
 };
 
-export function BridgeProvider(props: Props) {
+function createBridge(value: Partial<Types.Bridge> = {}): Types.Bridge {
+  return {
+    ...defaultBridge,
+    ...value,
+  };
+}
+
+function BridgeProvider(props: Props) {
   const {value, children} = props;
-  const bridge = useMemo(() => {
-    return {
-      ...defaultBridge,
-      ...value,
-    };
-  }, [value]);
+  const bridge = useMemo(() => createBridge(value), [value]);
 
   return <Context.Provider value={bridge}>{children}</Context.Provider>;
 }
 
-export function useBridge() {
+function useBridge() {
   return useContext(Context);
 }
+
+export {createBridge, useBridge, BridgeProvider};

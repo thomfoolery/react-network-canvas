@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Edge renders correctly 1`] = `
+<g
+  onClick={[Function]}
+  onMouseDown={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+>
+  <path
+    id="Edge-edge-1"
+  />
+  <path />
+</g>
+`;

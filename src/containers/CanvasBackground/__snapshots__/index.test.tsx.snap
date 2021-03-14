@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CanvasBackground renders correctly 1`] = `
+<svg
+  onMouseDown={[Function]}
+  onMouseUp={[Function]}
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <g
+    onClick={[Function]}
+    onMouseDown={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+  >
+    <path
+      id="Edge-cc77e2e0-598e-4cb0-813c-516666955e42"
+    />
+    <path />
+  </g>
+</svg>
+`;

@@ -61,10 +61,14 @@ interface GraphManagerPrivateProps {
 }
 
 interface GraphManagerArguments {
-  nodes: Types.Node[];
-  edges: Types.Edge[];
+  nodes?: Types.Node[];
+  edges?: Types.Edge[];
 }
-function createGraphManager({nodes = [], edges = []}: GraphManagerArguments) {
+
+function createGraphManager({
+  nodes = [],
+  edges = [],
+}: GraphManagerArguments = {}) {
   const __: GraphManagerPrivateProps = {
     nodes,
     edges,
@@ -416,7 +420,7 @@ interface Props {
   children?: ReactNode;
 }
 
-export function GraphManagerProvider(props: Props) {
+function GraphManagerProvider(props: Props) {
   const {nodes, edges, children} = props;
   const graphManager = useMemo(() => createGraphManager({nodes, edges}), []);
   const dragManager = useDragManager();
@@ -438,6 +442,8 @@ export function GraphManagerProvider(props: Props) {
   return <Context.Provider value={graphManager}>{children}</Context.Provider>;
 }
 
-export function useGraphManager() {
+function useGraphManager() {
   return useContext(Context);
 }
+
+export {createGraphManager, useGraphManager, GraphManagerProvider};
