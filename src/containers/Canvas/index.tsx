@@ -38,7 +38,7 @@ function Canvas(props: Props) {
     }
 
     function handleDragEnd(event, dragDelta, dragData) {
-      if (dragData?.type === "selectbox" && !isClick(dragDelta)) {
+      if (dragData.type === "selectbox" && !isClick(dragDelta)) {
         const [x1, y1, x2, y2] = getSelectBoxCoordinates(selectBoxRef.current);
         const selectedNodeIds = graphManager.nodes.reduce((acc, node) => {
           const nodeElement: HTMLDivElement | null = document.querySelector(
@@ -77,8 +77,13 @@ function Canvas(props: Props) {
       style={{transform}}
       className={styles.Canvas}
       onMouseDown={handleMouseDown}
+      data-testid="Canvas"
     >
-      <div ref={selectBoxRef} className={styles.SelectBox} />
+      <div
+        ref={selectBoxRef}
+        className={styles.SelectBox}
+        data-testid="SelectBox"
+      />
       <CanvasBackground />
       <CanvasForeground />
     </div>

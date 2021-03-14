@@ -3,6 +3,7 @@
 exports[`Canvas renders correctly 1`] = `
 <div
   className="Canvas"
+  data-testid="Canvas"
   onClick={[Function]}
   onMouseDown={[Function]}
   style={
@@ -13,6 +14,7 @@ exports[`Canvas renders correctly 1`] = `
 >
   <div
     className="SelectBox"
+    data-testid="SelectBox"
   />
   <svg
     className="CanvasBackground"

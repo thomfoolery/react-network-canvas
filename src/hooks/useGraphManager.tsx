@@ -286,11 +286,11 @@ function createGraphManager({
     handleDragMove(event, dragDelta: Types.Position, dragData: any) {
       const {selectedNodeIds, dragManager, workspace} = __;
 
-      if (dragManager?.dragData?.dragType === "node") {
+      if (dragManager?.dragData.dragType === "node") {
         __.subscriptions.dragDeltaById.notifyIds(selectedNodeIds, dragDelta);
       }
 
-      if (workspace && dragManager?.dragData?.dragType === "port") {
+      if (workspace && dragManager?.dragData.dragType === "port") {
         const position = workspace.getCanvasPosition(event);
 
         const x1 = dragData.port.position.x;
@@ -309,10 +309,10 @@ function createGraphManager({
         y: 0,
       });
 
-      if (dragData?.dragType === "node") {
+      if (dragData.dragType === "node") {
         selectedNodeIds.forEach((id) => updateNodePositionById(id, dragDelta));
       }
-      if (dragData?.dragType === "port") {
+      if (dragData.dragType === "port") {
         clearDraftEdgePath();
       }
     },

@@ -38,8 +38,9 @@ function createDragManager() {
   function handleDragStart(event) {
     document.addEventListener("selectstart", handleOnSelectStart);
     event.currentTarget.addEventListener("mousemove", handleDragMove);
-    __.dragStartPosition = {x: event.screenX, y: event.screenY};
     __.dragDelta = {x: 0, y: 0};
+    __.dragData = __.dragData || {};
+    __.dragStartPosition = {x: event.screenX, y: event.screenY};
     __.subscriptions.dragStartById.notifyAll(event);
   }
 
