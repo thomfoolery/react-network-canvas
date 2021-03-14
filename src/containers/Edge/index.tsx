@@ -17,15 +17,26 @@ function Edge(props: Props) {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = useCallback(() => {
+    if (isDraft) return;
     graphManager.removeEdgeById(edge.id);
-  }, [graphManager]);
+  }, [isDraft, graphManager]);
 
   const handleMouseDown = useCallback(() => {
+    if (isDraft) return;
     graphManager.selectedNodeIds = [];
-  }, []);
+  }, [isDraft]);
 
-  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
-  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
+  const handleMouseEnter = useCallback(() => {
+    if (!isDraft) {
+      setIsHovered(true);
+    }
+  }, [isDraft]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (!isDraft) {
+      setIsHovered(false);
+    }
+  }, [isDraft]);
 
   const className = joinClassList(
     isDraft && styles.isDraft,

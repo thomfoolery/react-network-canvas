@@ -69,7 +69,7 @@ exports[`renders correctly 1`] = `
             onMouseLeave={[Function]}
           >
             <path
-              id="Edge-e3327200-8456-11eb-ad94-117561157804"
+              id="Edge-cc77e2e0-598e-4cb0-813c-516666955e42"
             />
             <path />
           </g>

@@ -1,6 +1,6 @@
 import {v1 as generateUuid} from "uuid";
 
-const DRAFT_EDGE_ID = generateUuid();
+const DRAFT_EDGE_ID = "cc77e2e0-598e-4cb0-813c-516666955e42";
 
 const DEFAULT_THEME = {
   workspace: {
