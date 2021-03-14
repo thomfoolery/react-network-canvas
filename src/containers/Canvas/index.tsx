@@ -22,7 +22,7 @@ function Canvas(props: Props) {
   const selectBoxRef = useRef();
 
   const handleMouseDown = useCallback((event) => {
-    if (workspace.isShiftKeyDown) {
+    if (workspace.isSelectBoxKeyDown) {
       dragManager.dragData = {
         type: "selectbox",
         startPosition: workspace.getCanvasPosition(event),

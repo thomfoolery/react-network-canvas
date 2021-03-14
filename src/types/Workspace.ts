@@ -2,7 +2,7 @@ import {Position} from "./Position";
 
 interface Workspace {
   container: HTMLDivElement;
-  isShiftKeyDown: boolean;
+  isSelectBoxKeyDown: boolean;
   getCanvasPosition(object: any): Position;
   mountContextScreenOffset: Position;
   panZoom: {

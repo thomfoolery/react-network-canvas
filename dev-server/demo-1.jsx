@@ -79,7 +79,14 @@ function App() {
     },
   };
 
-  return <NodeCanvas nodes={nodes} edges={edges} bridge={bridge} />;
+  const options = {
+    zoomWheelKey: "Meta",
+    selectBoxKey: "Meta",
+  };
+
+  return (
+    <NodeCanvas nodes={nodes} edges={edges} bridge={bridge} options={options} />
+  );
 }
 
 ReactDOM.render(createElement(App), document.getElementById("app"));

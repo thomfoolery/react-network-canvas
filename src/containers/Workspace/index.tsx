@@ -26,12 +26,13 @@ function Workspace(props: Props) {
     canvasSize,
     canvasMargin,
     zoomWheelKey,
+    selectBoxKey,
     zoomSensitivity,
     startAtCanvasCenter,
   } = options;
 
   const workspaceDivRef = useRef();
-  const isShiftKeyDownRef = useRef(false);
+  const isSelectBoxKeyDownRef = useRef(false);
 
   const onChangeZoom = useCallback((zoom) => bridge.onChangeZoom(zoom), [
     bridge,
@@ -62,8 +63,8 @@ function Workspace(props: Props) {
       get container() {
         return workspaceDivRef.current;
       },
-      get isShiftKeyDown() {
-        return isShiftKeyDownRef.current;
+      get isSelectBoxKeyDown() {
+        return isSelectBoxKeyDownRef.current;
       },
       mountContextScreenOffset: {
         get x() {
@@ -111,7 +112,7 @@ function Workspace(props: Props) {
         throw Error("Unsupported object");
       },
     };
-  }, [panZoomRef, workspaceDivRef, isShiftKeyDownRef, setPan, setZoom]);
+  }, [panZoomRef, workspaceDivRef, isSelectBoxKeyDownRef, setPan, setZoom]);
 
   const handleMouseDown = useCallback(
     (event) => {
@@ -150,10 +151,10 @@ function Workspace(props: Props) {
 
   useEffect(() => {
     function handleKeyDown({key}) {
-      if (key === "Shift") isShiftKeyDownRef.current = true;
+      if (key === selectBoxKey) isSelectBoxKeyDownRef.current = true;
     }
     function handleKeyUp({key}) {
-      if (key === "Shift") isShiftKeyDownRef.current = false;
+      if (key === selectBoxKey) isSelectBoxKeyDownRef.current = false;
     }
 
     document.addEventListener("keydown", handleKeyDown);
@@ -162,7 +163,7 @@ function Workspace(props: Props) {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
     };
-  }, [isShiftKeyDownRef]);
+  }, [selectBoxKey, isSelectBoxKeyDownRef]);
 
   return (
     <WorkspaceProvider value={workspace}>

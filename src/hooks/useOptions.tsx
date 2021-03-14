@@ -15,7 +15,8 @@ interface Options {
   startAtCanvasCenter: boolean;
   canvasMargin: number;
   zoomSensitivity: number;
-  zoomWheelKey?: "Shift" | "Control" | "Meta" | "Alt";
+  selectBoxKey?: "Shift" | "Control" | "Alt" | "Meta";
+  zoomWheelKey?: "Shift" | "Control" | "Alt" | "Meta";
   maxZoom: number;
   minZoom: number;
   NodeComponent: ReactComponent;
@@ -27,6 +28,7 @@ const DEFAULT_OPTIONS: Options = {
   canvasMargin: 50,
   zoomSensitivity: 0.001,
   zoomWheelKey: undefined,
+  selectBoxKey: "Shift",
   maxZoom: Infinity,
   minZoom: 0,
   NodeComponent,

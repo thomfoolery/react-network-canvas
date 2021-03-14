@@ -49,7 +49,7 @@ function Node(props: Props) {
   const handleMouseDown = useCallback(() => {
     dragManager.dragData = {dragType: "node", node};
     if (
-      !workspace.isShiftKeyDown &&
+      !workspace.isSelectBoxKeyDown &&
       !graphManager.selectedNodeIds.includes(id)
     ) {
       graphManager.selectedNodeIds = [id];
@@ -58,7 +58,7 @@ function Node(props: Props) {
 
   const handleMouseUp = useCallback(() => {
     if (isClick(dragManager.dragDelta)) {
-      if (workspace.isShiftKeyDown) {
+      if (workspace.isSelectBoxKeyDown) {
         if (graphManager.selectedNodeIds.includes(id)) {
           graphManager.removeSelectedNodeId(id);
         } else {
