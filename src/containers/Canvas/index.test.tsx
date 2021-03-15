@@ -8,6 +8,7 @@ import {
   mockUseBridge,
 } from "@component/utils/mocks";
 import {
+  createGraphManager,
   createDragManager,
   createWorkspace,
   useDragManager,
@@ -71,6 +72,7 @@ describe("Canvas", () => {
       set: dragDataSetter,
       configurable: true,
     });
+
     Object.defineProperty(workspace, "isSelectBoxKeyDown", {
       get: isSelectBoxKeyDownGetter,
       configurable: true,
@@ -170,7 +172,51 @@ describe("Canvas", () => {
     `);
   });
 
-  it.todo(
-    "calls graphManager.selectedNodeIds with the node ids inside the selectbox boundary"
-  );
+  it("calls graphManager.selectedNodeIds with the node ids inside the selectbox boundary", () => {
+    const graphManager = createGraphManager();
+    const dragManager = createDragManager();
+
+    const selectedNodeIdsSetter = jest.fn();
+
+    dragManager.dragData = {
+      type: "selectbox",
+      startPosition: {
+        x: 0,
+        y: 0,
+      },
+    };
+
+    Object.defineProperty(graphManager, "selectedNodeIds", {
+      set: selectedNodeIdsSetter,
+      configurable: true,
+    });
+
+    useGraphManager.mockImplementation(mockUseGraphManager(graphManager));
+    useDragManager.mockImplementation(mockUseDragManager(dragManager));
+
+    render(<Canvas {...defaultProps} />);
+
+    dragManager.handleDragStart({
+      screenX: 0,
+      screenY: 0,
+      currentTarget: {
+        addEventListener() {},
+      },
+    });
+
+    dragManager.handleDragMove({
+      screenX: 100,
+      screenY: 100,
+    });
+
+    dragManager.handleDragEnd({
+      screenX: 100,
+      screenY: 100,
+      currentTarget: {
+        removeEventListener() {},
+      },
+    });
+
+    expect(selectedNodeIdsSetter).toHaveBeenCalled();
+  });
 });
