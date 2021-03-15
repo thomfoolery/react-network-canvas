@@ -40,6 +40,7 @@ function Node(props) {
         onMouseUp={onMouseUp}
         onMouseDown={onMouseDown}
         className={styles.NodeBody}
+        data-testid={node.id}
       ></div>
       <div className={styles.NodeOutputPorts}>
         {outputPorts.map((port) => (

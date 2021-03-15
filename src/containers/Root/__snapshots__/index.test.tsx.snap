@@ -114,6 +114,7 @@ exports[`renders correctly 1`] = `
           </div>
           <div
             className="NodeBody"
+            data-testid="node-1"
             onMouseDown={[Function]}
             onMouseUp={[Function]}
           />
@@ -152,6 +153,7 @@ exports[`renders correctly 1`] = `
           </div>
           <div
             className="NodeBody"
+            data-testid="node-2"
             onMouseDown={[Function]}
             onMouseUp={[Function]}
           />

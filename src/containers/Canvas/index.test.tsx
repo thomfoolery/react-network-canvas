@@ -1,6 +1,6 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import {render, fireEvent, screen, act} from "@testing-library/react";
+import {render, fireEvent, screen} from "@testing-library/react";
 import {
   mockUseDragManager,
   mockUseGraphManager,
@@ -35,6 +35,24 @@ const defaultProps = {
   transform: `translate3d(100px, 100px, 0) scale(1)`,
 };
 
+const mockWorkspace = {
+  panZoomRef: {
+    current: {
+      x: 0,
+      y: 0,
+      zoom: 1,
+    },
+  },
+  workspaceDivRef: {
+    current: document.createElement("div"),
+  },
+  isSelectBoxKeyDownRef: {
+    current: false,
+  },
+  setPan() {},
+  setZoom() {},
+};
+
 describe("Canvas", () => {
   it("renders correctly", () => {
     const tree = renderer.create(<Canvas {...defaultProps} />).toJSON();
@@ -46,23 +64,7 @@ describe("Canvas", () => {
     const dragDataSetter = jest.fn();
     const isSelectBoxKeyDownGetter = jest.fn(() => true);
     const dragManager = createDragManager();
-    const workspace = createWorkspace({
-      panZoomRef: {
-        current: {
-          x: 0,
-          y: 0,
-          zoom: 1,
-        },
-      },
-      workspaceDivRef: {
-        current: document.createElement("div"),
-      },
-      isSelectBoxKeyDownRef: {
-        current: false,
-      },
-      setPan() {},
-      setZoom() {},
-    });
+    const workspace = createWorkspace(mockWorkspace);
 
     // override the value property definition with our mocked setter
     Object.defineProperty(dragManager, "dragData", {

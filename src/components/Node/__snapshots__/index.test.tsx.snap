@@ -16,6 +16,7 @@ exports[`Node renders correctly 1`] = `
   />
   <div
     className="NodeBody"
+    data-testid="node-1"
     onMouseDown={[Function]}
     onMouseUp={[Function]}
   />
