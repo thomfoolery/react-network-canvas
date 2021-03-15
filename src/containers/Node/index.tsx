@@ -3,10 +3,11 @@ import {Port as PortComponent} from "../Port";
 import * as Types from "@component/types";
 
 import {
-  useOptions,
-  useWorkspace,
-  useDragManager,
   useGraphManager,
+  useDragManager,
+  useWorkspace,
+  useOptions,
+  useBridge,
 } from "@component/hooks";
 import {isClick, svgGeneratePath} from "@component/utils";
 
@@ -19,10 +20,11 @@ interface Props {
 
 function Node(props: Props) {
   const {node} = props;
-  const options = useOptions();
-  const workspace = useWorkspace();
-  const dragManager = useDragManager();
   const graphManager = useGraphManager();
+  const dragManager = useDragManager();
+  const workspace = useWorkspace();
+  const options = useOptions();
+  const bridge = useBridge();
 
   const {NodeComponent} = options;
 
@@ -56,17 +58,21 @@ function Node(props: Props) {
     }
   }, [node, workspace, dragManager, graphManager]);
 
-  const handleMouseUp = useCallback(() => {
-    if (isClick(dragManager.dragDelta)) {
-      if (workspace.isSelectBoxKeyDown) {
-        if (graphManager.selectedNodeIds.includes(id)) {
-          graphManager.removeSelectedNodeId(id);
-        } else {
-          graphManager.appendSelectedNodeId(id);
+  const handleMouseUp = useCallback(
+    (event) => {
+      if (isClick(dragManager.dragDelta)) {
+        if (workspace.isSelectBoxKeyDown) {
+          if (graphManager.selectedNodeIds.includes(id)) {
+            graphManager.removeSelectedNodeId(id);
+          } else {
+            graphManager.appendSelectedNodeId(id);
+          }
         }
+        bridge.onClickNode(event, node, graphManager);
       }
-    }
-  }, [workspace, dragManager, graphManager]);
+    },
+    [node, bridge, workspace, dragManager, graphManager]
+  );
 
   useEffect(() => edgesIn.forEach(updateEdgePath), [dragDelta]);
   useEffect(() => edgesOut.forEach(updateEdgePath), [edgesOut, dragDelta]);

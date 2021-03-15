@@ -16,10 +16,15 @@ interface GraphEvent {
 interface Bridge {
   connect(graphEvent: GraphEvent): void;
   onChangeZoom(zoom: number): void;
-  onUpdateGraph(graphEvent: GraphEvent): void;
+  onMutateGraph(graphEvent: GraphEvent): void;
   onClickCanvas(
     event: React.SyntheticEvent,
     position: Types.Position,
+    graphManager: any
+  ): void;
+  onClickNode(
+    event: React.SyntheticEvent,
+    node: Types.Node,
     graphManager: any
   ): void;
   onClickPort(
@@ -28,6 +33,7 @@ interface Bridge {
     node: Types.Node,
     graphManager: any
   ): void;
+  onChangeSelectedNodeIds(selectedNodesIds: string[], graphManager: any): void;
   onKeyPress(event: React.SyntheticEvent, key: string, graphManager: any): void;
 }
 

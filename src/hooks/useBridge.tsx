@@ -11,10 +11,12 @@ interface Props {
 const defaultBridge: Types.Bridge = {
   connect() {},
   onChangeZoom() {},
-  onUpdateGraph() {},
+  onMutateGraph() {},
   onClickCanvas() {},
+  onClickNode() {},
   onClickPort() {},
   onKeyPress() {},
+  onChangeSelectedNodeIds() {},
 };
 
 function createBridge(value: Partial<Types.Bridge> = {}): Types.Bridge {

@@ -127,6 +127,7 @@ function createGraphManager({
     requestAnimationFrame(() => {
       __.subscriptions.isSelectedById.notifyIds(newSelectedNodeIds, true);
       __.subscriptions.isSelectedById.notifyIds(unselectedNodeIds, false);
+      __.bridge?.onChangeSelectedNodeIds(selectedNodeIds, API);
     });
   }
 
@@ -165,7 +166,7 @@ function createGraphManager({
     svgPath?.nextElementSibling?.setAttribute("d", path);
   }
 
-  return {
+  const API = {
     // bridge
     get bridge() {
       return {...__.bridge};
@@ -215,7 +216,7 @@ function createGraphManager({
 
       setNodes([...__.nodes, node]);
 
-      __.bridge?.onUpdateGraph({
+      __.bridge?.onMutateGraph({
         action: "CREATE_NODE",
         subject: node,
         graph: {
@@ -236,7 +237,7 @@ function createGraphManager({
       setEdges(__.edges.filter((edge) => !removedEdgeIds.includes(edge.id)));
       setNodes(__.nodes.filter((node) => node.id != id));
 
-      __.bridge?.onUpdateGraph({
+      __.bridge?.onMutateGraph({
         action: "DELETE_NODE",
         subject: __.nodesByIdHash[id],
         graph: {
@@ -263,7 +264,7 @@ function createGraphManager({
       setNodes(__.nodes.filter((node) => !removedNodeIds.includes(node.id)));
 
       removedNodeIds.forEach((id) => {
-        __.bridge?.onUpdateGraph({
+        __.bridge?.onMutateGraph({
           action: "DELETE_NODE",
           subject: __.nodesByIdHash[id],
           graph: {
@@ -402,7 +403,7 @@ function createGraphManager({
       // trigger render to draw edges
       updateNodePositionById(edge.from.nodeId, {x: 0, y: 0});
 
-      __.bridge?.onUpdateGraph({
+      __.bridge?.onMutateGraph({
         action: "CREATE_EDGE",
         subject: edge,
         graph: {
@@ -429,7 +430,7 @@ function createGraphManager({
       updateNodePositionById(edge.from.nodeId, {x: 0, y: 0});
       updateNodePositionById(edge.to.nodeId, {x: 0, y: 0});
 
-      __.bridge?.onUpdateGraph({
+      __.bridge?.onMutateGraph({
         action: "DELETE_EDGE",
         subject: edge,
         graph: {
@@ -447,6 +448,8 @@ function createGraphManager({
       __.subscriptions.edgesChange.removeListenerForId(id, fn);
     },
   };
+
+  return API;
 }
 
 interface Props {
