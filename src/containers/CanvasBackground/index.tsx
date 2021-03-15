@@ -53,7 +53,7 @@ function Component(props: CanvasBackgroundProps) {
         dragManager.dragData = {type: "panzoom"};
       }
     },
-    [dragManager, graphManager, containerRef]
+    [dragManager, containerRef]
   );
 
   const handleMouseUp = useCallback(
@@ -65,7 +65,7 @@ function Component(props: CanvasBackgroundProps) {
         graphManager.selectedNodeIds = [];
       } else if (
         isClick(dragManager.dragDelta) &&
-        containerRef.current === event.target
+        event.target === containerRef.current
       ) {
         const position = workspace.getCanvasPosition(event);
 
@@ -87,6 +87,7 @@ function Component(props: CanvasBackgroundProps) {
       onMouseDown={handleMouseDown}
       xmlns="http://www.w3.org/2000/svg"
       className={styles.CanvasBackground}
+      data-testid="CanvasBackground"
     >
       {edges.map((edge) => (
         <Edge key={edge.id} edge={edge} />

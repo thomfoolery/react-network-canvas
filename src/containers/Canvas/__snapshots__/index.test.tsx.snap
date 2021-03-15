@@ -18,6 +18,7 @@ exports[`Canvas renders correctly 1`] = `
   />
   <svg
     className="CanvasBackground"
+    data-testid="CanvasBackground"
     onMouseDown={[Function]}
     onMouseUp={[Function]}
     xmlns="http://www.w3.org/2000/svg"
