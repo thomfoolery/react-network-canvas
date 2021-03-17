@@ -8,9 +8,172 @@ Network diagrams are useful for modeling things such as audio synthesis, executi
 
 This component aspires to be completely customizable in behavior and styles, but this is an ongoing effort.
 
-### Demo
+## Demo
 
 https://user-images.githubusercontent.com/188110/111396711-09a5a880-8696-11eb-8c8c-607e139e5666.mov
+
+## Component Props
+
+```ts
+interface Props {
+  nodes: Types.Node[];
+  edges: Types.Edge[];
+  options?: Partial<Types.Options>;
+  bridge?: Types.Bridge;
+  theme?: any;
+}
+```
+
+## Options
+
+```ts
+interface Options {
+  gridSize: number;
+  canvasSize: number;
+  isRoundToGridEnabled: boolean;
+  startAtCanvasCenter: boolean;
+  canvasMargin: number;
+  zoomSensitivity: number;
+  selectBoxKey?: "Shift" | "Control" | "Alt" | "Meta";
+  zoomWheelKey?: "Shift" | "Control" | "Alt" | "Meta";
+  maxZoom: number;
+  minZoom: number;
+  NodeComponent: ReactComponent;
+  PortComponent: ReactComponent;
+}
+
+const DEFAULT_OPTIONS: Types.Options = {
+  gridSize: 10,
+  canvasSize: 2000,
+  isRoundToGridEnabled: false,
+  startAtCanvasCenter: true,
+  canvasMargin: 50,
+  zoomSensitivity: 0.001,
+  zoomWheelKey: undefined,
+  selectBoxKey: "Shift",
+  maxZoom: Infinity,
+  minZoom: 0,
+  NodeComponent,
+  PortComponent,
+};
+
+const DEFAULT_THEME = {
+  workspace: {
+    backgroundSize: "",
+    backgroundImage: "",
+    backgroundColor: "#f6f6f6",
+  },
+  canvas: {
+    borderRadius: "5px",
+    boxShadow: "0 0 0 1px lightgrey",
+    backgroundColor: "white",
+    backgroundSize: "var(--NC-grid-size) var(--NC-grid-size)",
+    backgroundImage:
+      "radial-gradient(lightgray, lightgray 1px, transparent 1px)",
+    backgroundPosition: "50% 50%",
+  },
+  edge: {
+    stroke: "black",
+    strokeWidth: "3px",
+    hover: {
+      stroke: "red",
+    },
+    draft: {
+      stroke: "black",
+    },
+  },
+};
+```
+
+### API Bridge
+
+```ts
+interface Bridge {
+  connect(graphEvent: GraphEvent): void;
+  onChangeZoom(zoom: number): void;
+  onMutateGraph(graphEvent: GraphEvent): void;
+  onClickCanvas(
+    event: React.SyntheticEvent,
+    position: Types.Position,
+    graphManager: any
+  ): void;
+  onClickNode(
+    event: React.SyntheticEvent,
+    node: Types.Node,
+    graphManager: any
+  ): void;
+  onClickPort(
+    event: React.SyntheticEvent,
+    port: Types.Port,
+    node: Types.Node,
+    graphManager: any
+  ): void;
+  onChangeSelectedNodeIds(selectedNodesIds: string[], graphManager: any): void;
+  onKeyPress(event: React.SyntheticEvent, key: string, graphManager: any): void;
+}
+```
+
+### GraphManager
+
+```ts
+interface GraphManager {
+  nodes: Types.Node;
+  edges: Types.Edge;
+  bridge: Types.Bridge;
+  workspace: Types.Workspace;
+  dragManager: Types.DragManager;
+  selectedNodeIds: string[];
+
+  getNodeById(id: string): Types.Node;
+  getNodesByEdgeId(id: string): {from?: Types.Node; to?: Types.Node};
+  createNode(nodeProps: Partial<Types.Node>): Types.Node;
+  removeNodeById(id: string): void;
+  removeNodesByIds(removedNodeIds: string[]): void;
+  subscribeToNodesChange(fn: Function): void;
+  unsubscribeToNodesChange(fn: Function): void;
+
+  handleDragMove(event, dragDelta: Types.Position, dragData: any): void;
+  handleDragEnd(event, dragDelta: Types.Position, dragData: any): void;
+  updateNodePositionById(id: string, dragDelta: Types.Position): void;
+  subscribeToDragDeltaById(id: string, fn: Function): void;
+  unsubscribeToDragDeltaById(id: string, fn: Function): void;
+  subscribeToNodePositionChangeById(id: string, fn: Function): void;
+  unsubscribeToNodePositionChangeById(id: string, fn: Function): void;
+
+  appendSelectedNodeId(id: string): void;
+  appendSelectedNodeIds(appendedNodeIds: string[]): void;
+  removeSelectedNodeId(id: string): void;
+  removeSelectedNodeIds(unselectedNodeIds: string[]): void;
+  subscribeToIsSelectedById(id: string, fn: Function): void;
+  unsubscribeToIsSelectedById(id: string, fn: Function): void;
+
+  getEdgeById(id: string): Types.Edge;
+  getEdgesByNodeId(id: string): Types.Edge[];
+  createEdge(edgeProps: Partial<Types.Edge>): Types.Edge;
+  removeEdgeById(id: string): void;
+  clearDraftEdgePath(): void;
+  updateDraftEdgePath(x1: number, y1: number, x2: number, y2: number): void;
+  subscribeToEdgesChange(id: string, fn: Function): void;
+  unsubscribeToEdgesChange(id: string, fn: Function): void;
+
+  import(graph: Types.Graph): void;
+  export(): Types.Graph;
+}
+```
+
+### Workspace
+
+```ts
+interface Workspace {
+  container: HTMLDivElement;
+  isSelectBoxKeyDown: boolean;
+  getCanvasPosition(object: any): Position;
+  mountContextScreenOffset: Position;
+  panZoom: {
+    zoom: number;
+  } & Position;
+}
+```
 
 ### Example Code
 

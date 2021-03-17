@@ -33,7 +33,7 @@ useWorkspace.mockImplementation(mockUseWorkspace());
 useBridge.mockImplementation(mockUseBridge());
 
 const defaultProps = {
-  transform: `translate3d(100px, 100px, 0) scale(1)`,
+  transform: "translate3d(100px, 100px, 0) scale(1)",
 };
 
 const mockWorkspace = {

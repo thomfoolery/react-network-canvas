@@ -55,7 +55,7 @@ interface GraphManagerPrivateProps {
   selectedNodeIds: string[];
   bridge?: Types.Bridge;
   options: Types.Options;
-  dragManager?: any;
+  dragManager?: Types.DragManager;
   workspace?: Types.Workspace;
   subscriptions: {
     nodePositionChangeById: Types.Publisher;
@@ -80,7 +80,7 @@ function createGraphManager({
   edges = [],
   bridge,
   dragManager,
-}: GraphManagerArguments = {}) {
+}: GraphManagerArguments = {}): Types.GraphManager {
   const __: GraphManagerPrivateProps = {
     nodes: [],
     edges: [],
@@ -174,14 +174,14 @@ function createGraphManager({
     get bridge() {
       return {...__.bridge};
     },
-    set bridge(bridge: any) {
+    set bridge(bridge: Types.Bridge) {
       __.bridge = bridge;
     },
     // workspace
     get workspace() {
       return {...__.workspace};
     },
-    set workspace(workspace: any) {
+    set workspace(workspace: Types.Workspace) {
       __.workspace = workspace;
     },
     // nodes
@@ -277,10 +277,10 @@ function createGraphManager({
         });
       });
     },
-    subscribeToNodesChange(fn: Function) {
+    subscribeToNodesChange(fn: () => void) {
       __.subscriptions.nodesChange.addListenerForId("default", fn);
     },
-    unsubscribeToNodesChange(fn: Function) {
+    unsubscribeToNodesChange(fn: () => void) {
       __.subscriptions.nodesChange.removeListenerForId("default", fn);
     },
     // position
@@ -321,16 +321,16 @@ function createGraphManager({
       }
     },
     updateNodePositionById,
-    subscribeToDragDeltaById(id: string, fn: Function) {
+    subscribeToDragDeltaById(id: string, fn: () => void) {
       __.subscriptions.dragDeltaById.addListenerForId(id, fn);
     },
-    unsubscribeToDragDeltaById(id: string, fn: Function) {
+    unsubscribeToDragDeltaById(id: string, fn: () => void) {
       __.subscriptions.dragDeltaById.removeListenerForId(id, fn);
     },
-    subscribeToNodePositionChangeById(id: string, fn: Function) {
+    subscribeToNodePositionChangeById(id: string, fn: () => void) {
       __.subscriptions.nodePositionChangeById.addListenerForId(id, fn);
     },
-    unsubscribeToNodePositionChangeById(id: string, fn: Function) {
+    unsubscribeToNodePositionChangeById(id: string, fn: () => void) {
       __.subscriptions.nodePositionChangeById.addListenerForId(id, fn);
     },
     // selected ids
@@ -368,14 +368,14 @@ function createGraphManager({
 
       setSelectedNodeIds(selectedNodeIds);
     },
-    subscribeToIsSelectedById(id: string, fn: Function) {
+    subscribeToIsSelectedById(id: string, fn: () => void) {
       __.subscriptions.isSelectedById.addListenerForId(id, fn);
     },
-    unsubscribeToIsSelectedById(id: string, fn: Function) {
+    unsubscribeToIsSelectedById(id: string, fn: () => void) {
       __.subscriptions.isSelectedById.removeListenerForId(id, fn);
     },
     // edges
-    get edges() {
+    get edges(): Types.Edge[] {
       return [...__.edges];
     },
     set edges(edges: Types.Edge[]) {
@@ -444,10 +444,10 @@ function createGraphManager({
     },
     clearDraftEdgePath,
     updateDraftEdgePath,
-    subscribeToEdgesChange(id: string, fn: Function) {
+    subscribeToEdgesChange(id: string, fn: () => void) {
       __.subscriptions.edgesChange.addListenerForId(id, fn);
     },
-    unsubscribeToEdgesChange(id: string, fn: Function) {
+    unsubscribeToEdgesChange(id: string, fn: () => void) {
       __.subscriptions.edgesChange.removeListenerForId(id, fn);
     },
     // import/export

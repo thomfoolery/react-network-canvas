@@ -53,7 +53,7 @@ function camelToKebabCase(str: string) {
   return str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, "$1-$2").toLowerCase();
 }
 
-function themeToCssVars(providedTheme) {
+function themeToCssVars(providedTheme: any): any {
   const theme = mergeDeep(DEFAULT_THEME, providedTheme);
   const styles = flattenThemeObject(theme);
 

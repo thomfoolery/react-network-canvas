@@ -22,7 +22,7 @@ interface DragManagerPrivateProps {
   };
 }
 
-function createDragManager() {
+function createDragManager(): Types.DragManager {
   const __: DragManagerPrivateProps = {
     dragData: null,
     dragDelta: {x: 0, y: 0},
@@ -135,8 +135,8 @@ function DragManagerProvider(props: Props) {
   const containerRef = useRef();
   const {children} = props;
   const style = {
-    width: `100%`,
-    height: `100%`,
+    width: "100%",
+    height: "100%",
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React, {useRef, ReactNode} from "react";
 import {Workspace} from "@component/containers";
 import {themeToCssVars} from "@component/utils";
 import {
@@ -14,12 +14,12 @@ import styles from "./styles.module.css";
 interface Props {
   nodes: Types.Node[];
   edges: Types.Edge[];
-  options: Partial<Types.Options>;
+  options?: Partial<Types.Options>;
   bridge?: Types.Bridge;
   theme?: any;
 }
 
-function Root(props: Props) {
+function Root(props: Props): ReactNode {
   const {nodes, edges, bridge, options = {}, theme = {}} = props;
   const containerRef = useRef();
 

@@ -1,4 +1,4 @@
-import React, {useRef, useMemo, useEffect, useCallback} from "react";
+import React, {useRef, useMemo, useEffect, useCallback, ReactNode} from "react";
 import {Canvas} from "@component/containers";
 import * as Types from "@component/types";
 import {
@@ -13,9 +13,7 @@ import {
 
 import styles from "./styles.module.css";
 
-interface Props {}
-
-function Workspace(props: Props) {
+function Workspace(): ReactNode {
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
   const options = useOptions();

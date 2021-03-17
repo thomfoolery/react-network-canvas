@@ -75,7 +75,7 @@ function usePanZoom(options: Options) {
           clampedZoom
         );
 
-        let {minX, minY, maxX, maxY} = boundaryRef.current;
+        const {minX, minY, maxX, maxY} = boundaryRef.current;
 
         requestAnimationFrame(() => onChangeZoom(clampedZoom));
 

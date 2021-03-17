@@ -1,4 +1,4 @@
-import React, {useCallback, SyntheticEvent} from "react";
+import React, {useCallback, ReactNode, SyntheticEvent} from "react";
 import {
   useBridge,
   useOptions,
@@ -16,7 +16,7 @@ interface Props {
   type: "input" | "output";
 }
 
-function Port(props: Props) {
+function Port(props: Props): ReactNode {
   const {node, port, type} = props;
   const graphManager = useGraphManager();
   const dragManager = useDragManager();

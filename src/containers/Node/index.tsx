@@ -1,4 +1,10 @@
-import React, {useMemo, useState, useCallback, useEffect} from "react";
+import React, {
+  useMemo,
+  useState,
+  useCallback,
+  useEffect,
+  ReactNode,
+} from "react";
 import {Port as PortComponent} from "../Port";
 import * as Types from "@component/types";
 
@@ -18,7 +24,7 @@ interface Props {
   node: Types.Node;
 }
 
-function Node(props: Props) {
+function Node(props: Props): ReactNode {
   const {node} = props;
   const graphManager = useGraphManager();
   const dragManager = useDragManager();

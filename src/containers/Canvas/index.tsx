@@ -1,4 +1,10 @@
-import React, {useRef, useEffect, useCallback, SyntheticEvent} from "react";
+import React, {
+  useRef,
+  useEffect,
+  useCallback,
+  SyntheticEvent,
+  ReactNode,
+} from "react";
 import * as Types from "@component/types";
 
 import {useDragManager, useGraphManager, useWorkspace} from "@component/hooks";
@@ -13,7 +19,7 @@ interface Props {
   onClick?(event: SyntheticEvent, position: Types.Position): void;
 }
 
-function Canvas(props: Props) {
+function Canvas(props: Props): ReactNode {
   const {transform, onClick = () => null} = props;
   const graphManager = useGraphManager();
   const dragManager = useDragManager();

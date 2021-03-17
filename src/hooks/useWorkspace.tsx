@@ -1,20 +1,25 @@
-import React, {createContext, useContext, ReactNode} from "react";
+import React, {createContext, useContext, ReactNode, RefObject} from "react";
 import * as Types from "@component/types";
 
 const Context = createContext();
 
-interface Props {
-  value?: Types.Workspace;
-  children?: ReactNode;
+interface Options {
+  panZoomRef: RefObject<number>;
+  workspaceDivRef: RefObject<HTMLElement>;
+  isSelectBoxKeyDownRef: RefObject<boolean>;
+  setZoom(): void;
+  setPan(): void;
 }
 
-function createWorkspace({
-  panZoomRef,
-  workspaceDivRef,
-  isSelectBoxKeyDownRef,
-  setPan,
-  setZoom,
-}) {
+function createWorkspace(options: Options): Types.Workspace {
+  const {
+    panZoomRef,
+    workspaceDivRef,
+    isSelectBoxKeyDownRef,
+    setZoom,
+    setPan,
+  } = options;
+
   return {
     setPan,
     setZoom,
@@ -22,7 +27,7 @@ function createWorkspace({
       return workspaceDivRef.current;
     },
     get isSelectBoxKeyDown() {
-      return isSelectBoxKeyDownRef.current;
+      return isSelectBoxKeyDownRef.current || false;
     },
     mountContextScreenOffset: {
       get x() {
@@ -83,13 +88,18 @@ function createWorkspace({
   };
 }
 
-function WorkspaceProvider(props: Props) {
+interface Props {
+  value?: Types.Workspace;
+  children?: ReactNode;
+}
+
+function WorkspaceProvider(props: Props): ReactNode {
   const {value, children} = props;
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }
 
-function useWorkspace() {
+function useWorkspace(): Types.Workspace {
   return useContext(Context);
 }
 

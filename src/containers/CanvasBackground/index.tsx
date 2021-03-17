@@ -4,7 +4,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
-  SyntheticEvent,
+  ReactNode,
 } from "react";
 
 import {
@@ -16,7 +16,6 @@ import {
 
 import {DRAFT_EDGE_ID} from "@component/constants";
 import {Edge} from "@component/containers";
-import * as Types from "@component/types";
 import {isClick} from "@component/utils";
 
 import styles from "./styles.module.css";
@@ -33,11 +32,7 @@ const draftEdge = {
   },
 };
 
-interface CanvasBackgroundProps {
-  onClick?(event: SyntheticEvent, position: Types.Position): void;
-}
-
-function Component(props: CanvasBackgroundProps) {
+function Component(): ReactNode {
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
   const workspace = useWorkspace();

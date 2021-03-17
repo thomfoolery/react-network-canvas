@@ -1,17 +1,28 @@
-import React from "react";
+import React, {ReactNode, Component} from "react";
+import * as Types from "@component/types";
 
 import styles from "./styles.module.css";
 
-function Node(props) {
+interface Props {
+  node: Types.Node;
+  position: Types.Position;
+  isSelected: boolean;
+  inputPorts: Types.Port[];
+  outputPorts: Types.Port[];
+  PortComponent: Component;
+  onMouseUp(): void;
+  onMouseDown(): void;
+}
+function Node(props: Props): ReactNode {
   const {
     node,
     position,
     isSelected,
     inputPorts,
     outputPorts,
+    PortComponent,
     onMouseUp,
     onMouseDown,
-    PortComponent,
   } = props;
 
   const style = {

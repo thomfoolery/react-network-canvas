@@ -9,14 +9,30 @@ interface Props {
 }
 
 const defaultBridge: Types.Bridge = {
-  connect() {},
-  onChangeZoom() {},
-  onMutateGraph() {},
-  onClickCanvas() {},
-  onClickNode() {},
-  onClickPort() {},
-  onKeyPress() {},
-  onChangeSelectedNodeIds() {},
+  connect() {
+    return undefined;
+  },
+  onChangeZoom() {
+    return undefined;
+  },
+  onMutateGraph() {
+    return undefined;
+  },
+  onClickCanvas() {
+    return undefined;
+  },
+  onClickNode() {
+    return undefined;
+  },
+  onClickPort() {
+    return undefined;
+  },
+  onKeyPress() {
+    return undefined;
+  },
+  onChangeSelectedNodeIds() {
+    return undefined;
+  },
 };
 
 function createBridge(value: Partial<Types.Bridge> = {}): Types.Bridge {
@@ -26,14 +42,14 @@ function createBridge(value: Partial<Types.Bridge> = {}): Types.Bridge {
   };
 }
 
-function BridgeProvider(props: Props) {
+function BridgeProvider(props: Props): ReactNode {
   const {value, children} = props;
   const bridge = useMemo(() => createBridge(value), [value]);
 
   return <Context.Provider value={bridge}>{children}</Context.Provider>;
 }
 
-function useBridge() {
+function useBridge(): Types.Bridge {
   return useContext(Context);
 }
 

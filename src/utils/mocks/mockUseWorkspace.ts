@@ -1,4 +1,5 @@
 import {createWorkspace} from "@component/hooks/useWorkspace";
+import * as Types from "@component/types";
 
 const defaultOptions = {
   panZoomRef: {
@@ -14,11 +15,17 @@ const defaultOptions = {
   isSelectBoxKeyDownRef: {
     current: false,
   },
-  setPan() {},
-  setZoom() {},
+  setPan() {
+    return undefined;
+  },
+  setZoom() {
+    return undefined;
+  },
 };
 
-function mockUseWorkspace(workspace = createWorkspace(defaultOptions)) {
+function mockUseWorkspace(
+  workspace: Types.Workspace = createWorkspace(defaultOptions)
+): () => Types.Workspace {
   return () => workspace;
 }
 

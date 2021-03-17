@@ -1,4 +1,4 @@
-import React from "react";
+import React, {ReactNode} from "react";
 import * as Types from "@component/types";
 import {joinClassList} from "@component/utils";
 
@@ -12,7 +12,7 @@ interface Props {
   onMouseDown(): void;
 }
 
-function Port(props: Props) {
+function Port(props: Props): ReactNode {
   const {port, type, onMouseUp, onMouseDown} = props;
 
   const className = joinClassList(

@@ -1,9 +1,12 @@
 import {Position} from "./Position";
 
 interface Workspace {
-  container: HTMLDivElement;
+  setPan(position: Position | ((position: Position) => Position)): void;
+  setZoom(zoom: number | ((zoom: number) => number)): void;
+  container?: HTMLDivElement;
   isSelectBoxKeyDown: boolean;
-  getCanvasPosition(object: any): Position;
+  getElementDimensions(HTMLElement): {width: number; height: number};
+  getCanvasPosition(object: HTMLElement | DOMRect | MouseEvent): Position;
   mountContextScreenOffset: Position;
   panZoom: {
     zoom: number;
