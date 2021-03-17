@@ -1,14 +1,10 @@
 .ZoomControls {
-  position: fixed;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  bottom: 0;
-  left: 0;
   border-radius: 5px;
   padding: 5px;
-  margin: 20px;
   background-color: white;
 }
 

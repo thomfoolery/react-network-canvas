@@ -37,6 +37,7 @@ exports[`renders correctly 1`] = `
     <div
       className="Workspace"
       onMouseDown={[Function]}
+      onMouseLeave={[Function]}
     >
       <div
         className="Canvas"

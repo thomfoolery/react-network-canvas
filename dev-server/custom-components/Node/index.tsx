@@ -29,22 +29,23 @@ function Node(props) {
     <div
       style={style}
       id={`Node-${node.id}`}
+      onMouseUp={onMouseUp}
+      onMouseDown={onMouseDown}
       className={containerClassList.join(" ")}
     >
-      <div className={styles.NodeInputPorts}>
-        {inputPorts.map((port) => (
-          <Port key={port.id} node={node} port={port} type="input" />
-        ))}
-      </div>
-      <div
-        onMouseUp={onMouseUp}
-        onMouseDown={onMouseDown}
-        className={styles.NodeBody}
-      ></div>
-      <div className={styles.NodeOutputPorts}>
-        {outputPorts.map((port) => (
-          <Port key={port.id} node={node} port={port} type="output" />
-        ))}
+      <header>Node {node.id.split("-").shift()}...</header>
+      <div className={styles.NodeBody}>
+        <div className={styles.NodeInputPorts}>
+          {inputPorts.map((port) => (
+            <Port key={port.id} node={node} port={port} type="input" />
+          ))}
+        </div>
+        <div className={styles.NodeContent}></div>
+        <div className={styles.NodeOutputPorts}>
+          {outputPorts.map((port) => (
+            <Port key={port.id} node={node} port={port} type="output" />
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -1,11 +1,13 @@
 import {useRef, useState, useEffect, useCallback} from "react";
 import {useDragManager} from "@component/hooks";
+import * as Types from "@component/types";
 
 interface Options {
   minZoom: number;
   maxZoom: number;
   canvasSize: number;
   canvasMargin: number;
+  initialPan: Types.Position;
   zoomWheelKey?: "Shift" | "Control" | "Meta" | "Alt";
   zoomSensitivity: number;
   startAtCanvasCenter: boolean;
@@ -16,6 +18,7 @@ function usePanZoom(options: Options) {
   const {
     minZoom,
     maxZoom,
+    initialPan,
     canvasSize,
     canvasMargin,
     zoomWheelKey,
@@ -41,7 +44,8 @@ function usePanZoom(options: Options) {
 
   const setPan = useCallback((pan) => {
     setTransform(({x, y}) => {
-      const newPan = typeof pan === "function" ? pan({x, y}) : {x, y};
+      const newPan =
+        typeof pan === "function" ? pan({x, y}) : {x: pan.x, y: pan.y};
       return {...transform, ...newPan};
     });
   }, []);
@@ -94,7 +98,7 @@ function usePanZoom(options: Options) {
   );
 
   useEffect(() => {
-    if (container) {
+    if (container && workspace) {
       boundaryRef.current = calculateBoundary(
         container,
         canvasSize,
@@ -102,10 +106,10 @@ function usePanZoom(options: Options) {
         panZoomRef.current.zoom
       );
     }
-  }, [container, canvasSize, canvasMargin]);
+  }, [container, workspace, canvasSize, canvasMargin]);
 
   useEffect(() => {
-    if (container) {
+    if (container && workspace) {
       let dragStartPosition;
 
       function handleDragStart() {
@@ -132,10 +136,10 @@ function usePanZoom(options: Options) {
         dragManager.unsubscribeToDragMove("panZoom", handleDragMove);
       };
     }
-  }, [container, canvasSize, canvasMargin, setTransform]);
+  }, [container, workspace, canvasSize, canvasMargin, setTransform]);
 
   useEffect(() => {
-    if (container) {
+    if (container && workspace) {
       function onWheel(event) {
         event.preventDefault();
 
@@ -162,7 +166,9 @@ function usePanZoom(options: Options) {
         }
       }
 
-      if (startAtCanvasCenter) {
+      if (initialPan) {
+        setPan(initialPan);
+      } else if (startAtCanvasCenter) {
         setTransform((transform) => ({
           ...transform,
           x: (canvasSize / 2 - container.clientWidth / 2) * -1,
@@ -179,7 +185,7 @@ function usePanZoom(options: Options) {
   }, [container, workspace, canvasSize, canvasMargin, setZoom, setTransform]);
 
   useEffect(() => {
-    if (container) {
+    if (container && workspace) {
       function onGesture(event) {
         event.preventDefault();
       }

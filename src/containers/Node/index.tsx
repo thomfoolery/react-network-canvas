@@ -49,7 +49,12 @@ function Node(props: Props) {
   }, [edges]);
 
   const handleMouseDown = useCallback(() => {
+    if (dragManager.dragData.dragType === "port") {
+      return;
+    }
+
     dragManager.dragData = {dragType: "node", node};
+
     if (
       !workspace.isSelectBoxKeyDown &&
       !graphManager.selectedNodeIds.includes(id)
@@ -74,8 +79,15 @@ function Node(props: Props) {
     [node, bridge, workspace, dragManager, graphManager]
   );
 
-  useEffect(() => edgesIn.forEach(updateEdgePath), [dragDelta]);
-  useEffect(() => edgesOut.forEach(updateEdgePath), [edgesOut, dragDelta]);
+  useEffect(() => edgesIn.forEach((edge) => updateEdgePath(edge, workspace)), [
+    dragDelta,
+    workspace,
+  ]);
+  useEffect(() => edgesOut.forEach((edge) => updateEdgePath(edge, workspace)), [
+    edgesOut,
+    dragDelta,
+    workspace,
+  ]);
 
   useEffect(() => {
     graphManager.subscribeToNodePositionChangeById(id, setPosition);
@@ -113,7 +125,7 @@ function Node(props: Props) {
   );
 }
 
-function updateEdgePath(edge) {
+function updateEdgePath(edge, workspace) {
   const svgPath: any = document.querySelector(`#Edge-${edge.id}`);
   const portFrom: any = document.querySelector(`#Port-${edge.from.portId}`);
   const portTo: any = document.querySelector(`#Port-${edge.to.portId}`);
@@ -127,21 +139,17 @@ function updateEdgePath(edge) {
     return;
   }
 
-  const x1 =
-    portFrom.offsetParent.offsetLeft +
-    portFrom.offsetLeft +
-    portFrom.clientWidth / 2;
+  const portFromBCR = portFrom.getBoundingClientRect();
+  const portFromPosition = workspace.getCanvasPosition(portFromBCR);
 
-  const y1 =
-    portFrom.offsetParent.offsetTop +
-    portFrom.offsetTop +
-    portFrom.clientHeight / 2;
+  const portToBCR = portTo.getBoundingClientRect();
+  const portToPosition = workspace.getCanvasPosition(portToBCR);
 
-  const x2 =
-    portTo.offsetParent.offsetLeft + portTo.offsetLeft + portTo.clientWidth / 2;
+  const x1 = portFromPosition.x + portFrom.clientWidth / 2;
+  const y1 = portFromPosition.y + portFrom.clientHeight / 2;
 
-  const y2 =
-    portTo.offsetParent.offsetTop + portTo.offsetTop + portTo.clientHeight / 2;
+  const x2 = portToPosition.x + portTo.clientWidth / 2;
+  const y2 = portToPosition.y + portTo.clientHeight / 2;
 
   const path = svgGeneratePath(x1, y1, x2, y2);
 

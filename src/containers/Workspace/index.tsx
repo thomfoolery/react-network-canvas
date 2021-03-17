@@ -35,6 +35,28 @@ function Workspace(props: Props) {
   const workspaceDivRef = useRef();
   const isSelectBoxKeyDownRef = useRef(false);
 
+  const initialPan = useMemo(() => {
+    const {nodes} = graphManager;
+    return nodes.length > 0
+      ? ((position) => {
+          return {
+            x: position.x * -1 + canvasMargin,
+            y: position.y * -1 + canvasMargin,
+          };
+        })(
+          nodes.reduce(
+            (acc, node) => {
+              const x = node.position.x < acc.x ? node.position.x : acc.x;
+              const y = node.position.y < acc.y ? node.position.y : acc.y;
+
+              return {x, y};
+            },
+            {x: Infinity, y: Infinity}
+          )
+        )
+      : null;
+  }, []);
+
   const onChangeZoom = useCallback((zoom) => bridge.onChangeZoom(zoom), [
     bridge,
   ]);
@@ -49,6 +71,7 @@ function Workspace(props: Props) {
   } = usePanZoom({
     minZoom,
     maxZoom,
+    initialPan,
     canvasSize,
     canvasMargin,
     zoomWheelKey,
@@ -62,20 +85,20 @@ function Workspace(props: Props) {
       workspaceDivRef.current = el;
       setContainer(el);
     },
-    [workspaceDivRef, setContainer]
+    [graphManager, workspaceDivRef, setPan, setContainer]
   );
 
-  const workspace: Types.Workspace = useMemo(
-    () =>
-      createWorkspace({
+  const workspace: Types.Workspace = useMemo(() => {
+    if (workspaceDivRef.current) {
+      return createWorkspace({
         panZoomRef,
         workspaceDivRef,
         isSelectBoxKeyDownRef,
         setPan,
         setZoom,
-      }),
-    [panZoomRef, workspaceDivRef, isSelectBoxKeyDownRef, setPan, setZoom]
-  );
+      });
+    }
+  }, [panZoomRef, workspaceDivRef, isSelectBoxKeyDownRef, setPan, setZoom]);
 
   const handleMouseDown = useCallback(
     (event) => {
@@ -114,7 +137,7 @@ function Workspace(props: Props) {
       );
   }, []);
 
-  useEffect(() => setWorkspace(workspace), [workspace, setWorkspace]);
+  useEffect(() => setWorkspace(workspace), [workspace]);
 
   useEffect(() => {
     graphManager.workspace = workspace;

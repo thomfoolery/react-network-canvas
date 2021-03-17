@@ -10,6 +10,7 @@ import {
   ZoomControls,
 } from "./custom-components";
 
+import styles from "./styles.module.css";
 // import graph from "./public/graph.json";
 
 const graph = {
@@ -33,7 +34,11 @@ function App() {
       onClickCanvas(event, position, graphManager) {
         const node = graphManager.createNode({
           position,
-          outputPorts: [{id: generateUuid()}, {id: generateUuid()}],
+          inputPorts: [{id: generateUuid(), label: "Input 1"}],
+          outputPorts: [
+            {id: generateUuid(), label: "Output 1"},
+            {id: generateUuid(), label: "Output 2"},
+          ],
         });
 
         graphManager.selectedNodeIds = [node.id];
@@ -75,7 +80,11 @@ function App() {
           }
         );
 
-        const node = graphManager.createNode({position});
+        const node = graphManager.createNode({
+          position,
+          inputPorts: [{id: generateUuid(), label: "Input 1"}],
+          outputPorts: [{id: generateUuid(), label: "Output 1"}],
+        });
 
         graphManager.createEdge({
           from: {
@@ -147,7 +156,12 @@ function App() {
         bridge={bridge}
         options={options}
       />
-      <ZoomControls zoom={zoom} graphManager={graphManager} />
+      <div className={styles.Controls}>
+        <ZoomControls zoom={zoom} graphManager={graphManager} />
+        <button onClick={() => alert(JSON.stringify(graphManager.export()))}>
+          Export
+        </button>
+      </div>
     </div>
   );
 }

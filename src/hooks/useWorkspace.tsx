@@ -47,6 +47,17 @@ function createWorkspace({
     getCanvasPosition(object) {
       const {zoom} = this.panZoom;
 
+      if (object instanceof HTMLElement) {
+        const BCR = object.getBoundingClientRect();
+        return {
+          x:
+            (BCR.left - this.mountContextScreenOffset.x) / zoom -
+            this.panZoom.x / zoom,
+          y:
+            (BCR.top - this.mountContextScreenOffset.y) / zoom -
+            this.panZoom.y / zoom,
+        };
+      }
       if (object instanceof DOMRect) {
         return {
           x:

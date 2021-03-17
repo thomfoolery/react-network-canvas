@@ -450,6 +450,17 @@ function createGraphManager({
     unsubscribeToEdgesChange(id: string, fn: Function) {
       __.subscriptions.edgesChange.removeListenerForId(id, fn);
     },
+    // import/export
+    import({nodes, edges}) {
+      setNodes(nodes);
+      setEdges(edges);
+    },
+    export() {
+      return {
+        nodes: [...__.nodes],
+        edges: [...__.edges],
+      };
+    },
   };
 
   return API;

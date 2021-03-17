@@ -15,20 +15,23 @@ interface Props {
 
 function Canvas(props: Props) {
   const {transform, onClick = () => null} = props;
-  const workspace = useWorkspace();
-  const dragManager = useDragManager();
   const graphManager = useGraphManager();
+  const dragManager = useDragManager();
+  const workspace = useWorkspace();
 
   const selectBoxRef = useRef();
 
-  const handleMouseDown = useCallback((event) => {
-    if (workspace.isSelectBoxKeyDown) {
-      dragManager.dragData = {
-        type: "selectbox",
-        startPosition: workspace.getCanvasPosition(event),
-      };
-    }
-  }, []);
+  const handleMouseDown = useCallback(
+    (event) => {
+      if (workspace.isSelectBoxKeyDown) {
+        dragManager.dragData = {
+          type: "selectbox",
+          startPosition: workspace.getCanvasPosition(event),
+        };
+      }
+    },
+    [workspace]
+  );
 
   useEffect(() => {
     function handleDragMove(event, dragDelta, dragData) {
