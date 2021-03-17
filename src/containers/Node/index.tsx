@@ -55,7 +55,7 @@ function Node(props: Props): ReactNode {
   }, [edges]);
 
   const handleMouseDown = useCallback(() => {
-    if (dragManager.dragData.dragType === "port") {
+    if (dragManager.dragData?.dragType === "port") {
       return;
     }
 
@@ -132,9 +132,11 @@ function Node(props: Props): ReactNode {
 }
 
 function updateEdgePath(edge, workspace) {
-  const svgPath: any = document.querySelector(`#Edge-${edge.id}`);
-  const portFrom: any = document.querySelector(`#Port-${edge.from.portId}`);
-  const portTo: any = document.querySelector(`#Port-${edge.to.portId}`);
+  if (!workspace) return;
+
+  const svgPath = document.querySelector(`#Edge-${edge.id}`);
+  const portFrom = document.querySelector(`#Port-${edge.from.portId}`);
+  const portTo = document.querySelector(`#Port-${edge.to.portId}`);
 
   if (!portFrom) {
     console.log(`Port ${edge.from.portId} does not exist`);
@@ -159,7 +161,7 @@ function updateEdgePath(edge, workspace) {
 
   const path = svgGeneratePath(x1, y1, x2, y2);
 
-  svgPath.setAttribute("d", path);
+  svgPath?.setAttribute("d", path);
   svgPath?.nextElementSibling?.setAttribute("d", path);
 }
 

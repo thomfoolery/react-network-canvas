@@ -119,7 +119,7 @@ function usePanZoom(options: Options) {
       function handleDragMove(event, dragDelta, dragData) {
         const {minX, minY, maxX, maxY} = boundaryRef.current;
 
-        if (dragData.type === "panzoom") {
+        if (dragData?.type === "panzoom") {
           setTransform((transform) => ({
             ...transform,
             x: clamp(minX, maxX, dragStartPosition.x + dragDelta.x),
@@ -142,6 +142,11 @@ function usePanZoom(options: Options) {
     if (container && workspace) {
       function onWheel(event) {
         event.preventDefault();
+
+        console.log(dragManager.dragData);
+        if (dragManager.dragData) {
+          return;
+        }
 
         if (isZoomKeyDownRef.current) {
           const {deltaY} = event;
@@ -182,7 +187,15 @@ function usePanZoom(options: Options) {
         container.removeEventListener("wheel", onWheel);
       };
     }
-  }, [container, workspace, canvasSize, canvasMargin, setZoom, setTransform]);
+  }, [
+    container,
+    workspace,
+    canvasSize,
+    canvasMargin,
+    dragManager,
+    setZoom,
+    setTransform,
+  ]);
 
   useEffect(() => {
     if (container && workspace) {

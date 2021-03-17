@@ -36,7 +36,7 @@ const DEFAULT_THEME = {
 const DEFAULT_OPTIONS: Types.Options = {
   gridSize: 10,
   canvasSize: 2000,
-  isRoundToGridEnabled: false,
+  isSnapToGridEnabled: false,
   startAtCanvasCenter: true,
   canvasMargin: 50,
   zoomSensitivity: 0.001,

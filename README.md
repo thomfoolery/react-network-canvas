@@ -30,7 +30,7 @@ interface Props {
 interface Options {
   gridSize: number;
   canvasSize: number;
-  isRoundToGridEnabled: boolean;
+  isSnapToGridEnabled: boolean;
   startAtCanvasCenter: boolean;
   canvasMargin: number;
   zoomSensitivity: number;
@@ -45,7 +45,7 @@ interface Options {
 const DEFAULT_OPTIONS: Types.Options = {
   gridSize: 10,
   canvasSize: 2000,
-  isRoundToGridEnabled: false,
+  isSnapToGridEnabled: false,
   startAtCanvasCenter: true,
   canvasMargin: 50,
   zoomSensitivity: 0.001,
@@ -271,7 +271,7 @@ function App() {
     gridSize: 20,
     zoomWheelKey: "Shift",
     selectBoxKey: "Shift",
-    isRoundToGridEnabled: true,
+    isSnapToGridEnabled: true,
   };
 
   return (

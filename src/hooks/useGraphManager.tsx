@@ -135,9 +135,9 @@ function createGraphManager({
   }
 
   function updateNodePositionById(id: string, dragDelta: Types.Position) {
-    const {isRoundToGridEnabled} = options;
+    const {isSnapToGridEnabled} = options;
     const node = __.nodesByIdHash[id];
-    const position = isRoundToGridEnabled
+    const position = isSnapToGridEnabled
       ? roundToGrid(
           {
             x: node.position.x + dragDelta.x,
@@ -204,8 +204,8 @@ function createGraphManager({
       return {from: undefined, to: undefined};
     },
     createNode(nodeProps: Partial<Types.Node>): Types.Node {
-      const {isRoundToGridEnabled, gridSize} = options;
-      const position = isRoundToGridEnabled
+      const {isSnapToGridEnabled, gridSize} = options;
+      const position = isSnapToGridEnabled
         ? roundToGrid(nodeProps.position || {x: 0, y: 0}, gridSize)
         : nodeProps.position || {x: 0, y: 0};
 
@@ -290,11 +290,11 @@ function createGraphManager({
     handleDragMove(event, dragDelta: Types.Position, dragData: any) {
       const {selectedNodeIds, dragManager, workspace} = __;
 
-      if (dragManager?.dragData.dragType === "node") {
+      if (dragManager?.dragData?.dragType === "node") {
         __.subscriptions.dragDeltaById.notifyIds(selectedNodeIds, dragDelta);
       }
 
-      if (workspace && dragManager?.dragData.dragType === "port") {
+      if (workspace && dragManager?.dragData?.dragType === "port") {
         const position = workspace.getCanvasPosition(event);
 
         const x1 = dragData.port.position.x;
@@ -313,10 +313,10 @@ function createGraphManager({
         y: 0,
       });
 
-      if (dragData.dragType === "node") {
+      if (dragData?.dragType === "node") {
         selectedNodeIds.forEach((id) => updateNodePositionById(id, dragDelta));
       }
-      if (dragData.dragType === "port") {
+      if (dragData?.dragType === "port") {
         clearDraftEdgePath();
       }
     },

@@ -3,7 +3,7 @@ import {ReactComponent} from "react";
 interface Options {
   gridSize: number;
   canvasSize: number;
-  isRoundToGridEnabled: boolean;
+  isSnapToGridEnabled: boolean;
   startAtCanvasCenter: boolean;
   canvasMargin: number;
   zoomSensitivity: number;

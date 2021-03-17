@@ -5,12 +5,7 @@ import {v1 as generateUuid} from "uuid";
 
 import {NetworkCanvas} from "@component";
 
-import graph from "./public/graph.json";
-
-// const graph = {
-//   nodes: [],
-//   edges: [],
-// };
+import graph from "./public/graph-1.json";
 
 function App() {
   const {nodes, edges} = graph;
@@ -79,21 +74,7 @@ function App() {
     },
   };
 
-  const options = {
-    gridSize: 20,
-    zoomWheelKey: "Meta",
-    selectBoxKey: "Meta",
-    isRoundToGridEnabled: true,
-  };
-
-  return (
-    <NetworkCanvas
-      nodes={nodes}
-      edges={edges}
-      bridge={bridge}
-      options={options}
-    />
-  );
+  return <NetworkCanvas nodes={nodes} edges={edges} bridge={bridge} />;
 }
 
 ReactDOM.render(createElement(App), document.getElementById("app"));

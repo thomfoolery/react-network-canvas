@@ -39,7 +39,6 @@ function createDragManager(): Types.DragManager {
     document.addEventListener("selectstart", handleOnSelectStart);
     event.currentTarget.addEventListener("mousemove", handleDragMove);
     __.dragDelta = {x: 0, y: 0};
-    __.dragData = __.dragData || {};
     __.dragStartPosition = {x: event.screenX, y: event.screenY};
     __.subscriptions.dragStartById.notifyAll(event);
   }
@@ -89,7 +88,7 @@ function createDragManager(): Types.DragManager {
       return {...__.dragDelta};
     },
     get dragData() {
-      return {...__.dragData};
+      return __.dragData ? {...__.dragData} : null;
     },
     set dragData(dragData: any) {
       __.dragData = dragData;
@@ -130,7 +129,7 @@ interface Props {
   children?: ReactNode;
 }
 
-function DragManagerProvider(props: Props) {
+function DragManagerProvider(props: Props): ReactNode {
   const dragManager = useMemo(() => createDragManager(), []);
   const containerRef = useRef();
   const {children} = props;
@@ -154,7 +153,7 @@ function DragManagerProvider(props: Props) {
   );
 }
 
-function useDragManager() {
+function useDragManager(): Types.DragManager {
   return useContext(Context);
 }
 

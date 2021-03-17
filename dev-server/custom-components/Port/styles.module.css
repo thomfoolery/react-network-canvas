@@ -32,6 +32,10 @@
   justify-content: flex-end;
 }
 
-.Output.PortTarget {
+.Output .PortTarget {
   cursor: pointer;
+}
+
+.Output .PortTarget:hover {
+  background-color: #00ffc8;
 }

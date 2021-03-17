@@ -11,17 +11,14 @@ import {
 } from "./custom-components";
 
 import styles from "./styles.module.css";
-// import graph from "./public/graph.json";
 
-const graph = {
-  nodes: [],
-  edges: [],
-};
+import graph from "./public/graph-2.json";
 
 function App() {
   const {nodes, edges} = graph;
   const [zoom, setZoom] = useState(1);
   const [graphManager, setGraphManager] = useState();
+  const [isDeleteVisible, setIsDeleteVisible] = useState();
 
   const bridge = useMemo(
     () => ({
@@ -103,6 +100,13 @@ function App() {
           graphManager.removeNodesByIds(graphManager.selectedNodeIds);
         }
       },
+      onChangeSelectedNodeIds(selectedNodeIds) {
+        if (selectedNodeIds.length > 0) {
+          setIsDeleteVisible(true);
+        } else {
+          setIsDeleteVisible(false);
+        }
+      },
     }),
     []
   );
@@ -122,7 +126,7 @@ function App() {
         backgroundPosition: "-10px -10px",
       },
       edge: {
-        stroke: "grey",
+        stroke: "#00ffc8",
         strokeWidth: "3px",
         hover: {
           stroke: "red",
@@ -141,6 +145,8 @@ function App() {
       maxZoom: 1.5,
       gridSize: 20,
       zoomWheelKey: "Shift",
+      selectBoxKey: "Meta",
+      isSnapToGridEnabled: true,
       NodeComponent,
       PortComponent,
     }),
@@ -161,6 +167,15 @@ function App() {
         <button onClick={() => alert(JSON.stringify(graphManager.export()))}>
           Export
         </button>
+        {isDeleteVisible && (
+          <button
+            onClick={() =>
+              graphManager.removeNodesByIds(graphManager.selectedNodeIds)
+            }
+          >
+            Delete
+          </button>
+        )}
       </div>
     </div>
   );
