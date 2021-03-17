@@ -6,6 +6,9 @@ Network diagrams are useful for modeling things such as execution audio synthesi
 
 This component aspires to be completely customizable in behavior and styles, but this is an ongoing effort.
 
+<img width="100%" src="https://user-images.githubusercontent.com/188110/111396785-2fcb4880-8696-11eb-86b1-57dab8659c60.png">
+
+### Demo
 https://user-images.githubusercontent.com/188110/111396711-09a5a880-8696-11eb-8c8c-607e139e5666.mov
 
 ### Example
