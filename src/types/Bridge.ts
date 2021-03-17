@@ -14,7 +14,7 @@ interface GraphEvent {
 }
 
 interface Bridge {
-  connect(graphEvent: GraphEvent): void;
+  connect(graphManager: Types.GraphManager): void;
   onChangeZoom(zoom: number): void;
   onMutateGraph(graphEvent: GraphEvent): void;
   onClickCanvas(
