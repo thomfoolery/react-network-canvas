@@ -11,7 +11,7 @@ interface Props {
   theme?: any;
 }
 
-function NodeCanvas(props: Props) {
+function NetworkCanvas(props: Props) {
   const {nodes = [], edges = [], bridge, theme = {}, options = {}} = props;
   const mergedOptions = useMemo(() => createOptions(options), [options]);
 
@@ -26,4 +26,4 @@ function NodeCanvas(props: Props) {
   );
 }
 
-export {NodeCanvas};
+export {NetworkCanvas};

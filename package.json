@@ -1,5 +1,5 @@
 {
-  "name": "react-component-node-canvas",
+  "name": "react-graph-canvas",
   "version": "1.0.0",
   "main": "dist/index.js",
   "module": "dist/index.es.js",

@@ -3,14 +3,14 @@ import ReactDOM from "react-dom";
 import {createElement} from "react";
 import {v1 as generateUuid} from "uuid";
 
-import {NodeCanvas} from "@component";
+import {NetworkCanvas} from "@component";
 
-// import graph from "./public/graph.json";
+import graph from "./public/graph.json";
 
-const graph = {
-  nodes: [],
-  edges: [],
-};
+// const graph = {
+//   nodes: [],
+//   edges: [],
+// };
 
 function App() {
   const {nodes, edges} = graph;
@@ -87,7 +87,12 @@ function App() {
   };
 
   return (
-    <NodeCanvas nodes={nodes} edges={edges} bridge={bridge} options={options} />
+    <NetworkCanvas
+      nodes={nodes}
+      edges={edges}
+      bridge={bridge}
+      options={options}
+    />
   );
 }
 

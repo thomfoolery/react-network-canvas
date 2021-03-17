@@ -13,7 +13,7 @@ exports[`renders correctly 1`] = `
   }
 >
   <div
-    className="NodeCanvas"
+    className="NetworkCanvas"
     style={
       Object {
         "--NC-canvas-background-color": "white",

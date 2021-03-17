@@ -57,6 +57,14 @@ function Workspace(props: Props) {
     onChangeZoom,
   });
 
+  const handleRef = useCallback(
+    (el) => {
+      workspaceDivRef.current = el;
+      setContainer(el);
+    },
+    [workspaceDivRef, setContainer]
+  );
+
   const workspace: Types.Workspace = useMemo(
     () =>
       createWorkspace({
@@ -78,13 +86,33 @@ function Workspace(props: Props) {
     [dragManager, graphManager, workspaceDivRef]
   );
 
-  const handleRef = useCallback(
-    (el) => {
-      workspaceDivRef.current = el;
-      setContainer(el);
-    },
-    [workspaceDivRef, setContainer]
-  );
+  // on mouse leaves workspace
+  // reset key tracker
+  const handleMouseLeave = useCallback(() => {
+    isSelectBoxKeyDownRef.current = false;
+  }, []);
+
+  // on page blur
+  // reset key tracker
+  useEffect(() => {
+    function handleVisibilityChange() {
+      if (document.hidden) {
+        isSelectBoxKeyDownRef.current = false;
+      }
+    }
+
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+      false
+    );
+    return () =>
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+        false
+      );
+  }, []);
 
   useEffect(() => setWorkspace(workspace), [workspace, setWorkspace]);
 
@@ -124,6 +152,7 @@ function Workspace(props: Props) {
         ref={handleRef}
         className={styles.Workspace}
         onMouseDown={handleMouseDown}
+        onMouseLeave={handleMouseLeave}
       >
         <Canvas transform={transform} />
       </div>

@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import {createElement} from "react";
 import {v1 as generateUuid} from "uuid";
 
-import {NodeCanvas} from "@component";
+import {NetworkCanvas} from "@component";
 import {
   Node as NodeComponent,
   Port as PortComponent,
@@ -140,7 +140,7 @@ function App() {
 
   return (
     <div style={{width: "100%", height: "100%"}}>
-      <NodeCanvas
+      <NetworkCanvas
         nodes={nodes}
         edges={edges}
         theme={theme}

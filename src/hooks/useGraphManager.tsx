@@ -82,8 +82,8 @@ function createGraphManager({
   dragManager,
 }: GraphManagerArguments = {}) {
   const __: GraphManagerPrivateProps = {
-    nodes,
-    edges,
+    nodes: [],
+    edges: [],
     nodesByIdHash: {},
     edgesByIdHash: {},
     edgesByNodeIdHash: {},
@@ -100,6 +100,9 @@ function createGraphManager({
       edgesChange: createPublisher(),
     },
   };
+
+  setNodes(nodes);
+  setEdges(edges);
 
   function setNodes(nodes: Types.Node[]) {
     __.nodes = [...nodes];

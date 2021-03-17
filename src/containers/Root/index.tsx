@@ -37,7 +37,11 @@ function Root(props: Props) {
     <OptionsProvider value={options}>
       <BridgeProvider value={bridge}>
         <DragManagerProvider>
-          <div style={cssVars} ref={containerRef} className={styles.NodeCanvas}>
+          <div
+            style={cssVars}
+            ref={containerRef}
+            className={styles.NetworkCanvas}
+          >
             <GraphManagerProvider nodes={nodes} edges={edges}>
               <Workspace />
             </GraphManagerProvider>
