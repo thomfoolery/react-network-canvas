@@ -338,9 +338,8 @@ function createGraphManager({
       if (dragData?.dragType === "node") {
         selectedNodeIds.forEach((id) => updateNodePositionById(id, dragDelta));
       }
-      if (dragData?.dragType === "port") {
-        clearDraftEdgePath();
-      }
+
+      clearDraftEdgePath();
     },
     updateNodePositionById,
     subscribeToDragDeltaById(id: string, fn: () => void) {

@@ -72,6 +72,13 @@ function Port(props: Props): ReactNode {
           },
         };
         graphManager.createEdge(edge);
+
+        // clear dragData to prevent the mouse up handler on the
+        // parent Node doesnt try to duplicate this edge
+        dragManager.dragData = {
+          ...dragManager.dragData,
+          dragType: null,
+        };
       }
     },
     [node, port, type, dragManager, graphManager]
