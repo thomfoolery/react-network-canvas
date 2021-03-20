@@ -30,9 +30,9 @@
 
 .SelectBox {
   position: absolute;
-  background-color: rgba(100, 148, 237, 0.25);
+  background-color: var(--NC-selectbox-background-color);
   border-radius: 5px;
-  box-shadow: 0 0 0 1px cornflowerblue;
+  box-shadow: var(--NC-selectbox-box-shadow);
   pointer-events: none;
   opacity: 0;
 }

@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react";
+import React, {useMemo, useState, useCallback} from "react";
 import ReactDOM from "react-dom";
 import {createElement} from "react";
 import {v1 as generateUuid} from "uuid";
@@ -8,11 +8,13 @@ import {
   Node as NodeComponent,
   Port as PortComponent,
   ZoomControls,
+  Palette,
 } from "./custom-components";
 
 import styles from "./styles.module.css";
 
-import graph from "./public/graph-2.json";
+// import graph from "./public/graph-2.json";
+const graph = {nodes: [], edges: []};
 
 function App() {
   const {nodes, edges} = graph;
@@ -28,71 +30,20 @@ function App() {
       onChangeZoom(zoom) {
         setZoom(zoom);
       },
-      onClickCanvas(event, position, graphManager) {
+      onDropCanvas(event, position, graphManager) {
+        event.preventDefault();
+
+        const type = event.dataTransfer.getData("text/plain");
         const node = graphManager.createNode({
           position,
-          inputPorts: [{id: generateUuid(), label: "Input 1"}],
-          outputPorts: [
-            {id: generateUuid(), label: "Output 1"},
-            {id: generateUuid(), label: "Output 2"},
-          ],
+          data: {
+            type,
+          },
+          inputPorts: type !== "SRC" ? [{id: generateUuid(), label: "In"}] : [],
+          outputPorts:
+            type !== "DEST" ? [{id: generateUuid(), label: "Out"}] : [],
         });
 
-        graphManager.selectedNodeIds = [node.id];
-      },
-      onClickPort(event, port, parentNode, graphManager) {
-        const parentNodeElement = document.querySelector(
-          `#Node-${parentNode.id}`
-        );
-        const edgesOut = graphManager
-          .getEdgesByNodeId(parentNode.id)
-          .filter(({from}) => from.nodeId === parentNode.id);
-
-        const BCR = parentNodeElement.getBoundingClientRect();
-        const nodeDimensions = graphManager.workspace.getElementDimensions(
-          parentNodeElement
-        );
-        const initialPosition = graphManager.workspace.getCanvasPosition(BCR);
-        const position = edgesOut.reduce(
-          (acc, edge) => {
-            const nodeElement = document.querySelector(
-              `#Node-${edge.to.nodeId}`
-            );
-            const BCR = nodeElement.getBoundingClientRect();
-            const nodeDimensions = graphManager.workspace.getElementDimensions(
-              nodeElement
-            );
-            const position = graphManager.workspace.getCanvasPosition(BCR);
-            if (position.y >= acc.y) {
-              return {
-                ...acc,
-                y: position.y + nodeDimensions.height + 20,
-              };
-            }
-            return acc;
-          },
-          {
-            x: initialPosition.x + nodeDimensions.width + 50,
-            y: initialPosition.y,
-          }
-        );
-
-        const node = graphManager.createNode({
-          position,
-          inputPorts: [{id: generateUuid(), label: "Input 1"}],
-          outputPorts: [{id: generateUuid(), label: "Output 1"}],
-        });
-
-        graphManager.createEdge({
-          from: {
-            nodeId: parentNode.id,
-            portId: port.id,
-          },
-          to: {
-            nodeId: node.id,
-            portId: node.inputPorts[0].id,
-          },
-        });
         graphManager.selectedNodeIds = [node.id];
       },
       onKeyPress(event, key, graphManager) {
@@ -114,25 +65,28 @@ function App() {
   const theme = useMemo(
     () => ({
       workspace: {
-        backgroundColor: "#222",
+        backgroundColor: "#050a14",
       },
       canvas: {
-        boxShadow: "0 0 0 1px rgba(255,255,255,0.2)",
-        backgroundColor: "#333",
+        backgroundColor: "#040d21",
+        boxShadow: "0 0 0 2px #00ffc844",
         backgroundImage: [
-          "radial-gradient(rgba(255,255,255,0.2)",
-          "rgba(255,255,255,0.2) 1.5px,transparent 1.5px)",
+          "radial-gradient(rgba(162, 250, 207, 0.2), rgba(162, 250, 207, 0.2) 1px, transparent 1px, transparent)",
         ].join(","),
         backgroundPosition: "-10px -10px",
+      },
+      selectbox: {
+        backgroundColor: "#00ffc822",
+        boxShadow: "0 0 0 1px #00ffc8",
       },
       edge: {
         stroke: "#00ffc8",
         strokeWidth: "3px",
         hover: {
-          stroke: "red",
+          stroke: "#ff00dd",
         },
         draft: {
-          stroke: "cornflowerblue",
+          stroke: "#00ffc8",
         },
       },
     }),
@@ -144,8 +98,8 @@ function App() {
       minZoom: 0.5,
       maxZoom: 1.5,
       gridSize: 20,
-      zoomWheelKey: "Shift",
       selectBoxKey: "Meta",
+      zoomWheelKey: "Shift",
       isSnapToGridEnabled: true,
       NodeComponent,
       PortComponent,
@@ -162,6 +116,9 @@ function App() {
         bridge={bridge}
         options={options}
       />
+      <div className={styles.Palette}>
+        <Palette />
+      </div>
       <div className={styles.Controls}>
         <ZoomControls zoom={zoom} graphManager={graphManager} />
         <button onClick={() => alert(JSON.stringify(graphManager.export()))}>

@@ -33,7 +33,7 @@ function Node(props) {
       onMouseDown={onMouseDown}
       className={containerClassList.join(" ")}
     >
-      <header>Node {node.id.split("-").shift()}...</header>
+      <header>{node?.data?.type}</header>
       <div className={styles.NodeBody}>
         <div className={styles.NodeInputPorts}>
           {inputPorts.map((port) => (

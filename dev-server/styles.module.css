@@ -1,3 +1,10 @@
+.Palette {
+  position: fixed;
+  margin: 20px;
+  top: 0;
+  left: 0;
+}
+
 .Controls {
   position: fixed;
   margin: 20px;
@@ -16,7 +23,8 @@
   justify-content: center;
   align-items: center;
 
-  background-color: white;
+  background-color: #00ffc8;
+  color: black;
   padding: 10px 10px;
   border-radius: 5px;
   margin-left: 10px;

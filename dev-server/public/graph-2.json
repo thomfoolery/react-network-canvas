@@ -9,7 +9,7 @@
         {"id": "ed123231-86d9-11eb-af8b-3350f07158b4", "label": "Output 1"},
         {"id": "ed123232-86d9-11eb-af8b-3350f07158b4", "label": "Output 2"}
       ],
-      "position": {"x": 680, "y": 840}
+      "position": {"x": 280, "y": 300}
     },
     {
       "id": "fee520d1-8729-11eb-bebe-bd3c0037de9c",
@@ -19,7 +19,7 @@
       "outputPorts": [
         {"id": "fee520d0-8729-11eb-bebe-bd3c0037de9c", "label": "Output 1"}
       ],
-      "position": {"x": 960, "y": 840}
+      "position": {"x": 560, "y": 300}
     },
     {
       "id": "ffebe272-8729-11eb-bebe-bd3c0037de9c",
@@ -29,7 +29,7 @@
       "outputPorts": [
         {"id": "ffebe271-8729-11eb-bebe-bd3c0037de9c", "label": "Output 1"}
       ],
-      "position": {"x": 960, "y": 1000}
+      "position": {"x": 560, "y": 460}
     },
     {
       "id": "0180da52-872a-11eb-bebe-bd3c0037de9c",
@@ -39,7 +39,7 @@
       "outputPorts": [
         {"id": "0180da51-872a-11eb-bebe-bd3c0037de9c", "label": "Output 1"}
       ],
-      "position": {"x": 1240, "y": 840}
+      "position": {"x": 840, "y": 300}
     },
     {
       "id": "02ffb222-872a-11eb-bebe-bd3c0037de9c",
@@ -49,7 +49,7 @@
       "outputPorts": [
         {"id": "02ffb221-872a-11eb-bebe-bd3c0037de9c", "label": "Output 1"}
       ],
-      "position": {"x": 1240, "y": 920}
+      "position": {"x": 840, "y": 380}
     },
     {
       "id": "05a97562-872a-11eb-bebe-bd3c0037de9c",
@@ -59,7 +59,7 @@
       "outputPorts": [
         {"id": "05a97561-872a-11eb-bebe-bd3c0037de9c", "label": "Output 1"}
       ],
-      "position": {"x": 1240, "y": 1000}
+      "position": {"x": 840, "y": 460}
     }
   ],
   "edges": [

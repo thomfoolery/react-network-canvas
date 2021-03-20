@@ -6,4 +6,5 @@ export interface Node {
   position: Position;
   inputPorts: Port[];
   outputPorts: Port[];
+  data?: any;
 }

@@ -1,0 +1,19 @@
+.Palette {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.Palette > * {
+  border-radius: 5px;
+  padding: 5px 10px;
+  background-color: #00ffc8;
+  color: black;
+}
+
+.Palette > * + * {
+  margin-top: 20px;
+}

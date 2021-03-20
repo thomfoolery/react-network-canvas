@@ -98,6 +98,18 @@ function Workspace(): ReactNode {
     }
   }, [panZoomRef, workspaceDivRef, isSelectBoxKeyDownRef, setPan, setZoom]);
 
+  const handleDrop = useCallback(
+    (event) => {
+      const position = workspace.getCanvasPosition(event);
+      bridge.onDropCanvas(event, position, graphManager);
+    },
+    [bridge, workspace, graphManager]
+  );
+
+  const handleDragOver = useCallback((event) => {
+    event.preventDefault();
+  }, []);
+
   const handleMouseDown = useCallback(
     (event) => {
       if (event.target === workspaceDivRef.current) {
@@ -172,6 +184,8 @@ function Workspace(): ReactNode {
       <div
         ref={handleRef}
         className={styles.Workspace}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
         onMouseDown={handleMouseDown}
         onMouseLeave={handleMouseLeave}
       >

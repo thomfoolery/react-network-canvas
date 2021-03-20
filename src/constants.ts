@@ -21,6 +21,10 @@ const DEFAULT_THEME = {
       "radial-gradient(lightgray, lightgray 1px, transparent 1px)",
     backgroundPosition: "50% 50%",
   },
+  selectbox: {
+    backgroundColor: "rgba(100, 148, 237, 0.25)",
+    boxShadow: "0 0 0 1px cornflowerblue",
+  },
   edge: {
     stroke: "black",
     strokeWidth: "3px",

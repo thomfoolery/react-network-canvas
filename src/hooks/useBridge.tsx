@@ -27,6 +27,9 @@ const defaultBridge: Types.Bridge = {
   onClickPort() {
     return undefined;
   },
+  onDropCanvas() {
+    return undefined;
+  },
   onKeyPress() {
     return undefined;
   },

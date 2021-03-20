@@ -5,7 +5,8 @@
   align-items: center;
   border-radius: 5px;
   padding: 5px;
-  background-color: white;
+  background-color: #00ffc8;
+  color: black;
 }
 
 .ZoomControlsButton {

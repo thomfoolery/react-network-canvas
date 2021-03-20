@@ -23,5 +23,5 @@ module.exports = {
     quotes: ["error", "double"],
     semi: ["error", "always"],
   },
-  ignorePatterns: ["**/*.test.ts", "**/*.test.tsx"],
+  ignorePatterns: ["dev-server/**/*", "**/*.test.ts", "**/*.test.tsx"],
 };

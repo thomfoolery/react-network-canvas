@@ -33,6 +33,11 @@ interface Bridge {
     node: Types.Node,
     graphManager: any
   ): void;
+  onDropCanvas(
+    event: React.SyntheticEvent,
+    position: Types.Position,
+    graphManager: any
+  ): void;
   onChangeSelectedNodeIds(selectedNodesIds: string[], graphManager: any): void;
   onKeyPress(event: React.SyntheticEvent, key: string, graphManager: any): void;
 }
