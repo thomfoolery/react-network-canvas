@@ -74,8 +74,8 @@ function Node(props: Props): ReactNode {
       const {dragData} = dragManager;
       if (
         dragData?.dragType === "port" &&
-        node.inputPorts.length === 1 &&
-        dragData?.port
+        dragData?.port?.parentNode.id !== node.id &&
+        node.inputPorts.length === 1
       ) {
         const edge = {
           from: {
