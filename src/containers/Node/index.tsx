@@ -71,6 +71,24 @@ function Node(props: Props): ReactNode {
 
   const handleMouseUp = useCallback(
     (event) => {
+      const {dragData} = dragManager;
+      if (
+        dragData?.dragType === "port" &&
+        node.inputPorts.length === 1 &&
+        dragData?.port
+      ) {
+        const edge = {
+          from: {
+            nodeId: dragData.port.parentNode.id,
+            portId: dragData.port.id,
+          },
+          to: {
+            nodeId: node.id,
+            portId: node.inputPorts[0].id,
+          },
+        };
+        graphManager.createEdge(edge);
+      }
       if (isClick(dragManager.dragDelta)) {
         if (workspace.isSelectBoxKeyDown) {
           if (graphManager.selectedNodeIds.includes(id)) {
