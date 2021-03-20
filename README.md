@@ -10,7 +10,9 @@ This component aspires to be completely customizable in behavior and styles, but
 
 ## Demo
 
-https://user-images.githubusercontent.com/188110/111396711-09a5a880-8696-11eb-8c8c-607e139e5666.mov
+https://337n0.sse.codesandbox.io/demo-1/
+
+https://337n0.sse.codesandbox.io/demo-2/
 
 ## Component Props
 
@@ -18,8 +20,8 @@ https://user-images.githubusercontent.com/188110/111396711-09a5a880-8696-11eb-8c
 interface Props {
   nodes: Types.Node[];
   edges: Types.Edge[];
-  options?: Partial<Types.Options>;
   bridge?: Types.Bridge;
+  options?: any;
   theme?: any;
 }
 ```
@@ -34,6 +36,7 @@ interface Options {
   startAtCanvasCenter: boolean;
   canvasMargin: number;
   zoomSensitivity: number;
+  initialPanOffset: Types.Position;
   selectBoxKey?: "Shift" | "Control" | "Alt" | "Meta";
   zoomWheelKey?: "Shift" | "Control" | "Alt" | "Meta";
   maxZoom: number;
@@ -48,6 +51,7 @@ const DEFAULT_OPTIONS: Types.Options = {
   isSnapToGridEnabled: false,
   startAtCanvasCenter: true,
   canvasMargin: 50,
+  initialPanOffset: {x: 50, y: 50},
   zoomSensitivity: 0.001,
   zoomWheelKey: undefined,
   selectBoxKey: "Shift",
@@ -71,6 +75,10 @@ const DEFAULT_THEME = {
     backgroundImage:
       "radial-gradient(lightgray, lightgray 1px, transparent 1px)",
     backgroundPosition: "50% 50%",
+  },
+  selectbox: {
+    backgroundColor: "rgba(100, 148, 237, 0.25)",
+    boxShadow: "0 0 0 1px cornflowerblue",
   },
   edge: {
     stroke: "black",
@@ -108,6 +116,11 @@ interface Bridge {
     node: Types.Node,
     graphManager: any
   ): void;
+  onDropCanvas(
+    event: React.SyntheticEvent,
+    position: Types.Position,
+    graphManager: any
+  ): void;
   onChangeSelectedNodeIds(selectedNodesIds: string[], graphManager: any): void;
   onKeyPress(event: React.SyntheticEvent, key: string, graphManager: any): void;
 }
@@ -117,44 +130,44 @@ interface Bridge {
 
 ```ts
 interface GraphManager {
-  nodes: Types.Node;
-  edges: Types.Edge;
+  nodes: Types.Node[];
+  edges: Types.Edge[];
   bridge: Types.Bridge;
-  workspace: Types.Workspace;
+  workspace: Types.Workspace | undefined;
   dragManager: Types.DragManager;
   selectedNodeIds: string[];
 
   getNodeById(id: string): Types.Node;
   getNodesByEdgeId(id: string): {from?: Types.Node; to?: Types.Node};
-  createNode(nodeProps: Partial<Types.Node>): Types.Node;
+  createNode(nodeProps: Partial<Types.Node>): Types.Node | null;
   removeNodeById(id: string): void;
   removeNodesByIds(removedNodeIds: string[]): void;
-  subscribeToNodesChange(fn: Function): void;
-  unsubscribeToNodesChange(fn: Function): void;
+  subscribeToNodesChange(fn: () => void): void;
+  unsubscribeToNodesChange(fn: () => void): void;
 
   handleDragMove(event, dragDelta: Types.Position, dragData: any): void;
   handleDragEnd(event, dragDelta: Types.Position, dragData: any): void;
   updateNodePositionById(id: string, dragDelta: Types.Position): void;
-  subscribeToDragDeltaById(id: string, fn: Function): void;
-  unsubscribeToDragDeltaById(id: string, fn: Function): void;
-  subscribeToNodePositionChangeById(id: string, fn: Function): void;
-  unsubscribeToNodePositionChangeById(id: string, fn: Function): void;
+  subscribeToDragDeltaById(id: string, fn: () => void): void;
+  unsubscribeToDragDeltaById(id: string, fn: () => void): void;
+  subscribeToNodePositionChangeById(id: string, fn: () => void): void;
+  unsubscribeToNodePositionChangeById(id: string, fn: () => void): void;
 
   appendSelectedNodeId(id: string): void;
   appendSelectedNodeIds(appendedNodeIds: string[]): void;
   removeSelectedNodeId(id: string): void;
   removeSelectedNodeIds(unselectedNodeIds: string[]): void;
-  subscribeToIsSelectedById(id: string, fn: Function): void;
-  unsubscribeToIsSelectedById(id: string, fn: Function): void;
+  subscribeToIsSelectedById(id: string, fn: () => void): void;
+  unsubscribeToIsSelectedById(id: string, fn: () => void): void;
 
   getEdgeById(id: string): Types.Edge;
   getEdgesByNodeId(id: string): Types.Edge[];
-  createEdge(edgeProps: Partial<Types.Edge>): Types.Edge;
+  createEdge(edgeProps: Partial<Types.Edge>): Types.Edge | null;
   removeEdgeById(id: string): void;
   clearDraftEdgePath(): void;
   updateDraftEdgePath(x1: number, y1: number, x2: number, y2: number): void;
-  subscribeToEdgesChange(id: string, fn: Function): void;
-  unsubscribeToEdgesChange(id: string, fn: Function): void;
+  subscribeToEdgesChange(id: string, fn: () => void): void;
+  unsubscribeToEdgesChange(id: string, fn: () => void): void;
 
   import(graph: Types.Graph): void;
   export(): Types.Graph;
@@ -165,9 +178,12 @@ interface GraphManager {
 
 ```ts
 interface Workspace {
-  container: HTMLDivElement;
+  setPan(position: Position | ((position: Position) => Position)): void;
+  setZoom(zoom: number | ((zoom: number) => number)): void;
+  container?: HTMLDivElement;
   isSelectBoxKeyDown: boolean;
-  getCanvasPosition(object: any): Position;
+  getElementDimensions(HTMLElement): {width: number; height: number};
+  getCanvasPosition(object: HTMLElement | DOMRect | MouseEvent): Position;
   mountContextScreenOffset: Position;
   panZoom: {
     zoom: number;
@@ -289,6 +305,9 @@ ReactDOM.render(createElement(App), document.getElementById("app"));
   "nodes": [
     {
       "id": "504f852d-5b78-4f64-bd71-ab7f7f5dfb03",
+      "data": {
+        "foo": "bar"
+      },
       "position": {
         "x": 100,
         "y": 100
@@ -309,6 +328,9 @@ ReactDOM.render(createElement(App), document.getElementById("app"));
     },
     {
       "id": "b832f63f-0c6a-4977-8bb1-581f1c6cc1cb",
+      "data": {
+        "foo": "bar"
+      },
       "position": {
         "x": 300,
         "y": 100
@@ -329,6 +351,9 @@ ReactDOM.render(createElement(App), document.getElementById("app"));
     },
     {
       "id": "1c973de3-b2b8-49cc-843c-39a600843ec2",
+      "data": {
+        "foo": "bar"
+      },
       "position": {
         "x": 300,
         "y": 200
