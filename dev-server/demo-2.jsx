@@ -14,13 +14,28 @@ import {
 import styles from "./styles.module.css";
 
 // import graph from "./public/graph-2.json";
-const graph = {nodes: [], edges: []};
+
+const initialGraph = {nodes: [], edges: []};
+
+function getSavedState() {
+  try {
+    return JSON.parse(localStorage.getItem("savedState")) || initialGraph;
+  } catch (err) {
+    return initialGraph;
+  }
+}
+
+function setSavedState(state) {
+  localStorage.setItem("savedState", JSON.stringify(state));
+}
 
 function App() {
-  const {nodes, edges} = graph;
   const [zoom, setZoom] = useState(1);
+  const [graph, setGraph] = useState(getSavedState());
   const [graphManager, setGraphManager] = useState();
   const [isDeleteVisible, setIsDeleteVisible] = useState();
+
+  const {nodes, edges} = graph;
 
   const bridge = useMemo(
     () => ({
@@ -29,6 +44,10 @@ function App() {
       },
       onChangeZoom(zoom) {
         setZoom(zoom);
+      },
+      onMutateGraph(graphEvent) {
+        setGraph(graphEvent.graph);
+        setSavedState(graphEvent.graph);
       },
       onDropCanvas(event, position, graphManager) {
         event.preventDefault();
@@ -124,6 +143,17 @@ function App() {
         <button onClick={() => alert(JSON.stringify(graphManager.export()))}>
           Export
         </button>
+        {graph?.nodes.length > 0 && (
+          <button
+            onClick={() =>
+              graphManager.removeNodesByIds(
+                graphManager.nodes.map(({id}) => id)
+              )
+            }
+          >
+            Clear
+          </button>
+        )}
         {isDeleteVisible && (
           <button
             onClick={() =>
