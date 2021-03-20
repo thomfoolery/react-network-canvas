@@ -20,7 +20,7 @@ module.exports = {
     /* ... */
   },
   devOptions: {
-    open: "firefox",
+    // open: "firefox",
   },
   buildOptions: {
     out: "dist",
