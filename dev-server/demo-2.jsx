@@ -144,6 +144,15 @@ function App() {
         <button onClick={() => alert(JSON.stringify(graphManager.export()))}>
           Export
         </button>
+        {isDeleteVisible && (
+          <button
+            onClick={() =>
+              graphManager.removeNodesByIds(graphManager.selectedNodeIds)
+            }
+          >
+            Delete
+          </button>
+        )}
         {graph?.nodes.length > 0 && (
           <button
             onClick={() =>
@@ -153,15 +162,6 @@ function App() {
             }
           >
             Clear
-          </button>
-        )}
-        {isDeleteVisible && (
-          <button
-            onClick={() =>
-              graphManager.removeNodesByIds(graphManager.selectedNodeIds)
-            }
-          >
-            Delete
           </button>
         )}
       </div>
