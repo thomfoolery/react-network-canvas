@@ -6,7 +6,13 @@ import React, {
   ReactNode,
 } from "react";
 
-import {createPublisher, svgGeneratePath, roundToGrid} from "@component/utils";
+import {
+  roundToGrid,
+  validateEdge,
+  validateNode,
+  svgGeneratePath,
+  createPublisher,
+} from "@component/utils";
 import {
   createOptions,
   useDragManager,
@@ -172,14 +178,14 @@ function createGraphManager({
   const API = {
     // bridge
     get bridge() {
-      return {...__.bridge};
+      return {...__.bridge} as Types.Bridge;
     },
     set bridge(bridge: Types.Bridge) {
       __.bridge = bridge;
     },
     // workspace
     get workspace() {
-      return {...__.workspace};
+      return {...__.workspace} as Types.Workspace;
     },
     set workspace(workspace: Types.Workspace) {
       __.workspace = workspace;
@@ -191,7 +197,7 @@ function createGraphManager({
     set nodes(nodes: Types.Node[]) {
       setNodes(nodes);
     },
-    getNodeById(id: string): Types.Node {
+    getNodeById(id: string) {
       return {...__.nodesByIdHash[id]};
     },
     getNodesByEdgeId(id: string): {from?: Types.Node; to?: Types.Node} {
@@ -203,11 +209,11 @@ function createGraphManager({
       }
       return {from: undefined, to: undefined};
     },
-    createNode(nodeProps: Partial<Types.Node>): Types.Node {
+    createNode(nodeProps: Partial<Types.Node>) {
       const {isSnapToGridEnabled, gridSize} = options;
       const position = isSnapToGridEnabled
-        ? roundToGrid(nodeProps.position || {x: 0, y: 0}, gridSize)
-        : nodeProps.position || {x: 0, y: 0};
+        ? roundToGrid(nodeProps.position, gridSize)
+        : nodeProps.position;
 
       const node = {
         id: generateUuid(),
@@ -216,6 +222,13 @@ function createGraphManager({
         ...nodeProps,
         position,
       };
+
+      try {
+        validateNode(node, __.nodes);
+      } catch (err) {
+        console.log(err);
+        return null;
+      }
 
       setNodes([...__.nodes, node]);
 
@@ -387,19 +400,22 @@ function createGraphManager({
     getEdgesByNodeId(id: string): Types.Edge[] {
       return __.edgesByNodeIdHash[id] ? [...__.edgesByNodeIdHash[id]] : [];
     },
-    createEdge(edgeProps: Partial<Types.Edge>): Types.Edge {
+    createEdge(edgeProps: Partial<Types.Edge>) {
       const edge: Types.Edge = {
         id: generateUuid(),
-        from: {
-          nodeId: "",
-          portId: "",
-        },
-        to: {
-          nodeId: "",
-          portId: "",
-        },
         ...edgeProps,
       };
+
+      if (!edgeProps.from || !edgeProps.to) {
+        throw Error;
+      }
+
+      try {
+        validateEdge(edge, __.edges);
+      } catch (err) {
+        console.log(err);
+        return null;
+      }
 
       setEdges([...__.edges, edge]);
 
@@ -415,7 +431,7 @@ function createGraphManager({
         },
       });
 
-      return edge;
+      return edge as Types.Edge;
     },
     removeEdgeById(id: string) {
       const filter = (edge) => edge.id != id;
@@ -472,7 +488,7 @@ interface Props {
   children?: ReactNode;
 }
 
-function GraphManagerProvider(props: Props) {
+function GraphManagerProvider(props: Props): ReactNode {
   const {nodes, edges, children} = props;
   const dragManager = useDragManager();
   const options = useOptions();
@@ -499,7 +515,7 @@ function GraphManagerProvider(props: Props) {
   return <Context.Provider value={graphManager}>{children}</Context.Provider>;
 }
 
-function useGraphManager() {
+function useGraphManager(): Types.GraphManager {
   return useContext(Context);
 }
 

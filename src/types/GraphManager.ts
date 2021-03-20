@@ -10,7 +10,7 @@ interface GraphManager {
 
   getNodeById(id: string): Types.Node;
   getNodesByEdgeId(id: string): {from?: Types.Node; to?: Types.Node};
-  createNode(nodeProps: Partial<Types.Node>): Types.Node;
+  createNode(nodeProps: Partial<Types.Node>): Types.Node | null;
   removeNodeById(id: string): void;
   removeNodesByIds(removedNodeIds: string[]): void;
   subscribeToNodesChange(fn: () => void): void;
@@ -33,7 +33,7 @@ interface GraphManager {
 
   getEdgeById(id: string): Types.Edge;
   getEdgesByNodeId(id: string): Types.Edge[];
-  createEdge(edgeProps: Partial<Types.Edge>): Types.Edge;
+  createEdge(edgeProps: Partial<Types.Edge>): Types.Edge | null;
   removeEdgeById(id: string): void;
   clearDraftEdgePath(): void;
   updateDraftEdgePath(x1: number, y1: number, x2: number, y2: number): void;
