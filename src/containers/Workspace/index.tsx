@@ -35,11 +35,18 @@ function Workspace(): ReactNode {
 
   const initialPan = useMemo(() => {
     const {nodes} = graphManager;
+    const {
+      initialPanOffset = {
+        x: canvasMargin,
+        y: canvasMargin,
+      },
+    } = options;
+
     return nodes.length > 0
       ? ((position) => {
           return {
-            x: position.x * -1 + canvasMargin,
-            y: position.y * -1 + canvasMargin,
+            x: position.x * -1 + initialPanOffset.x,
+            y: position.y * -1 + initialPanOffset.y,
           };
         })(
           nodes.reduce(

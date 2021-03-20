@@ -172,7 +172,12 @@ function usePanZoom(options: Options) {
       }
 
       if (initialPan) {
-        setPan(initialPan);
+        const {minX, minY, maxX, maxY} = boundaryRef.current;
+
+        setPan({
+          x: clamp(minX, maxX, initialPan.x),
+          y: clamp(minY, maxY, initialPan.y),
+        });
       } else if (startAtCanvasCenter) {
         setTransform((transform) => ({
           ...transform,

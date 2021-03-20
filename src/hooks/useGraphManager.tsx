@@ -158,6 +158,15 @@ function createGraphManager({
 
     node.position = position;
     __.subscriptions.nodePositionChangeById.notifyIds([id], position);
+
+    __.bridge?.onMutateGraph({
+      action: "UPDATE_NODE",
+      subject: node,
+      graph: {
+        nodes: [...__.nodes],
+        edges: [...__.edges],
+      },
+    });
   }
 
   function clearDraftEdgePath() {

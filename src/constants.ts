@@ -43,6 +43,7 @@ const DEFAULT_OPTIONS: Types.Options = {
   isSnapToGridEnabled: false,
   startAtCanvasCenter: true,
   canvasMargin: 50,
+  initialPanOffset: {x: 50, y: 50},
   zoomSensitivity: 0.001,
   zoomWheelKey: undefined,
   selectBoxKey: "Shift",

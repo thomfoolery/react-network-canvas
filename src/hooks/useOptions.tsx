@@ -16,13 +16,13 @@ function createOptions(value: Partial<Types.Options> = {}): Types.Options {
   };
 }
 
-function OptionsProvider(props: Props) {
+function OptionsProvider(props: Props): ReactNode {
   const {value, children} = props;
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }
 
-function useOptions() {
+function useOptions(): Types.Options {
   return useContext(Context);
 }
 

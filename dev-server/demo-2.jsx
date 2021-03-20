@@ -120,6 +120,7 @@ function App() {
       selectBoxKey: "Meta",
       zoomWheelKey: "Shift",
       isSnapToGridEnabled: true,
+      initialPanOffset: {x: 150, y: 70},
       NodeComponent,
       PortComponent,
     }),

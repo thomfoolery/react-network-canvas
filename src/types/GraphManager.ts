@@ -1,8 +1,8 @@
 import * as Types from "@component/types";
 
 interface GraphManager {
-  nodes: Types.Node;
-  edges: Types.Edge;
+  nodes: Types.Node[];
+  edges: Types.Edge[];
   bridge: Types.Bridge;
   workspace: Types.Workspace | undefined;
   dragManager: Types.DragManager;
