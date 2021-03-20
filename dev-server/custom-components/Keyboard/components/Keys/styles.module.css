@@ -1,0 +1,92 @@
+.Keys,
+.KeysOctaveNotes {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  /* border: 1px solid #00ffc8; */
+  overflow: hidden;
+
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.Keys {
+  /* padding-bottom: 10px; */
+  overflow-x: scroll;
+
+  /* border: 1px solid #00ffc8; */
+  border-radius: 5px;
+  /* overflow: hidden; */
+  /* background-color: #333; */
+}
+
+.KeysOctave {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.KeysOctave:first-child .WhiteKey:first-child {
+  border-radius: 5px 0 0 5px;
+}
+
+.KeysOctave:last-child .WhiteKey:last-child {
+  border-radius: 0 5px 5px 0;
+}
+
+/*
+.KeysOctaveLabel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: #00ffc8;
+  margin: 10px 2px 5px 2px;
+  line-height: 1.5em;
+}
+*/
+
+.BlackKey,
+.WhiteKey {
+  padding-bottom: 10px;
+  /* border-radius: 0 0 4px 4px; */
+  background-color: transparent;
+  border: 1px solid #00ffc8;
+  color: #00ffc8;
+  /* box-shadow: 0 0 0 2px #00ffc844; */
+  transition: transform 50ms linear, box-shadow 50ms linear;
+  outline: none;
+}
+
+.WhiteKey {
+  width: 40px;
+  /* background: white; */
+  padding-top: 100px;
+  z-index: 1;
+}
+
+.BlackKey {
+  background: #00ffc8;
+  color: black;
+  width: 30px;
+  padding-top: 50px;
+  border-radius: 0 0 4px 4px;
+  border-color: transparent;
+  margin: 0 -15px;
+  z-index: 2;
+  /* box-shadow: 0 3px 5px rgba(0, 0, 0, 0.25); */
+}
+
+.KeyPressed {
+  transform: translate3d(0, -3px, 0);
+}
+
+.WhiteKey.KeyPressed {
+  /* box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.25); */
+}
+
+.BlackKey.KeyPressed {
+  /* box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25); */
+}

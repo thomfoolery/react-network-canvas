@@ -8,6 +8,7 @@ import {
   Node as NodeComponent,
   Port as PortComponent,
   ZoomControls,
+  Keyboard,
   Palette,
 } from "./custom-components";
 
@@ -33,6 +34,7 @@ function App() {
   const [zoom, setZoom] = useState(1);
   const [graph, setGraph] = useState(getSavedState());
   const [graphManager, setGraphManager] = useState();
+  const [selectedNode, setSelectedNode] = useState(null);
   const [isDeleteVisible, setIsDeleteVisible] = useState();
 
   const {nodes, edges} = graph;
@@ -70,10 +72,18 @@ function App() {
           graphManager.removeNodesByIds(graphManager.selectedNodeIds);
         }
       },
-      onChangeSelectedNodeIds(selectedNodeIds) {
+      onChangeSelectedNodeIds(selectedNodeIds, graphManager) {
         if (selectedNodeIds.length > 0) {
           setIsDeleteVisible(true);
+          if (selectedNodeIds.length === 1) {
+            setSelectedNode(
+              graphManager.nodes.find(({id}) => id === selectedNodeIds[0])
+            );
+          } else {
+            setSelectedNode(null);
+          }
         } else {
+          setSelectedNode(null);
           setIsDeleteVisible(false);
         }
       },
@@ -165,6 +175,17 @@ function App() {
           </button>
         )}
       </div>
+      {selectedNode && (
+        <div className={styles.NodeDetails}>
+          {selectedNode.data.type === "SRC" ? (
+            <div>
+              <Keyboard />
+            </div>
+          ) : (
+            <pre>{JSON.stringify(selectedNode, null, 2)}</pre>
+          )}
+        </div>
+      )}
     </div>
   );
 }

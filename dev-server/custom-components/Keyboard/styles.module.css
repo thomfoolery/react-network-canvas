@@ -1,0 +1,97 @@
+.visuallyHidden {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.KeyboardContainer {
+  white-space: nowrap;
+  margin: 10px;
+  background-color: #333;
+  border-left: 5px solid #333;
+  border-right: 5px solid #333;
+  color: #aaa;
+}
+
+.KeyboardContainer h2 {
+  padding: 10px 0 5px;
+  margin: 0 5px;
+  font-weight: 400;
+  letter-spacing: -0.07em;
+}
+
+.KeyboardBody {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.ParameterControl {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: white;
+  margin: 5px;
+}
+
+.ParameterControl label {
+  width: 100px;
+  margin-right: 10px;
+  text-align: right;
+}
+
+.ParameterControl input {
+  margin-right: 10px;
+}
+
+.KeyboardBody label {
+  margin: 0 5px;
+}
+
+.KeyboardBody select {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.5em;
+  border-radius: 4px;
+  margin-left: 5px;
+  text-transform: uppercase;
+}
+
+.KeyboardBody button {
+  padding: 0.5em;
+  margin-left: 10px;
+}
+
+.ArpeggiatorContainer {
+  background-color: rgba(255, 255, 255, 0.05);
+  margin: 0 5px;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.ArpeggiatorHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ArpeggiatorHeader + * {
+  margin-top: 10px;
+}
+
+.ArpeggiatorHeader h3 {
+  margin: 0;
+  font-weight: 100;
+}
+
+.ArpeggiatorHidden {
+  display: none;
+}

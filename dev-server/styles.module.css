@@ -34,3 +34,18 @@
   text-align: center;
   cursor: pointer;
 }
+
+.NodeDetails {
+  position: fixed;
+  margin: 20px;
+  bottom: 0;
+  right: 0;
+
+  max-width: calc(100vw - 400px);
+  box-shadow: 0 0 0 2px #00ffc844;
+  color: #00ffc8;
+  border-radius: 5px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+}
