@@ -7,7 +7,7 @@ interface Props {
   nodes: Types.Node[];
   edges: Types.Edge[];
   bridge?: Types.Bridge;
-  options?: any;
+  options?: Types.Options;
   theme?: any;
 }
 
@@ -26,4 +26,4 @@ function NetworkCanvas(props: Props): ReactNode {
   );
 }
 
-export {NetworkCanvas};
+export {NetworkCanvas, Types};

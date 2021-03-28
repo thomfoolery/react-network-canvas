@@ -10,6 +10,7 @@ import {
   ZoomControls,
   Keyboard,
   Palette,
+  Modal,
 } from "./custom-components";
 
 import styles from "./styles.module.css";
@@ -34,6 +35,7 @@ function App() {
   const [zoom, setZoom] = useState(1);
   const [graph, setGraph] = useState(getSavedState());
   const [graphManager, setGraphManager] = useState();
+  const [isHelpVisible, setIsHelpVisible] = useState();
   const [selectedNode, setSelectedNode] = useState(null);
   const [isDeleteVisible, setIsDeleteVisible] = useState();
 
@@ -60,7 +62,8 @@ function App() {
           data: {
             type,
           },
-          inputPorts: type !== "SRC" ? [{id: generateUuid(), label: "In"}] : [],
+          inputPorts:
+            type !== "MIDI" ? [{id: generateUuid(), label: "In"}] : [],
           outputPorts:
             type !== "DEST" ? [{id: generateUuid(), label: "Out"}] : [],
         });
@@ -137,6 +140,19 @@ function App() {
     []
   );
 
+  const isClearVisible = graph?.nodes.length > 0;
+
+  const handleClickHelp = () => setIsHelpVisible(true);
+  const closeHelp = () => setIsHelpVisible(false);
+
+  const handleClickDelete = () =>
+    graphManager.removeNodesByIds(graphManager.selectedNodeIds);
+
+  const handleClickClear = () =>
+    graphManager.removeNodesByIds(graphManager.nodes.map(({id}) => id));
+
+  const handleClickExport = () => alert(JSON.stringify(graphManager.export()));
+
   return (
     <div style={{width: "100%", height: "100%"}}>
       <NetworkCanvas
@@ -151,29 +167,12 @@ function App() {
       </div>
       <div className={styles.Controls}>
         <ZoomControls zoom={zoom} graphManager={graphManager} />
-        <button onClick={() => alert(JSON.stringify(graphManager.export()))}>
-          Export
+        <button onClick={handleClickExport}>Export</button>
+        {isDeleteVisible && <button onClick={handleClickDelete}>Delete</button>}
+        {isClearVisible && <button onClick={handleClickClear}>Clear</button>}
+        <button onClick={handleClickHelp} className={styles.HelpButton}>
+          ?
         </button>
-        {isDeleteVisible && (
-          <button
-            onClick={() =>
-              graphManager.removeNodesByIds(graphManager.selectedNodeIds)
-            }
-          >
-            Delete
-          </button>
-        )}
-        {graph?.nodes.length > 0 && (
-          <button
-            onClick={() =>
-              graphManager.removeNodesByIds(
-                graphManager.nodes.map(({id}) => id)
-              )
-            }
-          >
-            Clear
-          </button>
-        )}
       </div>
       {selectedNode && (
         <div className={styles.NodeDetails}>
@@ -185,6 +184,44 @@ function App() {
             <pre>{JSON.stringify(selectedNode, null, 2)}</pre>
           )}
         </div>
+      )}
+      {isHelpVisible && (
+        <Modal onClose={closeHelp}>
+          <div>
+            <table>
+              <tr>
+                <td>Meta + Click and Drag</td>
+                <td>=</td>
+                <td>Multi-select</td>
+              </tr>
+              <tr>
+                <td>Shift + Scroll Wheel</td>
+                <td>=</td>
+                <td>Zoom</td>
+              </tr>
+              <tr>
+                <td>Click and Drag</td>
+                <td>=</td>
+                <td>Pan</td>
+              </tr>
+              <tr>
+                <td>Touch pad</td>
+                <td>=</td>
+                <td>Pan</td>
+              </tr>
+              <tr>
+                <td>Click and drag from output to node</td>
+                <td>=</td>
+                <td>Create connection</td>
+              </tr>
+              <tr>
+                <td>Click connection</td>
+                <td>=</td>
+                <td>Delete connection</td>
+              </tr>
+            </table>
+          </div>
+        </Modal>
       )}
     </div>
   );

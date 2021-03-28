@@ -20,26 +20,33 @@ interface Bridge {
   onClickCanvas(
     event: React.SyntheticEvent,
     position: Types.Position,
-    graphManager: any
+    graphManager: Types.GraphManager
   ): void;
   onClickNode(
     event: React.SyntheticEvent,
     node: Types.Node,
-    graphManager: any
+    graphManager: Types.GraphManager
   ): void;
   onClickPort(
     event: React.SyntheticEvent,
     port: Types.Port,
     node: Types.Node,
-    graphManager: any
+    graphManager: Types.GraphManager
   ): void;
   onDropCanvas(
     event: React.SyntheticEvent,
     position: Types.Position,
-    graphManager: any
+    graphManager: Types.GraphManager
   ): void;
-  onChangeSelectedNodeIds(selectedNodesIds: string[], graphManager: any): void;
-  onKeyPress(event: React.SyntheticEvent, key: string, graphManager: any): void;
+  onChangeSelectedNodeIds(
+    selectedNodesIds: string[],
+    graphManager: Types.GraphManager
+  ): void;
+  onKeyPress(
+    event: React.SyntheticEvent,
+    key: string,
+    graphManager: Types.GraphManager
+  ): void;
 }
 
 export {Bridge};

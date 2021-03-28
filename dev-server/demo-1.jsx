@@ -13,6 +13,7 @@ function App() {
     onClickCanvas(event, position, graphManager) {
       const node = graphManager.createNode({
         position,
+        inputPorts: [{id: generateUuid()}],
         outputPorts: [{id: generateUuid()}, {id: generateUuid()}],
       });
 
@@ -53,7 +54,11 @@ function App() {
         }
       );
 
-      const node = graphManager.createNode({position});
+      const node = graphManager.createNode({
+        position,
+        inputPorts: [{id: generateUuid()}],
+        outputPorts: [{id: generateUuid()}],
+      });
 
       graphManager.createEdge({
         from: {

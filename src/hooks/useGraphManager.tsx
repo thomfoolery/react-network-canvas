@@ -6,13 +6,7 @@ import React, {
   ReactNode,
 } from "react";
 
-import {
-  roundToGrid,
-  validateEdge,
-  validateNode,
-  svgGeneratePath,
-  createPublisher,
-} from "@component/utils";
+import {roundToGrid, svgGeneratePath, createPublisher} from "@component/utils";
 import {
   createOptions,
   useDragManager,
@@ -218,26 +212,17 @@ function createGraphManager({
       }
       return {from: undefined, to: undefined};
     },
-    createNode(nodeProps: Partial<Types.Node>) {
+    createNode(nodeProps: Omit<Types.Node, "id">) {
       const {isSnapToGridEnabled, gridSize} = options;
-      const position = isSnapToGridEnabled
+      const position: Types.Position = isSnapToGridEnabled
         ? roundToGrid(nodeProps.position, gridSize)
-        : nodeProps.position;
+        : nodeProps.position || {x: NaN, y: NaN};
 
-      const node = {
+      const node: Types.Node = {
         id: generateUuid(),
-        inputPorts: [{id: generateUuid()}],
-        outputPorts: [{id: generateUuid()}],
         ...nodeProps,
         position,
       };
-
-      try {
-        validateNode(node, __.nodes);
-      } catch (err) {
-        console.log(err);
-        return null;
-      }
 
       setNodes([...__.nodes, node]);
 
@@ -408,22 +393,11 @@ function createGraphManager({
     getEdgesByNodeId(id: string): Types.Edge[] {
       return __.edgesByNodeIdHash[id] ? [...__.edgesByNodeIdHash[id]] : [];
     },
-    createEdge(edgeProps: Partial<Types.Edge>) {
+    createEdge(edgeProps: Omit<Types.Edge, "id">) {
       const edge: Types.Edge = {
         id: generateUuid(),
         ...edgeProps,
       };
-
-      if (!edgeProps.from || !edgeProps.to) {
-        throw Error;
-      }
-
-      try {
-        validateEdge(edge, __.edges);
-      } catch (err) {
-        console.log(err);
-        return null;
-      }
 
       setEdges([...__.edges, edge]);
 

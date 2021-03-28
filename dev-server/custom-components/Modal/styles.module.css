@@ -1,0 +1,56 @@
+.ModalContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.Modal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+
+  --bg-color: rgba(4, 13, 33, 0.8);
+  --color-primary: #00ffc8;
+  --bg-grid: radial-gradient(
+    rgba(162, 250, 207, 0.05),
+    transparent 4px,
+    transparent
+  );
+  --bg-glass-effect: linear-gradient(
+    135deg,
+    rgba(162, 250, 207, 0.05) 0,
+    rgba(162, 250, 207, 0.1) 40%,
+    rgba(162, 250, 207, 0.1) 60%,
+    rgba(162, 250, 207, 0.05) 61%,
+    rgba(162, 250, 207, 0.05) 62%,
+    rgba(162, 250, 207, 0.15) 100%
+  );
+
+  position: absolute;
+
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 5px;
+
+  color: rgba(162, 250, 207, 0.8);
+
+  background-image: var(--bg-glass-effect);
+  background-color: var(--bg-color);
+  background-image: var(--bg-glass-effect);
+
+  backdrop-filter: blur(2px);
+
+  box-shadow: 0 0 0 2px #00ffc844;
+
+  padding: 10px;
+}

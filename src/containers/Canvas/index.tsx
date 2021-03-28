@@ -49,22 +49,25 @@ function Canvas(props: Props): ReactNode {
     function handleDragEnd(event, dragDelta, dragData) {
       if (dragData?.type === "selectbox" && !isClick(dragDelta)) {
         const [x1, y1, x2, y2] = getSelectBoxCoordinates(selectBoxRef.current);
-        const selectedNodeIds = graphManager.nodes.reduce((acc, node) => {
-          const nodeElement: HTMLDivElement | null = document.querySelector(
-            `#Node-${node.id}`
-          );
-          if (nodeElement) {
-            const x = parseInt(nodeElement.style.left, 10);
-            const y = parseInt(nodeElement.style.top, 10);
-            const width = nodeElement.clientWidth;
-            const height = nodeElement.clientHeight;
+        const selectedNodeIds: string[] = graphManager.nodes.reduce(
+          (acc: string[], node: Types.Node) => {
+            const nodeElement: HTMLDivElement | null = document.querySelector(
+              `#Node-${node.id}`
+            );
+            if (nodeElement) {
+              const x = parseInt(nodeElement.style.left, 10);
+              const y = parseInt(nodeElement.style.top, 10);
+              const width = nodeElement.clientWidth;
+              const height = nodeElement.clientHeight;
 
-            if (x > x1 && y > y1 && x + width < x2 && y + height < y2) {
-              return [...acc, node.id];
+              if (x > x1 && y > y1 && x + width < x2 && y + height < y2) {
+                return [...acc, node.id];
+              }
             }
-          }
-          return acc;
-        }, []);
+            return acc;
+          },
+          []
+        );
 
         graphManager.selectedNodeIds = selectedNodeIds;
       }

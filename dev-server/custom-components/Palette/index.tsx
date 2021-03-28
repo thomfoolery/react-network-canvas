@@ -12,6 +12,9 @@ function Palette(): ReactNode {
 
   return (
     <div className={styles.Palette}>
+      <div draggable onDragStart={handleDragStart("MIDI")}>
+        MIDI
+      </div>
       <div draggable onDragStart={handleDragStart("SRC")}>
         SRC
       </div>
