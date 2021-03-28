@@ -5,6 +5,7 @@ export * from "./Graph";
 export * from "./GraphManager";
 export * from "./Node";
 export * from "./Options";
+export * from "./PanZoom";
 export * from "./Port";
 export * from "./Position";
 export * from "./Publisher";

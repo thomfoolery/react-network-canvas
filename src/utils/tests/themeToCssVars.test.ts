@@ -12,6 +12,8 @@ const defaultCSSVars = {
   "--NC-edge-hover-stroke": "red",
   "--NC-edge-stroke": "black",
   "--NC-edge-stroke-width": "3px",
+  "--NC-selectbox-background-color": "rgba(100, 148, 237, 0.25)",
+  "--NC-selectbox-box-shadow": "0 0 0 1px cornflowerblue",
   "--NC-workspace-background-color": "#f6f6f6",
   "--NC-workspace-background-image": "",
   "--NC-workspace-background-size": "",

@@ -66,14 +66,7 @@ function Workspace(): ReactNode {
     bridge,
   ]);
 
-  const {
-    setPan,
-    setZoom,
-    transform,
-    panZoomRef,
-    setContainer,
-    setWorkspace,
-  } = usePanZoom({
+  const {setPan, setZoom, transform, panZoomRef, setContainer} = usePanZoom({
     minZoom,
     maxZoom,
     initialPan,
@@ -153,8 +146,6 @@ function Workspace(): ReactNode {
         false
       );
   }, []);
-
-  useEffect(() => setWorkspace(workspace), [workspace]);
 
   useEffect(() => {
     graphManager.workspace = workspace;

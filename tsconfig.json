@@ -20,5 +20,11 @@
     "plugins": [{"name": "typescript-plugin-css-modules"}]
   },
   "include": ["./src/**/*"],
-  "exclude": ["**/*.test.ts", "**/*.test.tsx", "node_modules", "dist"]
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "rollup.config.js",
+    "node_modules",
+    "dist"
+  ]
 }

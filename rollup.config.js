@@ -1,3 +1,4 @@
+/* eslint-env node */
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
@@ -7,19 +8,19 @@ import postcss from "rollup-plugin-postcss-modules";
 import autoprefixer from "autoprefixer";
 import alias from "rollup-plugin-alias";
 
-const packageJson = require("./package.json");
+import pkg from "./package.json";
 
 export default {
   input: "src/index.tsx",
   preserveModules: false,
   output: [
     {
-      file: packageJson.main,
+      file: pkg.main,
       format: "cjs",
       sourcemap: true,
     },
     {
-      file: packageJson.module,
+      file: pkg.module,
       format: "esm",
       sourcemap: true,
     },

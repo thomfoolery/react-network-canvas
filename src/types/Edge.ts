@@ -8,4 +8,5 @@ export interface Edge {
     nodeId: string;
     portId: string;
   };
+  data?: any;
 }

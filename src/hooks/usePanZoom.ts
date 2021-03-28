@@ -14,7 +14,7 @@ interface Options {
   onChangeZoom?(zoom: number): void;
 }
 
-function usePanZoom(options: Options) {
+function usePanZoom(options: Options): Types.PanZoom {
   const {
     minZoom,
     maxZoom,
@@ -31,7 +31,6 @@ function usePanZoom(options: Options) {
 
   const [transform, setTransform] = useState({x: 0, y: 0, zoom: 1});
   const [container, setContainer] = useState();
-  const [workspace, setWorkspace] = useState();
 
   const isZoomKeyDownRef = useRef(false);
   const panZoomRef = useRef({...transform});
@@ -42,20 +41,22 @@ function usePanZoom(options: Options) {
     maxY: Infinity,
   });
 
-  const setPan = useCallback((pan) => {
+  const setPan = useCallback((fnOrValue) => {
     setTransform(({x, y}) => {
       const newPan =
-        typeof pan === "function" ? pan({x, y}) : {x: pan.x, y: pan.y};
+        typeof fnOrValue === "function"
+          ? fnOrValue({x, y})
+          : {x: fnOrValue.x, y: fnOrValue.y};
       return {...transform, ...newPan};
     });
   }, []);
 
   const setZoom = useCallback(
-    (firstArgument, possibleCenter) => {
+    (fnOrValue, possibleCenter) => {
       setTransform((transform) => {
         const {zoom} = transform;
         const newZoom =
-          typeof firstArgument === "function" ? firstArgument(zoom) : zoom;
+          typeof fnOrValue === "function" ? fnOrValue(zoom) : zoom;
         const clampedZoom = clamp(minZoom, maxZoom, newZoom);
 
         if (clampedZoom === zoom) {
@@ -98,7 +99,7 @@ function usePanZoom(options: Options) {
   );
 
   useEffect(() => {
-    if (container && workspace) {
+    if (container) {
       boundaryRef.current = calculateBoundary(
         container,
         canvasSize,
@@ -106,10 +107,10 @@ function usePanZoom(options: Options) {
         panZoomRef.current.zoom
       );
     }
-  }, [container, workspace, canvasSize, canvasMargin]);
+  }, [container, canvasSize, canvasMargin]);
 
   useEffect(() => {
-    if (container && workspace) {
+    if (container) {
       let dragStartPosition;
 
       function handleDragStart() {
@@ -136,10 +137,10 @@ function usePanZoom(options: Options) {
         dragManager.unsubscribeToDragMove("panZoom", handleDragMove);
       };
     }
-  }, [container, workspace, canvasSize, canvasMargin, setTransform]);
+  }, [container, canvasSize, canvasMargin, setTransform]);
 
   useEffect(() => {
-    if (container && workspace) {
+    if (container) {
       function onWheel(event) {
         event.preventDefault();
 
@@ -192,18 +193,10 @@ function usePanZoom(options: Options) {
         container.removeEventListener("wheel", onWheel);
       };
     }
-  }, [
-    container,
-    workspace,
-    canvasSize,
-    canvasMargin,
-    dragManager,
-    setZoom,
-    setTransform,
-  ]);
+  }, [container, canvasSize, canvasMargin, dragManager, setZoom, setTransform]);
 
   useEffect(() => {
-    if (container && workspace) {
+    if (container) {
       function onGesture(event) {
         event.preventDefault();
       }
@@ -260,7 +253,6 @@ function usePanZoom(options: Options) {
   return {
     transform: `translate3d(${transform.x}px,${transform.y}px,0) scale(${transform.zoom})`,
     setContainer,
-    setWorkspace,
     panZoomRef,
     setZoom,
     setPan,
