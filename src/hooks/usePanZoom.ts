@@ -144,7 +144,6 @@ function usePanZoom(options: Options): Types.PanZoom {
       function onWheel(event) {
         event.preventDefault();
 
-        console.log(dragManager.dragData);
         if (dragManager.dragData) {
           return;
         }
