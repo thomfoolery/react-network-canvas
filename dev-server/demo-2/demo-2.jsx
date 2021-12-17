@@ -1,9 +1,9 @@
-import React, {useMemo, useState, useCallback} from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import ReactDOM from "react-dom";
-import {createElement} from "react";
-import {v1 as generateUuid} from "uuid";
+import { createElement } from "react";
+import { v1 as generateUuid } from "uuid";
 
-import {NetworkCanvas} from "@component";
+import { NetworkCanvas } from "@component";
 import {
   Node as NodeComponent,
   Port as PortComponent,
@@ -11,13 +11,13 @@ import {
   Keyboard,
   Palette,
   Modal,
-} from "./custom-components";
+} from "../custom-components";
 
 import styles from "./styles.module.css";
 
-// import graph from "./public/graph-2.json";
+// import graph from "./graph-2.json";
 
-const initialGraph = {nodes: [], edges: []};
+const initialGraph = { nodes: [], edges: [] };
 
 function getSavedState() {
   try {
@@ -39,7 +39,7 @@ function App() {
   const [selectedNode, setSelectedNode] = useState(null);
   const [isDeleteVisible, setIsDeleteVisible] = useState();
 
-  const {nodes, edges} = graph;
+  const { nodes, edges } = graph;
 
   const bridge = useMemo(
     () => ({
@@ -63,9 +63,9 @@ function App() {
             type,
           },
           inputPorts:
-            type !== "MIDI" ? [{id: generateUuid(), label: "In"}] : [],
+            type !== "MIDI" ? [{ id: generateUuid(), label: "In" }] : [],
           outputPorts:
-            type !== "DEST" ? [{id: generateUuid(), label: "Out"}] : [],
+            type !== "DEST" ? [{ id: generateUuid(), label: "Out" }] : [],
         });
 
         graphManager.selectedNodeIds = [node.id];
@@ -80,7 +80,7 @@ function App() {
           setIsDeleteVisible(true);
           if (selectedNodeIds.length === 1) {
             setSelectedNode(
-              graphManager.nodes.find(({id}) => id === selectedNodeIds[0])
+              graphManager.nodes.find(({ id }) => id === selectedNodeIds[0])
             );
           } else {
             setSelectedNode(null);
@@ -133,7 +133,7 @@ function App() {
       selectBoxKey: "Meta",
       zoomWheelKey: "Shift",
       isSnapToGridEnabled: true,
-      initialPanOffset: {x: 150, y: 70},
+      initialPanOffset: { x: 150, y: 70 },
       NodeComponent,
       PortComponent,
     }),
@@ -149,12 +149,12 @@ function App() {
     graphManager.removeNodesByIds(graphManager.selectedNodeIds);
 
   const handleClickClear = () =>
-    graphManager.removeNodesByIds(graphManager.nodes.map(({id}) => id));
+    graphManager.removeNodesByIds(graphManager.nodes.map(({ id }) => id));
 
   const handleClickExport = () => alert(JSON.stringify(graphManager.export()));
 
   return (
-    <div style={{width: "100%", height: "100%"}}>
+    <div style={{ width: "100%", height: "100%" }}>
       <NetworkCanvas
         nodes={nodes}
         edges={edges}

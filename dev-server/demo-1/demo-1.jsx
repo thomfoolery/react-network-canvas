@@ -1,20 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {createElement} from "react";
-import {v1 as generateUuid} from "uuid";
+import { createElement } from "react";
+import { v1 as generateUuid } from "uuid";
 
-import {NetworkCanvas} from "@component";
+import { NetworkCanvas } from "@component";
 
-import graph from "./public/graph-1.json";
+import graph from "./graph-1.json";
 
 function App() {
-  const {nodes, edges} = graph;
+  const { nodes, edges } = graph;
   const bridge = {
     onClickCanvas(event, position, graphManager) {
       const node = graphManager.createNode({
         position,
-        inputPorts: [{id: generateUuid()}],
-        outputPorts: [{id: generateUuid()}, {id: generateUuid()}],
+        inputPorts: [{ id: generateUuid() }],
+        outputPorts: [{ id: generateUuid() }, { id: generateUuid() }],
       });
 
       graphManager.selectedNodeIds = [node.id];
@@ -25,20 +25,18 @@ function App() {
       );
       const edgesOut = graphManager
         .getEdgesByNodeId(parentNode.id)
-        .filter(({from}) => from.nodeId === parentNode.id);
+        .filter(({ from }) => from.nodeId === parentNode.id);
 
       const BCR = parentNodeElement.getBoundingClientRect();
-      const nodeDimensions = graphManager.workspace.getElementDimensions(
-        parentNodeElement
-      );
+      const nodeDimensions =
+        graphManager.workspace.getElementDimensions(parentNodeElement);
       const initialPosition = graphManager.workspace.getCanvasPosition(BCR);
       const position = edgesOut.reduce(
         (acc, edge) => {
           const nodeElement = document.querySelector(`#Node-${edge.to.nodeId}`);
           const BCR = nodeElement.getBoundingClientRect();
-          const nodeDimensions = graphManager.workspace.getElementDimensions(
-            nodeElement
-          );
+          const nodeDimensions =
+            graphManager.workspace.getElementDimensions(nodeElement);
           const position = graphManager.workspace.getCanvasPosition(BCR);
           if (position.y >= acc.y) {
             return {
@@ -56,8 +54,8 @@ function App() {
 
       const node = graphManager.createNode({
         position,
-        inputPorts: [{id: generateUuid()}],
-        outputPorts: [{id: generateUuid()}],
+        inputPorts: [{ id: generateUuid() }],
+        outputPorts: [{ id: generateUuid() }],
       });
 
       graphManager.createEdge({
