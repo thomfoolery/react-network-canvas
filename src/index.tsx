@@ -1,7 +1,8 @@
-import React, {useMemo, ReactNode} from "react";
+import React, { useMemo, ReactNode } from "react";
 import * as Types from "@component/types";
-import {Root} from "@component/containers";
-import {createOptions} from "@component/hooks";
+import { Root } from "@component/containers";
+import { createOptions } from "@component/hooks";
+import { RecoilRoot } from "recoil";
 
 interface Props {
   nodes: Types.Node[];
@@ -12,18 +13,20 @@ interface Props {
 }
 
 function NetworkCanvas(props: Props): ReactNode {
-  const {nodes = [], edges = [], bridge, theme = {}, options = {}} = props;
+  const { nodes = [], edges = [], bridge, theme = {}, options = {} } = props;
   const mergedOptions = useMemo(() => createOptions(options), [options]);
 
   return (
-    <Root
-      nodes={nodes}
-      edges={edges}
-      theme={theme}
-      bridge={bridge}
-      options={mergedOptions}
-    />
+    <RecoilRoot>
+      <Root
+        nodes={nodes}
+        edges={edges}
+        theme={theme}
+        bridge={bridge}
+        options={mergedOptions}
+      />
+    </RecoilRoot>
   );
 }
 
-export {NetworkCanvas, Types};
+export { NetworkCanvas, Types };
