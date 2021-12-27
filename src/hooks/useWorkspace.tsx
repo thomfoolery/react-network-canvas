@@ -20,6 +20,15 @@ function createWorkspace(options: Options): Types.Workspace {
     setPan,
   } = options;
 
+  const offset: Types.Position = {
+    get x() {
+      return workspaceDivRef.current.getBoundingClientRect().left;
+    },
+    get y() {
+      return workspaceDivRef.current.getBoundingClientRect().top;
+    },
+  };
+
   return {
     setPan,
     setZoom,
@@ -28,14 +37,6 @@ function createWorkspace(options: Options): Types.Workspace {
     },
     get isSelectBoxKeyDown() {
       return isSelectBoxKeyDownRef.current || false;
-    },
-    mountContextScreenOffset: {
-      get x() {
-        return workspaceDivRef.current.getBoundingClientRect().left;
-      },
-      get y() {
-        return workspaceDivRef.current.getBoundingClientRect().top;
-      },
     },
     get panZoom() {
       return panZoomRef.current;
@@ -55,31 +56,19 @@ function createWorkspace(options: Options): Types.Workspace {
       if (object instanceof HTMLElement) {
         const BCR = object.getBoundingClientRect();
         return {
-          x:
-            (BCR.left - this.mountContextScreenOffset.x) / zoom -
-            this.panZoom.x / zoom,
-          y:
-            (BCR.top - this.mountContextScreenOffset.y) / zoom -
-            this.panZoom.y / zoom,
+          x: (BCR.left - offset.x) / zoom - this.panZoom.x / zoom,
+          y: (BCR.top - offset.y) / zoom - this.panZoom.y / zoom,
         };
       }
       if (object instanceof DOMRect) {
         return {
-          x:
-            (object.left - this.mountContextScreenOffset.x) / zoom -
-            this.panZoom.x / zoom,
-          y:
-            (object.top - this.mountContextScreenOffset.y) / zoom -
-            this.panZoom.y / zoom,
+          x: (object.left - offset.x) / zoom - this.panZoom.x / zoom,
+          y: (object.top - offset.y) / zoom - this.panZoom.y / zoom,
         };
       } else if ("clientX" in object && "clientY" in object) {
         return {
-          x:
-            (object.clientX - this.mountContextScreenOffset.x) / zoom -
-            this.panZoom.x / zoom,
-          y:
-            (object.clientY - this.mountContextScreenOffset.y) / zoom -
-            this.panZoom.y / zoom,
+          x: (object.clientX - offset.x) / zoom - this.panZoom.x / zoom,
+          y: (object.clientY - offset.y) / zoom - this.panZoom.y / zoom,
         };
       }
 

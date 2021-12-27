@@ -7,7 +7,6 @@ interface Workspace {
   isSelectBoxKeyDown: boolean;
   getElementDimensions(HTMLElement): { width: number; height: number };
   getCanvasPosition(object: HTMLElement | DOMRect | MouseEvent): Position;
-  mountContextScreenOffset: Position;
   panZoom: {
     zoom: number;
   } & Position;
