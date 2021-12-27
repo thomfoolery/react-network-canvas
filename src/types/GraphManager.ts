@@ -9,7 +9,7 @@ interface GraphManager {
   selectedNodeIds: string[];
 
   getNodeById(id: string): Types.Node;
-  getNodesByEdgeId(id: string): {from?: Types.Node; to?: Types.Node};
+  getNodesByEdgeId(id: string): { from?: Types.Node; to?: Types.Node };
   createNode(nodeProps: Partial<Types.Node>): Types.Node | null;
   removeNodeById(id: string): void;
   removeNodesByIds(removedNodeIds: string[]): void;
@@ -44,4 +44,4 @@ interface GraphManager {
   export(): Types.Graph;
 }
 
-export {GraphManager};
+export { GraphManager };

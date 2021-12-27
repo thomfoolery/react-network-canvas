@@ -12,4 +12,4 @@ interface PanZoom {
   setPan(): void;
 }
 
-export {PanZoom};
+export { PanZoom };

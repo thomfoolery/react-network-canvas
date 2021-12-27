@@ -1,4 +1,4 @@
-import {SyntheticEvent} from "react";
+import { SyntheticEvent } from "react";
 import * as Types from "@component/types";
 
 interface DragManager {
@@ -20,4 +20,4 @@ interface DragManager {
   unsubscribeToDragEnd(id, fn): void;
 }
 
-export {DragManager};
+export { DragManager };

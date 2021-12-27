@@ -1,4 +1,4 @@
-import React, {ReactNode, Component} from "react";
+import React, { ReactNode, Component } from "react";
 import * as Types from "@component/types";
 
 import styles from "./styles.module.css";
@@ -62,4 +62,4 @@ function Node(props: Props): ReactNode {
   );
 }
 
-export {Node};
+export { Node };

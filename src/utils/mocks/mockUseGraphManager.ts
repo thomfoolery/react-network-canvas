@@ -1,4 +1,4 @@
-import {createGraphManager} from "@component/hooks/useGraphManager";
+import { createGraphManager } from "@component/hooks/useGraphManager";
 import * as Types from "@component/types";
 
 function mockUseGraphManager(
@@ -7,4 +7,4 @@ function mockUseGraphManager(
   return () => graphManager;
 }
 
-export {mockUseGraphManager};
+export { mockUseGraphManager };

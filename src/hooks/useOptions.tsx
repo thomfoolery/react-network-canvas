@@ -1,5 +1,5 @@
-import React, {useContext, createContext, ReactNode} from "react";
-import {DEFAULT_OPTIONS} from "@component/constants";
+import React, { useContext, createContext, ReactNode } from "react";
+import { DEFAULT_OPTIONS } from "@component/constants";
 import * as Types from "@component/types";
 
 const Context = createContext();
@@ -17,7 +17,7 @@ function createOptions(value: Partial<Types.Options> = {}): Types.Options {
 }
 
 function OptionsProvider(props: Props): ReactNode {
-  const {value, children} = props;
+  const { value, children } = props;
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }
@@ -26,4 +26,4 @@ function useOptions(): Types.Options {
   return useContext(Context);
 }
 
-export {createOptions, useOptions, OptionsProvider};
+export { createOptions, useOptions, OptionsProvider };

@@ -1,5 +1,5 @@
 import * as Types from "@component/types";
-import {ReactComponent} from "react";
+import { ReactComponent } from "react";
 
 interface Options {
   gridSize: number;
@@ -17,4 +17,4 @@ interface Options {
   PortComponent: ReactComponent;
 }
 
-export {Options};
+export { Options };

@@ -1,4 +1,4 @@
-import {joinClassList} from "..";
+import { joinClassList } from "..";
 
 it("joins all arguments together into a string separated by spaces", () => {
   const className = joinClassList("a", "b", "c");

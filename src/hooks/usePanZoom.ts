@@ -1,5 +1,5 @@
-import {useRef, useState, useEffect, useCallback} from "react";
-import {useDragManager} from "@component/hooks";
+import { useRef, useState, useEffect, useCallback } from "react";
+import { useDragManager } from "@component/hooks";
 import * as Types from "@component/types";
 
 interface Options {
@@ -29,11 +29,11 @@ function usePanZoom(options: Options): Types.PanZoom {
 
   const dragManager = useDragManager();
 
-  const [transform, setTransform] = useState({x: 0, y: 0, zoom: 1});
+  const [transform, setTransform] = useState({ x: 0, y: 0, zoom: 1 });
   const [container, setContainer] = useState();
 
   const isZoomKeyDownRef = useRef(false);
-  const panZoomRef = useRef({...transform});
+  const panZoomRef = useRef({ ...transform });
   const boundaryRef = useRef({
     minX: -Infinity,
     maxX: Infinity,
@@ -42,19 +42,19 @@ function usePanZoom(options: Options): Types.PanZoom {
   });
 
   const setPan = useCallback((fnOrValue) => {
-    setTransform(({x, y}) => {
+    setTransform(({ x, y }) => {
       const newPan =
         typeof fnOrValue === "function"
-          ? fnOrValue({x, y})
-          : {x: fnOrValue.x, y: fnOrValue.y};
-      return {...transform, ...newPan};
+          ? fnOrValue({ x, y })
+          : { x: fnOrValue.x, y: fnOrValue.y };
+      return { ...transform, ...newPan };
     });
   }, []);
 
   const setZoom = useCallback(
     (fnOrValue, possibleCenter) => {
       setTransform((transform) => {
-        const {zoom} = transform;
+        const { zoom } = transform;
         const newZoom =
           typeof fnOrValue === "function" ? fnOrValue(zoom) : zoom;
         const clampedZoom = clamp(minZoom, maxZoom, newZoom);
@@ -63,7 +63,7 @@ function usePanZoom(options: Options): Types.PanZoom {
           return transform;
         }
 
-        const {x, y} = transform;
+        const { x, y } = transform;
         const center = possibleCenter || {
           x: container.offsetWidth / 2,
           y: container.offsetHeight / 2,
@@ -76,7 +76,7 @@ function usePanZoom(options: Options): Types.PanZoom {
           clampedZoom
         );
 
-        const {minX, minY, maxX, maxY} = boundaryRef.current;
+        const { minX, minY, maxX, maxY } = boundaryRef.current;
 
         requestAnimationFrame(() => onChangeZoom(clampedZoom));
 
@@ -118,7 +118,7 @@ function usePanZoom(options: Options): Types.PanZoom {
       }
 
       function handleDragMove(event, dragDelta, dragData) {
-        const {minX, minY, maxX, maxY} = boundaryRef.current;
+        const { minX, minY, maxX, maxY } = boundaryRef.current;
 
         if (dragData?.type === "panzoom") {
           setTransform((transform) => ({
@@ -149,7 +149,7 @@ function usePanZoom(options: Options): Types.PanZoom {
         }
 
         if (isZoomKeyDownRef.current) {
-          const {deltaY} = event;
+          const { deltaY } = event;
           const postion = {
             x: event.clientX,
             y: event.clientY,
@@ -160,8 +160,8 @@ function usePanZoom(options: Options): Types.PanZoom {
             postion
           );
         } else {
-          const {minX, minY, maxX, maxY} = boundaryRef.current;
-          const {deltaX, deltaY} = event;
+          const { minX, minY, maxX, maxY } = boundaryRef.current;
+          const { deltaX, deltaY } = event;
 
           setTransform((transform) => ({
             ...transform,
@@ -172,7 +172,7 @@ function usePanZoom(options: Options): Types.PanZoom {
       }
 
       if (initialPan) {
-        const {minX, minY, maxX, maxY} = boundaryRef.current;
+        const { minX, minY, maxX, maxY } = boundaryRef.current;
 
         setPan({
           x: clamp(minX, maxX, initialPan.x),
@@ -231,10 +231,10 @@ function usePanZoom(options: Options): Types.PanZoom {
 
   useEffect(() => {
     if (zoomWheelKey) {
-      function handleKeyDown({key}) {
+      function handleKeyDown({ key }) {
         if (key === zoomWheelKey) isZoomKeyDownRef.current = true;
       }
-      function handleKeyUp({key}) {
+      function handleKeyUp({ key }) {
         if (key === zoomWheelKey) isZoomKeyDownRef.current = false;
       }
 
@@ -247,7 +247,7 @@ function usePanZoom(options: Options): Types.PanZoom {
     }
   }, [isZoomKeyDownRef, zoomWheelKey]);
 
-  panZoomRef.current = {...transform};
+  panZoomRef.current = { ...transform };
 
   return {
     transform: `translate3d(${transform.x}px,${transform.y}px,0) scale(${transform.zoom})`,
@@ -286,4 +286,4 @@ function clamp(min, max, value) {
   return Math.max(min, Math.min(value, max));
 }
 
-export {usePanZoom};
+export { usePanZoom };

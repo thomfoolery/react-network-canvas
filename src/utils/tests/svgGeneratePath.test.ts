@@ -1,4 +1,4 @@
-import {svgGeneratePath} from "..";
+import { svgGeneratePath } from "..";
 
 it("notifys all subscribed functions", () => {
   const x1 = 100;

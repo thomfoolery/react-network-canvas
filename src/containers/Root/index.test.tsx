@@ -1,8 +1,8 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import {createOptions} from "@component/hooks";
+import { createOptions } from "@component/hooks";
 
-import {Root} from "./index";
+import { Root } from "./index";
 
 it("renders correctly", () => {
   const nodes = [
@@ -12,8 +12,8 @@ it("renders correctly", () => {
         x: 0,
         y: 0,
       },
-      inputPorts: [{id: "node-1-input-1"}],
-      outputPorts: [{id: "node-1-output-1"}],
+      inputPorts: [{ id: "node-1-input-1" }],
+      outputPorts: [{ id: "node-1-output-1" }],
     },
     {
       id: "node-2",
@@ -21,8 +21,8 @@ it("renders correctly", () => {
         x: 100,
         y: 100,
       },
-      inputPorts: [{id: "node-2-input-1"}],
-      outputPorts: [{id: "node-2-output-1"}],
+      inputPorts: [{ id: "node-2-input-1" }],
+      outputPorts: [{ id: "node-2-output-1" }],
     },
   ];
   const edges = [

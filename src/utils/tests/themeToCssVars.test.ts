@@ -1,4 +1,4 @@
-import {themeToCssVars} from "..";
+import { themeToCssVars } from "..";
 
 const defaultCSSVars = {
   "--NC-canvas-background-color": "white",

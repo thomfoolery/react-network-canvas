@@ -1,4 +1,4 @@
-import {createDragManager} from "@component/hooks/useDragManager";
+import { createDragManager } from "@component/hooks/useDragManager";
 import * as Types from "@component/types";
 
 function mockUseDragManager(
@@ -7,4 +7,4 @@ function mockUseDragManager(
   return () => dragManager;
 }
 
-export {mockUseDragManager};
+export { mockUseDragManager };

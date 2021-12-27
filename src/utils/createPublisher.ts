@@ -35,4 +35,4 @@ function createPublisher(): Types.Publisher {
   };
 }
 
-export {createPublisher};
+export { createPublisher };

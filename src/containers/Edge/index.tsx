@@ -1,6 +1,6 @@
-import React, {useState, useCallback, ReactNode} from "react";
-import {useGraphManager} from "@component/hooks";
-import {joinClassList} from "@component/utils";
+import React, { useState, useCallback, ReactNode } from "react";
+import { useGraphManager } from "@component/hooks";
+import { joinClassList } from "@component/utils";
 import * as Types from "@component/types";
 
 import styles from "./styles.module.css";
@@ -12,7 +12,7 @@ interface Props {
 }
 
 function Edge(props: Props): ReactNode {
-  const {edge, isDraft = false} = props;
+  const { edge, isDraft = false } = props;
   const graphManager = useGraphManager();
   const [isHovered, setIsHovered] = useState(false);
 
@@ -60,4 +60,4 @@ function Edge(props: Props): ReactNode {
   );
 }
 
-export {Edge};
+export { Edge };

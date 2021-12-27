@@ -5,7 +5,7 @@ import React, {
   useContext,
   ReactNode,
 } from "react";
-import {createPublisher} from "@component/utils";
+import { createPublisher } from "@component/utils";
 import * as Types from "@component/types";
 
 const Context = createContext();
@@ -25,7 +25,7 @@ interface DragManagerPrivateProps {
 function createDragManager(): Types.DragManager {
   const __: DragManagerPrivateProps = {
     dragData: null,
-    dragDelta: {x: 0, y: 0},
+    dragDelta: { x: 0, y: 0 },
     dragStartPosition: null,
     workspace: undefined,
     subscriptions: {
@@ -38,16 +38,16 @@ function createDragManager(): Types.DragManager {
   function handleDragStart(event) {
     document.addEventListener("selectstart", handleOnSelectStart);
     event.currentTarget.addEventListener("mousemove", handleDragMove);
-    __.dragDelta = {x: 0, y: 0};
-    __.dragStartPosition = {x: event.screenX, y: event.screenY};
+    __.dragDelta = { x: 0, y: 0 };
+    __.dragStartPosition = { x: event.screenX, y: event.screenY };
     __.subscriptions.dragStartById.notifyAll(event);
   }
 
   function handleDragMove(event) {
     if (!__.dragStartPosition) return;
 
-    const {workspace, dragStartPosition} = __;
-    const currentPosition = {x: event.screenX, y: event.screenY};
+    const { workspace, dragStartPosition } = __;
+    const currentPosition = { x: event.screenX, y: event.screenY };
     const dragDelta = {
       x:
         (currentPosition.x - dragStartPosition.x) /
@@ -64,8 +64,8 @@ function createDragManager(): Types.DragManager {
     document.removeEventListener("selectstart", handleOnSelectStart);
     event.currentTarget.removeEventListener("mousemove", handleDragMove);
     if (__.dragStartPosition) {
-      const {workspace, dragStartPosition} = __;
-      const currentPosition = {x: event.screenX, y: event.screenY};
+      const { workspace, dragStartPosition } = __;
+      const currentPosition = { x: event.screenX, y: event.screenY };
       const dragDelta = {
         x:
           (currentPosition.x - dragStartPosition.x) /
@@ -85,10 +85,10 @@ function createDragManager(): Types.DragManager {
       __.workspace = workspace;
     },
     get dragDelta() {
-      return {...__.dragDelta};
+      return { ...__.dragDelta };
     },
     get dragData() {
-      return __.dragData ? {...__.dragData} : null;
+      return __.dragData ? { ...__.dragData } : null;
     },
     set dragData(dragData: any) {
       __.dragData = dragData;
@@ -132,7 +132,7 @@ interface Props {
 function DragManagerProvider(props: Props): ReactNode {
   const dragManager = useMemo(() => createDragManager(), []);
   const containerRef = useRef();
-  const {children} = props;
+  const { children } = props;
   const style = {
     width: "100%",
     height: "100%",
@@ -157,4 +157,4 @@ function useDragManager(): Types.DragManager {
   return useContext(Context);
 }
 
-export {createDragManager, useDragManager, DragManagerProvider};
+export { createDragManager, useDragManager, DragManagerProvider };

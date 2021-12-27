@@ -1,6 +1,6 @@
-import React, {useRef, ReactNode} from "react";
-import {Workspace} from "@component/containers";
-import {themeToCssVars} from "@component/utils";
+import React, { useRef, ReactNode } from "react";
+import { Workspace } from "@component/containers";
+import { themeToCssVars } from "@component/utils";
 import {
   GraphManagerProvider,
   DragManagerProvider,
@@ -20,10 +20,10 @@ interface Props {
 }
 
 function Root(props: Props): ReactNode {
-  const {nodes, edges, bridge, options = {}, theme = {}} = props;
+  const { nodes, edges, bridge, options = {}, theme = {} } = props;
   const containerRef = useRef();
 
-  const {gridSize, canvasSize} = options;
+  const { gridSize, canvasSize } = options;
 
   const cssVars = {
     ...themeToCssVars({
@@ -52,4 +52,4 @@ function Root(props: Props): ReactNode {
   );
 }
 
-export {Root};
+export { Root };

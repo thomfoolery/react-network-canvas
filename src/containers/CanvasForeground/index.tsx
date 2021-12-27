@@ -1,7 +1,7 @@
-import React, {memo, useState, useEffect} from "react";
-import {Node} from "@component/containers";
+import React, { memo, useState, useEffect } from "react";
+import { Node } from "@component/containers";
 
-import {useGraphManager} from "@component/hooks";
+import { useGraphManager } from "@component/hooks";
 
 function Component() {
   const graphManager = useGraphManager();
@@ -24,4 +24,4 @@ function Component() {
 
 const CanvasForeground = memo(Component);
 
-export {CanvasForeground};
+export { CanvasForeground };

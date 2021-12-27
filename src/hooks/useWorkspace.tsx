@@ -1,4 +1,4 @@
-import React, {createContext, useContext, ReactNode, RefObject} from "react";
+import React, { createContext, useContext, ReactNode, RefObject } from "react";
 import * as Types from "@component/types";
 
 const Context = createContext();
@@ -41,7 +41,7 @@ function createWorkspace(options: Options): Types.Workspace {
       return panZoomRef.current;
     },
     getElementDimensions(element) {
-      const {zoom} = this.panZoom;
+      const { zoom } = this.panZoom;
       const BCR = element.getBoundingClientRect();
 
       return {
@@ -50,7 +50,7 @@ function createWorkspace(options: Options): Types.Workspace {
       };
     },
     getCanvasPosition(object) {
-      const {zoom} = this.panZoom;
+      const { zoom } = this.panZoom;
 
       if (object instanceof HTMLElement) {
         const BCR = object.getBoundingClientRect();
@@ -94,7 +94,7 @@ interface Props {
 }
 
 function WorkspaceProvider(props: Props): ReactNode {
-  const {value, children} = props;
+  const { value, children } = props;
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }
@@ -103,4 +103,4 @@ function useWorkspace(): Types.Workspace {
   return useContext(Context);
 }
 
-export {createWorkspace, useWorkspace, WorkspaceProvider};
+export { createWorkspace, useWorkspace, WorkspaceProvider };

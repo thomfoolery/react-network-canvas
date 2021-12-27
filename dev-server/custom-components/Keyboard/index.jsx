@@ -1,4 +1,10 @@
-import React, {useRef, useMemo, useState, useCallback, useEffect} from "react";
+import React, {
+  useRef,
+  useMemo,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
 
 // import Modal from '../Modal';
 // import PatchGraph from '../PatchGraph';
@@ -46,7 +52,7 @@ const patches = [
 // const [firstPatchDef] = patches;
 // const intitialPatchName = firstPatchDef[0];
 
-function Keyboard({isPlaying, connect, analyser, audioContext}) {
+function Keyboard({ isPlaying, connect, analyser, audioContext }) {
   const onNotePressed = useCallback((e) => {}, []);
 
   const onNoteReleased = useCallback((e) => {}, []);
@@ -194,4 +200,4 @@ function Keyboard({isPlaying, connect, analyser, audioContext}) {
   );
 }
 
-export {Keyboard};
+export { Keyboard };

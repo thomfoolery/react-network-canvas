@@ -1,5 +1,5 @@
-import {Position} from "./Position";
-import {Port} from "./Port";
+import { Position } from "./Position";
+import { Port } from "./Port";
 
 export interface Node {
   id: string;

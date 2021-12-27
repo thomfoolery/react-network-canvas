@@ -5,4 +5,4 @@ interface Publisher {
   removeListenerForId(id, fn): void;
 }
 
-export {Publisher};
+export { Publisher };

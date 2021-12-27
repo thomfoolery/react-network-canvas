@@ -1,5 +1,5 @@
 import React from "react";
-import {Port} from "@component/containers";
+import { Port } from "@component/containers";
 
 import styles from "./styles.module.css";
 
@@ -51,4 +51,4 @@ function Node(props) {
   );
 }
 
-export {Node};
+export { Node };

@@ -1,6 +1,6 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import {render, fireEvent, screen} from "@testing-library/react";
+import { render, fireEvent, screen } from "@testing-library/react";
 import {
   mockUseDragManager,
   mockUseGraphManager,
@@ -17,7 +17,7 @@ import {
   useBridge,
 } from "@component/hooks";
 
-import {CanvasBackground} from "./index";
+import { CanvasBackground } from "./index";
 
 jest.mock("@component/hooks", () => ({
   ...jest.requireActual("@component/hooks"),
@@ -101,7 +101,7 @@ describe("CanvasBackground", () => {
     });
 
     Object.defineProperty(dragManager, "dragDelta", {
-      get: () => ({x: 0, y: 0}),
+      get: () => ({ x: 0, y: 0 }),
       configurable: true,
     });
 
@@ -116,7 +116,7 @@ describe("CanvasBackground", () => {
     fireEvent.mouseUp(screen.queryByTestId("CanvasBackground"));
     expect(onClickCanvas).toHaveBeenCalledWith(
       expect.anything(),
-      {x: 0, y: 0},
+      { x: 0, y: 0 },
       graphManager
     );
   });

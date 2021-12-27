@@ -7,10 +7,14 @@ import React, {
 } from "react";
 import * as Types from "@component/types";
 
-import {useDragManager, useGraphManager, useWorkspace} from "@component/hooks";
-import {isClick} from "@component/utils";
+import {
+  useDragManager,
+  useGraphManager,
+  useWorkspace,
+} from "@component/hooks";
+import { isClick } from "@component/utils";
 
-import {CanvasBackground, CanvasForeground} from "@component/containers";
+import { CanvasBackground, CanvasForeground } from "@component/containers";
 
 import styles from "./styles.module.css";
 
@@ -20,7 +24,7 @@ interface Props {
 }
 
 function Canvas(props: Props): ReactNode {
-  const {transform, onClick = () => null} = props;
+  const { transform, onClick = () => null } = props;
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
   const workspace = useWorkspace();
@@ -86,7 +90,7 @@ function Canvas(props: Props): ReactNode {
   return (
     <div
       onClick={onClick}
-      style={{transform}}
+      style={{ transform }}
       className={styles.Canvas}
       onMouseDown={handleMouseDown}
       data-testid="Canvas"
@@ -103,7 +107,7 @@ function Canvas(props: Props): ReactNode {
 }
 
 function getSelectBoxCoordinates(element) {
-  const {style} = element;
+  const { style } = element;
   const x1 = parseInt(style.left, 10);
   const y1 = parseInt(style.top, 10);
   const x2 = parseInt(style.left, 10) + parseInt(style.width, 10);
@@ -113,7 +117,7 @@ function getSelectBoxCoordinates(element) {
 }
 
 function drawSelectBox(dragDelta, dragData, element) {
-  const {style} = element;
+  const { style } = element;
 
   style.left = `${Math.min(
     dragData.startPosition.x,
@@ -132,4 +136,4 @@ function clearSelectBox(element) {
   element.style = "";
 }
 
-export {Canvas};
+export { Canvas };

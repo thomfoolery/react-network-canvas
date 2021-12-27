@@ -1,7 +1,7 @@
 import React from "react";
 import renderer from "react-test-renderer";
 
-import {Port} from "./index";
+import { Port } from "./index";
 
 describe("Port", () => {
   it("renders correctly", () => {
@@ -11,10 +11,10 @@ describe("Port", () => {
         x: 0,
         y: 0,
       },
-      inputPorts: [{id: "node-1-input-1"}],
-      outputPorts: [{id: "node-1-output-1"}],
+      inputPorts: [{ id: "node-1-input-1" }],
+      outputPorts: [{ id: "node-1-output-1" }],
     };
-    const port = {id: "node-1-input-1"};
+    const port = { id: "node-1-input-1" };
     const type = "input";
     const onMouseUp = () => null;
     const onMouseDown = () => null;

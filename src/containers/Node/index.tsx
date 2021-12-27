@@ -5,7 +5,7 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import {Port as PortComponent} from "../Port";
+import { Port as PortComponent } from "../Port";
 import * as Types from "@component/types";
 
 import {
@@ -15,7 +15,7 @@ import {
   useOptions,
   useBridge,
 } from "@component/hooks";
-import {isClick, svgGeneratePath} from "@component/utils";
+import { isClick, svgGeneratePath } from "@component/utils";
 
 import styles from "./styles.module.css";
 
@@ -25,20 +25,20 @@ interface Props {
 }
 
 function Node(props: Props): ReactNode {
-  const {node} = props;
+  const { node } = props;
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
   const workspace = useWorkspace();
   const options = useOptions();
   const bridge = useBridge();
 
-  const {NodeComponent} = options;
+  const { NodeComponent } = options;
 
   const [isSelected, setIsSelected] = useState(false);
   const [position, setPosition] = useState(node.position);
-  const [dragDelta, setDragDelta] = useState({x: 0, y: 0});
+  const [dragDelta, setDragDelta] = useState({ x: 0, y: 0 });
 
-  const {id, inputPorts, outputPorts} = node;
+  const { id, inputPorts, outputPorts } = node;
   const finalPosition = {
     x: position.x + dragDelta.x,
     y: position.y + dragDelta.y,
@@ -47,11 +47,11 @@ function Node(props: Props): ReactNode {
   const edges = graphManager.getEdgesByNodeId(id);
 
   const edgesIn = useMemo(() => {
-    return edges.filter(({to}) => to.nodeId === id);
+    return edges.filter(({ to }) => to.nodeId === id);
   }, [edges]);
 
   const edgesOut = useMemo(() => {
-    return edges.filter(({from}) => from.nodeId === id);
+    return edges.filter(({ from }) => from.nodeId === id);
   }, [edges]);
 
   const handleMouseDown = useCallback(() => {
@@ -59,7 +59,7 @@ function Node(props: Props): ReactNode {
       return;
     }
 
-    dragManager.dragData = {dragType: "node", node};
+    dragManager.dragData = { dragType: "node", node };
 
     if (
       !workspace.isSelectBoxKeyDown &&
@@ -71,7 +71,7 @@ function Node(props: Props): ReactNode {
 
   const handleMouseUp = useCallback(
     (event) => {
-      const {dragData} = dragManager;
+      const { dragData } = dragManager;
       if (
         dragData?.dragType === "port" &&
         dragData?.port?.parentNode.id !== node.id &&
@@ -103,15 +103,14 @@ function Node(props: Props): ReactNode {
     [node, bridge, workspace, dragManager, graphManager]
   );
 
-  useEffect(() => edgesIn.forEach((edge) => updateEdgePath(edge, workspace)), [
-    dragDelta,
-    workspace,
-  ]);
-  useEffect(() => edgesOut.forEach((edge) => updateEdgePath(edge, workspace)), [
-    edgesOut,
-    dragDelta,
-    workspace,
-  ]);
+  useEffect(
+    () => edgesIn.forEach((edge) => updateEdgePath(edge, workspace)),
+    [dragDelta, workspace]
+  );
+  useEffect(
+    () => edgesOut.forEach((edge) => updateEdgePath(edge, workspace)),
+    [edgesOut, dragDelta, workspace]
+  );
 
   useEffect(() => {
     graphManager.subscribeToNodePositionChangeById(id, setPosition);
@@ -183,4 +182,4 @@ function updateEdgePath(edge, workspace) {
   svgPath?.nextElementSibling?.setAttribute("d", path);
 }
 
-export {Node};
+export { Node };

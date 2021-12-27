@@ -1,4 +1,4 @@
-import React, {createContext, useMemo, useContext, ReactNode} from "react";
+import React, { createContext, useMemo, useContext, ReactNode } from "react";
 import * as Types from "@component/types";
 
 const Context = createContext();
@@ -46,7 +46,7 @@ function createBridge(value: Partial<Types.Bridge> = {}): Types.Bridge {
 }
 
 function BridgeProvider(props: Props): ReactNode {
-  const {value, children} = props;
+  const { value, children } = props;
   const bridge = useMemo(() => createBridge(value), [value]);
 
   return <Context.Provider value={bridge}>{children}</Context.Provider>;
@@ -56,4 +56,4 @@ function useBridge(): Types.Bridge {
   return useContext(Context);
 }
 
-export {createBridge, useBridge, BridgeProvider};
+export { createBridge, useBridge, BridgeProvider };

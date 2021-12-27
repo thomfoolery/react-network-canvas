@@ -49,4 +49,4 @@ interface Bridge {
   ): void;
 }
 
-export {Bridge};
+export { Bridge };

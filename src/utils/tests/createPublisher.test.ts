@@ -1,4 +1,4 @@
-import {createPublisher} from "..";
+import { createPublisher } from "..";
 
 it("notifys all subscribed functions", () => {
   const publisher = createPublisher();

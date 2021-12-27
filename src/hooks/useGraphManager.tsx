@@ -6,17 +6,21 @@ import React, {
   ReactNode,
 } from "react";
 
-import {roundToGrid, svgGeneratePath, createPublisher} from "@component/utils";
+import {
+  roundToGrid,
+  svgGeneratePath,
+  createPublisher,
+} from "@component/utils";
 import {
   createOptions,
   useDragManager,
   useOptions,
   useBridge,
 } from "@component/hooks";
-import {DRAFT_EDGE_ID} from "@component/constants";
+import { DRAFT_EDGE_ID } from "@component/constants";
 import * as Types from "@component/types";
 
-import {v1 as generateUuid} from "uuid";
+import { v1 as generateUuid } from "uuid";
 
 const Context = createContext();
 
@@ -29,7 +33,7 @@ function getObjectsByIdHash(objects) {
 
 function getEdgesByNodeIdHash(edges) {
   return edges.reduce((acc, edge) => {
-    const {from, to} = edge;
+    const { from, to } = edge;
 
     if (acc[from.nodeId]) {
       acc[from.nodeId].push(edge);
@@ -49,9 +53,9 @@ function getEdgesByNodeIdHash(edges) {
 interface GraphManagerPrivateProps {
   nodes: Types.Node[];
   edges: Types.Edge[];
-  nodesByIdHash: {[id: string]: Types.Node};
-  edgesByIdHash: {[id: string]: Types.Edge};
-  edgesByNodeIdHash: {[id: string]: Types.Edge[]};
+  nodesByIdHash: { [id: string]: Types.Node };
+  edgesByIdHash: { [id: string]: Types.Edge };
+  edgesByNodeIdHash: { [id: string]: Types.Edge[] };
   selectedNodeIds: string[];
   bridge?: Types.Bridge;
   options: Types.Options;
@@ -135,7 +139,7 @@ function createGraphManager({
   }
 
   function updateNodePositionById(id: string, dragDelta: Types.Position) {
-    const {isSnapToGridEnabled} = options;
+    const { isSnapToGridEnabled } = options;
     const node = __.nodesByIdHash[id];
     const position = isSnapToGridEnabled
       ? roundToGrid(
@@ -181,14 +185,14 @@ function createGraphManager({
   const API = {
     // bridge
     get bridge() {
-      return {...__.bridge} as Types.Bridge;
+      return { ...__.bridge } as Types.Bridge;
     },
     set bridge(bridge: Types.Bridge) {
       __.bridge = bridge;
     },
     // workspace
     get workspace() {
-      return {...__.workspace} as Types.Workspace;
+      return { ...__.workspace } as Types.Workspace;
     },
     set workspace(workspace: Types.Workspace) {
       __.workspace = workspace;
@@ -201,22 +205,22 @@ function createGraphManager({
       setNodes(nodes);
     },
     getNodeById(id: string) {
-      return {...__.nodesByIdHash[id]};
+      return { ...__.nodesByIdHash[id] };
     },
-    getNodesByEdgeId(id: string): {from?: Types.Node; to?: Types.Node} {
+    getNodesByEdgeId(id: string): { from?: Types.Node; to?: Types.Node } {
       const edge: Types.Edge = __.edgesByIdHash[id];
       if (edge) {
         const from = __.nodesByIdHash[edge.from.nodeId];
         const to = __.nodesByIdHash[edge.to.nodeId];
-        return {from, to};
+        return { from, to };
       }
-      return {from: undefined, to: undefined};
+      return { from: undefined, to: undefined };
     },
     createNode(nodeProps: Omit<Types.Node, "id">) {
-      const {isSnapToGridEnabled, gridSize} = options;
+      const { isSnapToGridEnabled, gridSize } = options;
       const position: Types.Position = isSnapToGridEnabled
         ? roundToGrid(nodeProps.position, gridSize)
-        : nodeProps.position || {x: NaN, y: NaN};
+        : nodeProps.position || { x: NaN, y: NaN };
 
       const node: Types.Node = {
         id: generateUuid(),
@@ -239,7 +243,7 @@ function createGraphManager({
     },
     removeNodeById(id: string) {
       const edges = __.edgesByNodeIdHash[id] || [];
-      const removedEdgeIds = edges.map(({id}) => id);
+      const removedEdgeIds = edges.map(({ id }) => id);
 
       setSelectedNodeIds(
         __.selectedNodeIds.filter((selectedNodeId) => selectedNodeId !== id)
@@ -260,7 +264,7 @@ function createGraphManager({
       const removedEdgeIds: string[] = removedNodeIds.reduce(
         (acc: string[], id: string) => {
           const edges = __.edgesByNodeIdHash[id] || [];
-          return [...acc, ...edges.map(({id}) => id)];
+          return [...acc, ...edges.map(({ id }) => id)];
         },
         []
       );
@@ -295,7 +299,7 @@ function createGraphManager({
       __.dragManager = dragManager;
     },
     handleDragMove(event, dragDelta: Types.Position, dragData: any) {
-      const {selectedNodeIds, dragManager, workspace} = __;
+      const { selectedNodeIds, dragManager, workspace } = __;
 
       if (dragManager?.dragData?.dragType === "node") {
         __.subscriptions.dragDeltaById.notifyIds(selectedNodeIds, dragDelta);
@@ -313,7 +317,7 @@ function createGraphManager({
       }
     },
     handleDragEnd(event, dragDelta: Types.Position, dragData: any) {
-      const {selectedNodeIds, subscriptions} = __;
+      const { selectedNodeIds, subscriptions } = __;
 
       subscriptions.dragDeltaById.notifyIds(selectedNodeIds, {
         x: 0,
@@ -388,7 +392,7 @@ function createGraphManager({
       setEdges(edges);
     },
     getEdgeById(id: string): Types.Edge {
-      return {...__.edgesByIdHash[id]};
+      return { ...__.edgesByIdHash[id] };
     },
     getEdgesByNodeId(id: string): Types.Edge[] {
       return __.edgesByNodeIdHash[id] ? [...__.edgesByNodeIdHash[id]] : [];
@@ -402,7 +406,7 @@ function createGraphManager({
       setEdges([...__.edges, edge]);
 
       // trigger render to draw edges
-      updateNodePositionById(edge.from.nodeId, {x: 0, y: 0});
+      updateNodePositionById(edge.from.nodeId, { x: 0, y: 0 });
 
       __.bridge?.onMutateGraph({
         action: "CREATE_EDGE",
@@ -417,7 +421,7 @@ function createGraphManager({
     },
     removeEdgeById(id: string) {
       const filter = (edge) => edge.id != id;
-      const {edgesByNodeIdHash} = __;
+      const { edgesByNodeIdHash } = __;
       const edge = __.edgesByIdHash[id];
       const fromNodeEdges = edgesByNodeIdHash[edge.from.nodeId];
       const toNodeEdges = edgesByNodeIdHash[edge.to.nodeId];
@@ -428,8 +432,8 @@ function createGraphManager({
       setEdges(__.edges.filter(filter));
 
       // redraw from and to nodes
-      updateNodePositionById(edge.from.nodeId, {x: 0, y: 0});
-      updateNodePositionById(edge.to.nodeId, {x: 0, y: 0});
+      updateNodePositionById(edge.from.nodeId, { x: 0, y: 0 });
+      updateNodePositionById(edge.to.nodeId, { x: 0, y: 0 });
 
       __.bridge?.onMutateGraph({
         action: "DELETE_EDGE",
@@ -449,7 +453,7 @@ function createGraphManager({
       __.subscriptions.edgesChange.removeListenerForId(id, fn);
     },
     // import/export
-    import({nodes, edges}) {
+    import({ nodes, edges }) {
       setNodes(nodes);
       setEdges(edges);
     },
@@ -471,13 +475,13 @@ interface Props {
 }
 
 function GraphManagerProvider(props: Props): ReactNode {
-  const {nodes, edges, children} = props;
+  const { nodes, edges, children } = props;
   const dragManager = useDragManager();
   const options = useOptions();
   const bridge = useBridge();
 
   const graphManager = useMemo(
-    () => createGraphManager({options, nodes, edges, bridge, dragManager}),
+    () => createGraphManager({ options, nodes, edges, bridge, dragManager }),
     []
   );
 
@@ -501,4 +505,4 @@ function useGraphManager(): Types.GraphManager {
   return useContext(Context);
 }
 
-export {createGraphManager, useGraphManager, GraphManagerProvider};
+export { createGraphManager, useGraphManager, GraphManagerProvider };

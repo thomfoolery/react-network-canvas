@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./styles.module.css";
 
 function ZoomControls(props) {
-  const {zoom, graphManager} = props;
+  const { zoom, graphManager } = props;
 
   return (
     <div className={styles.ZoomControls}>
@@ -36,4 +36,4 @@ function ZoomControls(props) {
   );
 }
 
-export {ZoomControls};
+export { ZoomControls };

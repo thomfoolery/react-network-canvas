@@ -1,7 +1,7 @@
 import * as Types from "@component/types";
 
 function roundToGrid(
-  position: Types.Position = {x: 0, y: 0},
+  position: Types.Position = { x: 0, y: 0 },
   gridSize: number
 ): Types.Position {
   return {
@@ -10,4 +10,4 @@ function roundToGrid(
   };
 }
 
-export {roundToGrid};
+export { roundToGrid };

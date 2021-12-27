@@ -1,4 +1,4 @@
-import {createWorkspace} from "@component/hooks/useWorkspace";
+import { createWorkspace } from "@component/hooks/useWorkspace";
 import * as Types from "@component/types";
 
 const defaultOptions = {
@@ -29,4 +29,4 @@ function mockUseWorkspace(
   return () => workspace;
 }
 
-export {mockUseWorkspace};
+export { mockUseWorkspace };

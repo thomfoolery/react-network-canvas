@@ -4,4 +4,4 @@ function joinClassList(...args): string | undefined {
   return classList.length > 0 ? classList.join(" ") : undefined;
 }
 
-export {joinClassList};
+export { joinClassList };

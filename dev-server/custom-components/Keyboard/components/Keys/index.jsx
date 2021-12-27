@@ -1,12 +1,12 @@
 import React from "react";
 
-import {allNotesByOctave} from "./notes";
+import { allNotesByOctave } from "./notes";
 
 import styles from "./styles.module.css";
 
 const octaves = allNotesByOctave.slice(2, 5);
 
-function Keys({onNotePressed, onNoteReleased}) {
+function Keys({ onNotePressed, onNoteReleased }) {
   return (
     <div className={styles.Keys}>
       {octaves.map((notes, octave) => (

@@ -6,9 +6,9 @@ import {
   mockUseDragManager,
   mockUseGraphManager,
 } from "@component/utils/mocks";
-import {useOptions, useDragManager, useGraphManager} from "@component/hooks";
+import { useOptions, useDragManager, useGraphManager } from "@component/hooks";
 
-import {Workspace} from "./index";
+import { Workspace } from "./index";
 
 jest.mock("@component/hooks", () => {
   return {

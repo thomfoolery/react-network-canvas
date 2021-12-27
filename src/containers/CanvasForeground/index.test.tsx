@@ -13,7 +13,7 @@ import {
   useBridge,
 } from "@component/hooks";
 
-import {CanvasForeground} from "./index";
+import { CanvasForeground } from "./index";
 
 jest.mock("@component/hooks", () => ({
   ...jest.requireActual("@component/hooks"),

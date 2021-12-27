@@ -1,6 +1,6 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import {render, fireEvent, screen} from "@testing-library/react";
+import { render, fireEvent, screen } from "@testing-library/react";
 import {
   mockUseDragManager,
   mockUseGraphManager,
@@ -17,7 +17,7 @@ import {
   useBridge,
 } from "@component/hooks";
 
-import {Canvas} from "./index";
+import { Canvas } from "./index";
 
 jest.mock("@component/hooks", () => ({
   ...jest.requireActual("@component/hooks"),
@@ -86,7 +86,7 @@ describe("Canvas", () => {
     fireEvent.mouseDown(screen.queryByTestId("Canvas"));
     expect(dragDataSetter).toHaveBeenCalledWith({
       type: "selectbox",
-      startPosition: {x: 0, y: 0},
+      startPosition: { x: 0, y: 0 },
     });
   });
 

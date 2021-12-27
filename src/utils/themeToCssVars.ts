@@ -1,4 +1,4 @@
-import {DEFAULT_THEME} from "@component/constants";
+import { DEFAULT_THEME } from "@component/constants";
 
 function flattenThemeObject(theme, prefix = "--NC", styles = {}) {
   Object.keys(theme).forEach((key) => {
@@ -60,4 +60,4 @@ function themeToCssVars(providedTheme: any): any {
   return styles;
 }
 
-export {themeToCssVars};
+export { themeToCssVars };

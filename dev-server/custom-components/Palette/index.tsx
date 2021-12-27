@@ -1,4 +1,4 @@
-import React, {useCallback, ReactNode} from "react";
+import React, { useCallback, ReactNode } from "react";
 
 import styles from "./styles.module.css";
 
@@ -43,4 +43,4 @@ function Palette(): ReactNode {
   );
 }
 
-export {Palette};
+export { Palette };

@@ -1,6 +1,6 @@
-import React, {ReactNode} from "react";
+import React, { ReactNode } from "react";
 import * as Types from "@component/types";
-import {joinClassList} from "@component/utils";
+import { joinClassList } from "@component/utils";
 
 import styles from "./styles.module.css";
 
@@ -13,7 +13,7 @@ interface Props {
 }
 
 function Port(props: Props): ReactNode {
-  const {port, type, onMouseUp, onMouseDown} = props;
+  const { port, type, onMouseUp, onMouseDown } = props;
 
   const className = joinClassList(
     styles.Port,
@@ -31,4 +31,4 @@ function Port(props: Props): ReactNode {
   );
 }
 
-export {Port};
+export { Port };

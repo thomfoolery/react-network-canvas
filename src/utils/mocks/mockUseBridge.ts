@@ -1,4 +1,4 @@
-import {createBridge} from "@component/hooks/useBridge";
+import { createBridge } from "@component/hooks/useBridge";
 import * as Types from "@component/types";
 
 function mockUseBridge(
@@ -7,4 +7,4 @@ function mockUseBridge(
   return () => bridge;
 }
 
-export {mockUseBridge};
+export { mockUseBridge };

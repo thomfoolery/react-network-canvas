@@ -1,6 +1,6 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import {render, fireEvent, screen} from "@testing-library/react";
+import { render, fireEvent, screen } from "@testing-library/react";
 import {
   mockUseDragManager,
   mockUseGraphManager,
@@ -15,7 +15,7 @@ import {
   useBridge,
 } from "@component/hooks";
 
-import {Edge} from "./index";
+import { Edge } from "./index";
 
 jest.mock("@component/hooks", () => ({
   ...jest.requireActual("@component/hooks"),

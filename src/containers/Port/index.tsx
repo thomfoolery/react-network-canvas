@@ -1,4 +1,4 @@
-import React, {useCallback, ReactNode, SyntheticEvent} from "react";
+import React, { useCallback, ReactNode, SyntheticEvent } from "react";
 import {
   useBridge,
   useOptions,
@@ -6,7 +6,7 @@ import {
   useDragManager,
   useGraphManager,
 } from "@component/hooks";
-import {isClick} from "@component/utils";
+import { isClick } from "@component/utils";
 import * as Types from "@component/types";
 
 interface Props {
@@ -17,14 +17,14 @@ interface Props {
 }
 
 function Port(props: Props): ReactNode {
-  const {node, port, type} = props;
+  const { node, port, type } = props;
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
   const workspace = useWorkspace();
   const options = useOptions();
   const bridge = useBridge();
 
-  const {PortComponent} = options;
+  const { PortComponent } = options;
 
   const handleMouseDown = useCallback(() => {
     if (type === "output") {
@@ -53,7 +53,7 @@ function Port(props: Props): ReactNode {
 
   const handleMouseUp = useCallback(
     (event: SyntheticEvent) => {
-      const {dragData} = dragManager;
+      const { dragData } = dragManager;
       if (isClick(dragManager.dragDelta)) {
         bridge.onClickPort(event, port, node, graphManager);
       } else if (
@@ -95,4 +95,4 @@ function Port(props: Props): ReactNode {
   );
 }
 
-export {Port};
+export { Port };

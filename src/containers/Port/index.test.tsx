@@ -1,6 +1,6 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import {render, fireEvent, screen} from "@testing-library/react";
+import { render, fireEvent, screen } from "@testing-library/react";
 import {
   mockUseDragManager,
   mockUseGraphManager,
@@ -19,7 +19,7 @@ import {
   useBridge,
 } from "@component/hooks";
 
-import {Port} from "./index";
+import { Port } from "./index";
 
 jest.mock("@component/hooks", () => ({
   ...jest.requireActual("@component/hooks"),
@@ -45,9 +45,9 @@ const defaultProps = {
   },
   node: {
     id: "node-1",
-    position: {x: 0, y: 0},
-    inputs: [{id: "node-1-input-1"}],
-    outputs: [{id: "node-1-output-1"}],
+    position: { x: 0, y: 0 },
+    inputs: [{ id: "node-1-input-1" }],
+    outputs: [{ id: "node-1-output-1" }],
   },
 };
 
@@ -109,7 +109,7 @@ describe("Port", () => {
 
   it("calls bridge.onClickPort onMouseUp if isClick", () => {
     const onClickPort = jest.fn();
-    const dragDataGetter = jest.fn(() => ({x: 0, y: 0}));
+    const dragDataGetter = jest.fn(() => ({ x: 0, y: 0 }));
     const dragManager = createDragManager();
     const bridge = createBridge();
 
@@ -130,16 +130,16 @@ describe("Port", () => {
   });
 
   it("calls graphManager.createEdge onMouseUp if not isClick && dragData.port && type === input && dragData.port.type === output", () => {
-    const dragDeltaGetter = jest.fn(() => ({x: 10, y: 10}));
+    const dragDeltaGetter = jest.fn(() => ({ x: 10, y: 10 }));
     const dragDataGetter = jest.fn(() => ({
       port: {
         id: "node-1-output-1",
         type: "output",
         parentNode: {
           id: "node-1",
-          position: {x: 0, y: 0},
-          inputs: [{id: "node-1-input-1"}],
-          outputs: [{id: "node-1-output-1"}],
+          position: { x: 0, y: 0 },
+          inputs: [{ id: "node-1-input-1" }],
+          outputs: [{ id: "node-1-output-1" }],
         },
       },
     }));

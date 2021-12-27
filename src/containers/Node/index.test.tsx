@@ -1,6 +1,6 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import {render, fireEvent, screen} from "@testing-library/react";
+import { render, fireEvent, screen } from "@testing-library/react";
 import {
   mockUseDragManager,
   mockUseGraphManager,
@@ -20,7 +20,7 @@ import {
   useBridge,
 } from "@component/hooks";
 
-import {Node} from "./index";
+import { Node } from "./index";
 
 jest.mock("@component/hooks", () => ({
   ...jest.requireActual("@component/hooks"),
@@ -44,8 +44,8 @@ const defaultProps = {
       x: 0,
       y: 0,
     },
-    inputPorts: [{id: "node-1-input-1"}],
-    outputPorts: [{id: "node-1-output-1"}],
+    inputPorts: [{ id: "node-1-input-1" }],
+    outputPorts: [{ id: "node-1-output-1" }],
   },
 };
 
@@ -123,7 +123,7 @@ describe("Node", () => {
     bridge.onClickNode = onClickNode;
 
     Object.defineProperty(dragManager, "dragDelta", {
-      get: () => ({x: 0, y: 0}),
+      get: () => ({ x: 0, y: 0 }),
       configurable: true,
     });
 
@@ -149,7 +149,7 @@ describe("Node", () => {
     const removeSelectedNodeId = jest.fn();
 
     Object.defineProperty(dragManager, "dragDelta", {
-      get: () => ({x: 0, y: 0}),
+      get: () => ({ x: 0, y: 0 }),
       configurable: true,
     });
 
@@ -182,7 +182,7 @@ describe("Node", () => {
     const appendSelectedNodeId = jest.fn();
 
     Object.defineProperty(dragManager, "dragDelta", {
-      get: () => ({x: 0, y: 0}),
+      get: () => ({ x: 0, y: 0 }),
       configurable: true,
     });
 

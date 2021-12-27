@@ -14,9 +14,9 @@ import {
   useBridge,
 } from "@component/hooks";
 
-import {DRAFT_EDGE_ID} from "@component/constants";
-import {Edge} from "@component/containers";
-import {isClick} from "@component/utils";
+import { DRAFT_EDGE_ID } from "@component/constants";
+import { Edge } from "@component/containers";
+import { isClick } from "@component/utils";
 
 import styles from "./styles.module.css";
 
@@ -45,7 +45,7 @@ function Component(): ReactNode {
   const handleMouseDown = useCallback(
     (event) => {
       if (event.target === containerRef.current) {
-        dragManager.dragData = {type: "panzoom"};
+        dragManager.dragData = { type: "panzoom" };
       }
     },
     [dragManager, containerRef]
@@ -94,4 +94,4 @@ function Component(): ReactNode {
 
 const CanvasBackground = memo(Component);
 
-export {CanvasBackground};
+export { CanvasBackground };

@@ -2,7 +2,7 @@ import React from "react";
 
 import styles from "./styles.module.css";
 
-function Modal({children, onClose}) {
+function Modal({ children, onClose }) {
   return (
     <div className={styles.ModalContainer} onClick={onClose}>
       <div className={styles.Modal}>{children}</div>
@@ -10,4 +10,4 @@ function Modal({children, onClose}) {
   );
 }
 
-export {Modal};
+export { Modal };

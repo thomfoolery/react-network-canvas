@@ -1,5 +1,11 @@
-import React, {useRef, useMemo, useEffect, useCallback, ReactNode} from "react";
-import {Canvas} from "@component/containers";
+import React, {
+  useRef,
+  useMemo,
+  useEffect,
+  useCallback,
+  ReactNode,
+} from "react";
+import { Canvas } from "@component/containers";
 import * as Types from "@component/types";
 import {
   useBridge,
@@ -34,7 +40,7 @@ function Workspace(): ReactNode {
   const isSelectBoxKeyDownRef = useRef(false);
 
   const initialPan = useMemo(() => {
-    const {nodes} = graphManager;
+    const { nodes } = graphManager;
     const {
       initialPanOffset = {
         x: canvasMargin,
@@ -54,19 +60,20 @@ function Workspace(): ReactNode {
               const x = node.position.x < acc.x ? node.position.x : acc.x;
               const y = node.position.y < acc.y ? node.position.y : acc.y;
 
-              return {x, y};
+              return { x, y };
             },
-            {x: Infinity, y: Infinity}
+            { x: Infinity, y: Infinity }
           )
         )
       : null;
   }, []);
 
-  const onChangeZoom = useCallback((zoom) => bridge.onChangeZoom(zoom), [
-    bridge,
-  ]);
+  const onChangeZoom = useCallback(
+    (zoom) => bridge.onChangeZoom(zoom),
+    [bridge]
+  );
 
-  const {setPan, setZoom, transform, panZoomRef, setContainer} = usePanZoom({
+  const { setPan, setZoom, transform, panZoomRef, setContainer } = usePanZoom({
     minZoom,
     maxZoom,
     initialPan,
@@ -113,7 +120,7 @@ function Workspace(): ReactNode {
   const handleMouseDown = useCallback(
     (event) => {
       if (event.target === workspaceDivRef.current) {
-        dragManager.dragData = {type: "panzoom"};
+        dragManager.dragData = { type: "panzoom" };
       }
     },
     [dragManager, graphManager, workspaceDivRef]
@@ -162,10 +169,10 @@ function Workspace(): ReactNode {
   }, [bridge, workspace, graphManager]);
 
   useEffect(() => {
-    function handleKeyDown({key}) {
+    function handleKeyDown({ key }) {
       if (key === selectBoxKey) isSelectBoxKeyDownRef.current = true;
     }
-    function handleKeyUp({key}) {
+    function handleKeyUp({ key }) {
       if (key === selectBoxKey) isSelectBoxKeyDownRef.current = false;
     }
 
@@ -193,4 +200,4 @@ function Workspace(): ReactNode {
   );
 }
 
-export {Workspace};
+export { Workspace };

@@ -12,7 +12,7 @@ interface Props {
 }
 
 function Port(props: Props) {
-  const {port, type, onMouseUp, onMouseDown} = props;
+  const { port, type, onMouseUp, onMouseDown } = props;
 
   const classList = [
     styles.Port,
@@ -42,4 +42,4 @@ function Port(props: Props) {
   );
 }
 
-export {Port};
+export { Port };
