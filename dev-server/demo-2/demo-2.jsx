@@ -189,36 +189,38 @@ function App() {
         <Modal onClose={closeHelp}>
           <div>
             <table>
-              <tr>
-                <td>Meta + Click and Drag</td>
-                <td>=</td>
-                <td>Multi-select</td>
-              </tr>
-              <tr>
-                <td>Shift + Scroll Wheel</td>
-                <td>=</td>
-                <td>Zoom</td>
-              </tr>
-              <tr>
-                <td>Click and Drag</td>
-                <td>=</td>
-                <td>Pan</td>
-              </tr>
-              <tr>
-                <td>Touch pad</td>
-                <td>=</td>
-                <td>Pan</td>
-              </tr>
-              <tr>
-                <td>Click and drag from output to node</td>
-                <td>=</td>
-                <td>Create connection</td>
-              </tr>
-              <tr>
-                <td>Click connection</td>
-                <td>=</td>
-                <td>Delete connection</td>
-              </tr>
+              <tbody>
+                <tr>
+                  <td>Meta + Click and Drag</td>
+                  <td>=</td>
+                  <td>Multi-select</td>
+                </tr>
+                <tr>
+                  <td>Shift + Scroll Wheel</td>
+                  <td>=</td>
+                  <td>Zoom</td>
+                </tr>
+                <tr>
+                  <td>Click and Drag</td>
+                  <td>=</td>
+                  <td>Pan</td>
+                </tr>
+                <tr>
+                  <td>Touch pad</td>
+                  <td>=</td>
+                  <td>Pan</td>
+                </tr>
+                <tr>
+                  <td>Click and drag from output to node</td>
+                  <td>=</td>
+                  <td>Create connection</td>
+                </tr>
+                <tr>
+                  <td>Click connection</td>
+                  <td>=</td>
+                  <td>Delete connection</td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </Modal>
