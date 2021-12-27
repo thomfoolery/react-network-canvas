@@ -1,4 +1,5 @@
 interface PanZoom {
+  isInitialized: boolean;
   transform: string;
   setContainer(container: HTMLElement): void;
   panZoomRef: {

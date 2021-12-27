@@ -10,7 +10,6 @@ interface Options {
   initialPan: Types.Position;
   zoomWheelKey?: "Shift" | "Control" | "Meta" | "Alt";
   zoomSensitivity: number;
-  startAtCanvasCenter: boolean;
   onChangeZoom?(zoom: number): void;
 }
 
@@ -23,12 +22,12 @@ function usePanZoom(options: Options): Types.PanZoom {
     canvasMargin,
     zoomWheelKey,
     zoomSensitivity,
-    startAtCanvasCenter,
     onChangeZoom = () => undefined,
   } = options;
 
   const dragManager = useDragManager();
 
+  const [isInitialized, setIsInitialized] = useState(false);
   const [transform, setTransform] = useState({ x: 0, y: 0, zoom: 1 });
   const [container, setContainer] = useState();
 
@@ -53,6 +52,8 @@ function usePanZoom(options: Options): Types.PanZoom {
 
   const setZoom = useCallback(
     (fnOrValue, possibleCenter) => {
+      if (!container) return;
+
       setTransform((transform) => {
         const { zoom } = transform;
         const newZoom =
@@ -94,122 +95,119 @@ function usePanZoom(options: Options): Types.PanZoom {
           zoom: clampedZoom,
         };
       });
-    },
-    [container, canvasSize, canvasMargin]
-  );
 
-  useEffect(() => {
-    if (container) {
       boundaryRef.current = calculateBoundary(
         container,
         canvasSize,
         canvasMargin,
         panZoomRef.current.zoom
       );
-    }
-  }, [container, canvasSize, canvasMargin]);
+    },
+    [container, canvasSize, canvasMargin]
+  );
 
   useEffect(() => {
-    if (container) {
-      let dragStartPosition;
+    if (!container) return;
 
-      function handleDragStart() {
-        dragStartPosition = panZoomRef.current;
-      }
+    let dragStartPosition;
 
-      function handleDragMove(event, dragDelta, dragData) {
-        const { minX, minY, maxX, maxY } = boundaryRef.current;
-
-        if (dragData?.type === "panzoom") {
-          setTransform((transform) => ({
-            ...transform,
-            x: clamp(minX, maxX, dragStartPosition.x + dragDelta.x),
-            y: clamp(minY, maxY, dragStartPosition.y + dragDelta.y),
-          }));
-        }
-      }
-
-      dragManager.subscribeToDragStart("panZoom", handleDragStart);
-      dragManager.subscribeToDragMove("panZoom", handleDragMove);
-
-      return () => {
-        dragManager.unsubscribeToDragStart("panZoom", handleDragStart);
-        dragManager.unsubscribeToDragMove("panZoom", handleDragMove);
-      };
+    function handleDragStart() {
+      dragStartPosition = panZoomRef.current;
     }
+
+    function handleDragMove(event, dragDelta, dragData) {
+      const { minX, minY, maxX, maxY } = boundaryRef.current;
+
+      if (dragData?.soource === "panzoom") {
+        setTransform((transform) => ({
+          ...transform,
+          x: clamp(minX, maxX, dragStartPosition.x + dragDelta.x),
+          y: clamp(minY, maxY, dragStartPosition.y + dragDelta.y),
+        }));
+      }
+    }
+
+    dragManager.subscribeToDragStart("panZoom", handleDragStart);
+    dragManager.subscribeToDragMove("panZoom", handleDragMove);
+
+    return () => {
+      dragManager.unsubscribeToDragStart("panZoom", handleDragStart);
+      dragManager.unsubscribeToDragMove("panZoom", handleDragMove);
+    };
   }, [container, canvasSize, canvasMargin, setTransform]);
 
   useEffect(() => {
-    if (container) {
-      function onWheel(event) {
-        event.preventDefault();
+    if (!container) return;
 
-        if (dragManager.dragData) {
-          return;
-        }
+    setIsInitialized(false);
 
-        if (isZoomKeyDownRef.current) {
-          const { deltaY } = event;
-          const postion = {
-            x: event.clientX,
-            y: event.clientY,
-          };
+    function onWheel(event) {
+      event.preventDefault();
 
-          setZoom(
-            (zoom) => zoom * Math.pow(1 - zoomSensitivity, deltaY),
-            postion
-          );
-        } else {
-          const { minX, minY, maxX, maxY } = boundaryRef.current;
-          const { deltaX, deltaY } = event;
-
-          setTransform((transform) => ({
-            ...transform,
-            x: clamp(minX, maxX, transform.x - deltaX),
-            y: clamp(minY, maxY, transform.y - deltaY),
-          }));
-        }
+      if (dragManager.dragData) {
+        return;
       }
 
-      if (initialPan) {
-        const { minX, minY, maxX, maxY } = boundaryRef.current;
+      if (isZoomKeyDownRef.current) {
+        const { deltaY } = event;
+        const position = {
+          x: event.clientX,
+          y: event.clientY,
+        };
 
-        setPan({
-          x: clamp(minX, maxX, initialPan.x),
-          y: clamp(minY, maxY, initialPan.y),
-        });
-      } else if (startAtCanvasCenter) {
+        setZoom(
+          (zoom) => zoom * Math.pow(1 - zoomSensitivity, deltaY),
+          position
+        );
+      } else {
+        const { minX, minY, maxX, maxY } = boundaryRef.current;
+        const { deltaX, deltaY } = event;
+
         setTransform((transform) => ({
           ...transform,
-          x: (canvasSize / 2 - container.clientWidth / 2) * -1,
-          y: (canvasSize / 2 - container.clientHeight / 2) * -1,
+          x: clamp(minX, maxX, transform.x - deltaX),
+          y: clamp(minY, maxY, transform.y - deltaY),
         }));
       }
-
-      container.addEventListener("wheel", onWheel);
-
-      return () => {
-        container.removeEventListener("wheel", onWheel);
-      };
     }
+
+    if (initialPan) {
+      const { minX, minY, maxX, maxY } = boundaryRef.current;
+
+      setPan({
+        x: clamp(minX, maxX, initialPan.x),
+        y: clamp(minY, maxY, initialPan.y),
+      });
+    }
+
+    container.addEventListener("wheel", onWheel);
+
+    // requestAnimationFrame(() => {
+    //   debugger;
+    setIsInitialized(true);
+    // });
+
+    return () => {
+      container.removeEventListener("wheel", onWheel);
+    };
   }, [container, canvasSize, canvasMargin, dragManager, setZoom, setTransform]);
 
   useEffect(() => {
-    if (container) {
-      function onGesture(event) {
-        event.preventDefault();
-      }
+    if (!container) return;
 
-      container.addEventListener("gesturestart", onGesture);
-      container.addEventListener("gesturechange", onGesture);
-      container.addEventListener("gestureend", onGesture);
-
-      return () => {
-        container.removeEventListener("gesturestart", onGesture);
-        container.removeEventListener("gesturechange", onGesture);
-        container.removeEventListener("gestureend", onGesture);
-      };
+    function onGesture(event) {
+      event.preventDefault();
     }
+
+    container.addEventListener("gesturestart", onGesture);
+    container.addEventListener("gesturechange", onGesture);
+    container.addEventListener("gestureend", onGesture);
+
+    return () => {
+      container.removeEventListener("gesturestart", onGesture);
+      container.removeEventListener("gesturechange", onGesture);
+      container.removeEventListener("gestureend", onGesture);
+    };
   }, [container]);
 
   useEffect(() => {
@@ -250,6 +248,7 @@ function usePanZoom(options: Options): Types.PanZoom {
   panZoomRef.current = { ...transform };
 
   return {
+    isInitialized,
     transform: `translate3d(${transform.x}px,${transform.y}px,0) scale(${transform.zoom})`,
     setContainer,
     panZoomRef,

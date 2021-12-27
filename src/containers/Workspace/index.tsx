@@ -40,6 +40,12 @@ function Workspace(): ReactNode {
   const isSelectBoxKeyDownRef = useRef(false);
 
   const initialPan = useMemo(() => {
+    const container = workspaceDivRef.current;
+
+    if (!container) {
+      return null;
+    }
+
     const { nodes } = graphManager;
     const {
       initialPanOffset = {
@@ -48,32 +54,48 @@ function Workspace(): ReactNode {
       },
     } = options;
 
-    return nodes.length > 0
-      ? ((position) => {
-          return {
-            x: position.x * -1 + initialPanOffset.x,
-            y: position.y * -1 + initialPanOffset.y,
-          };
-        })(
-          nodes.reduce(
-            (acc, node) => {
-              const x = node.position.x < acc.x ? node.position.x : acc.x;
-              const y = node.position.y < acc.y ? node.position.y : acc.y;
+    if (nodes.length > 0) {
+      return ((position) => {
+        return {
+          x: position.x * -1 + initialPanOffset.x,
+          y: position.y * -1 + initialPanOffset.y,
+        };
+      })(
+        nodes.reduce(
+          (acc, node) => {
+            const x = node.position.x < acc.x ? node.position.x : acc.x;
+            const y = node.position.y < acc.y ? node.position.y : acc.y;
 
-              return { x, y };
-            },
-            { x: Infinity, y: Infinity }
-          )
+            return { x, y };
+          },
+          { x: Infinity, y: Infinity }
         )
-      : null;
-  }, []);
+      );
+    } else {
+      if (startAtCanvasCenter) {
+        return {
+          x: (canvasSize / 2 - container.clientWidth / 2) * -1,
+          y: (canvasSize / 2 - container.clientHeight / 2) * -1,
+        };
+      }
+
+      return null;
+    }
+  }, [workspaceDivRef.current]);
 
   const onChangeZoom = useCallback(
     (zoom) => bridge.onChangeZoom(zoom),
     [bridge]
   );
 
-  const { setPan, setZoom, transform, panZoomRef, setContainer } = usePanZoom({
+  const {
+    setPan,
+    setZoom,
+    transform,
+    panZoomRef,
+    setContainer,
+    isInitialized: isPanZoomInitialized,
+  } = usePanZoom({
     minZoom,
     maxZoom,
     initialPan,
@@ -81,7 +103,6 @@ function Workspace(): ReactNode {
     canvasMargin,
     zoomWheelKey,
     zoomSensitivity,
-    startAtCanvasCenter,
     onChangeZoom,
   });
 
@@ -90,7 +111,7 @@ function Workspace(): ReactNode {
       workspaceDivRef.current = el;
       setContainer(el);
     },
-    [graphManager, workspaceDivRef, setPan, setContainer]
+    [graphManager, workspaceDivRef, setContainer]
   );
 
   const workspace: Types.Workspace = useMemo(() => {
@@ -120,7 +141,7 @@ function Workspace(): ReactNode {
   const handleMouseDown = useCallback(
     (event) => {
       if (event.target === workspaceDivRef.current) {
-        dragManager.dragData = { type: "panzoom" };
+        dragManager.dragData = { source: "panzoom" };
       }
     },
     [dragManager, graphManager, workspaceDivRef]
@@ -194,7 +215,7 @@ function Workspace(): ReactNode {
         onMouseDown={handleMouseDown}
         onMouseLeave={handleMouseLeave}
       >
-        <Canvas transform={transform} />
+        {isPanZoomInitialized && <Canvas transform={transform} />}
       </div>
     </WorkspaceProvider>
   );
