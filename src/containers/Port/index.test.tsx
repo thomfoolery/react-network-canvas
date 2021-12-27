@@ -94,7 +94,7 @@ describe("Port", () => {
 
     fireEvent.mouseDown(screen.queryByTestId(defaultProps.port.id));
     expect(dragDataSetter).toHaveBeenCalledWith({
-      dragType: "port",
+      source: "port",
       port: {
         ...defaultProps.port,
         type,

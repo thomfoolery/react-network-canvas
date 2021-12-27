@@ -85,16 +85,16 @@ describe("Canvas", () => {
 
     fireEvent.mouseDown(screen.queryByTestId("Canvas"));
     expect(dragDataSetter).toHaveBeenCalledWith({
-      type: "selectbox",
+      source: "selectbox",
       startPosition: { x: 0, y: 0 },
     });
   });
 
-  it("sets style props on SelectBox onDragMove if dragData.type === selectbox", async () => {
+  it("sets style props on SelectBox onDragMove if dragData.source === selectbox", async () => {
     const dragManager = createDragManager();
 
     dragManager.dragData = {
-      type: "selectbox",
+      source: "selectbox",
       startPosition: {
         x: 0,
         y: 0,
@@ -127,11 +127,11 @@ describe("Canvas", () => {
     `);
   });
 
-  it("clear style props on SelectBox onDragEnd if dragData.type === selectbox && !isClick", async () => {
+  it("clear style props on SelectBox onDragEnd if dragData.source === selectbox && !isClick", async () => {
     const dragManager = createDragManager();
 
     dragManager.dragData = {
-      type: "selectbox",
+      source: "selectbox",
       startPosition: {
         x: 0,
         y: 0,
@@ -179,7 +179,7 @@ describe("Canvas", () => {
     const selectedNodeIdsSetter = jest.fn();
 
     dragManager.dragData = {
-      type: "selectbox",
+      source: "selectbox",
       startPosition: {
         x: 0,
         y: 0,

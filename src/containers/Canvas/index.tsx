@@ -35,7 +35,7 @@ function Canvas(props: Props): ReactNode {
     (event) => {
       if (workspace.isSelectBoxKeyDown) {
         dragManager.dragData = {
-          type: "selectbox",
+          source: "selectbox",
           startPosition: workspace.getCanvasPosition(event),
         };
       }
@@ -45,13 +45,13 @@ function Canvas(props: Props): ReactNode {
 
   useEffect(() => {
     function handleDragMove(event, dragDelta, dragData) {
-      if (dragData?.type === "selectbox") {
+      if (dragData?.source === "selectbox") {
         drawSelectBox(dragDelta, dragData, selectBoxRef.current);
       }
     }
 
     function handleDragEnd(event, dragDelta, dragData) {
-      if (dragData?.type === "selectbox" && !isClick(dragDelta)) {
+      if (dragData?.source === "selectbox" && !isClick(dragDelta)) {
         const [x1, y1, x2, y2] = getSelectBoxCoordinates(selectBoxRef.current);
         const selectedNodeIds: string[] = graphManager.nodes.reduce(
           (acc: string[], node: Types.Node) => {

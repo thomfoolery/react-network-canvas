@@ -45,7 +45,7 @@ describe("CanvasBackground", () => {
     expect(tree).toMatchSnapshot();
   });
 
-  it("sets dragManager.dragData.type to 'panzoom' onMouseDown", () => {
+  it("sets dragManager.dragData.source to 'panzoom' onMouseDown", () => {
     const dragDataSetter = jest.fn();
     const dragManager = createDragManager();
 
@@ -61,7 +61,7 @@ describe("CanvasBackground", () => {
 
     fireEvent.mouseDown(screen.queryByTestId("CanvasBackground"));
     expect(dragDataSetter).toHaveBeenCalledWith({
-      type: "panzoom",
+      source: "panzoom",
     });
   });
 

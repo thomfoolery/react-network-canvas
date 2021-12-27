@@ -45,7 +45,7 @@ function Component(): ReactNode {
   const handleMouseDown = useCallback(
     (event) => {
       if (event.target === containerRef.current) {
-        dragManager.dragData = { type: "panzoom" };
+        dragManager.dragData = { source: "panzoom" };
       }
     },
     [dragManager, containerRef]

@@ -82,7 +82,7 @@ describe("Node", () => {
 
     fireEvent.mouseDown(screen.queryByTestId(defaultProps.node.id));
 
-    expect(dragManager.dragData.dragType).toBe("node");
+    expect(dragManager.dragData.source).toBe("node");
     expect(dragManager.dragData.node).toBe(defaultProps.node);
   });
 

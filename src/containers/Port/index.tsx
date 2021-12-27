@@ -36,7 +36,7 @@ function Port(props: Props): ReactNode {
 
         graphManager.selectedNodeIds = [];
         dragManager.dragData = {
-          dragType: "port",
+          source: "port",
           port: {
             ...port,
             type,
@@ -77,7 +77,7 @@ function Port(props: Props): ReactNode {
         // parent Node doesnt try to duplicate this edge
         dragManager.dragData = {
           ...dragManager.dragData,
-          dragType: null,
+          source: null,
         };
       }
     },

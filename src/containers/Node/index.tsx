@@ -34,7 +34,9 @@ function Node(props: Props): ReactNode {
 
   const { NodeComponent } = options;
 
-  const [isSelected, setIsSelected] = useState(false);
+  const [isSelected, setIsSelected] = useState(
+    graphManager.selectedNodeIds.includes(node.id)
+  );
   const [position, setPosition] = useState(node.position);
   const [dragDelta, setDragDelta] = useState({ x: 0, y: 0 });
 
@@ -55,11 +57,11 @@ function Node(props: Props): ReactNode {
   }, [edges]);
 
   const handleMouseDown = useCallback(() => {
-    if (dragManager.dragData?.dragType === "port") {
+    if (dragManager.dragData?.source === "port") {
       return;
     }
 
-    dragManager.dragData = { dragType: "node", node };
+    dragManager.dragData = { source: "node", node };
 
     if (
       !workspace.isSelectBoxKeyDown &&
@@ -73,7 +75,7 @@ function Node(props: Props): ReactNode {
     (event) => {
       const { dragData } = dragManager;
       if (
-        dragData?.dragType === "port" &&
+        dragData?.source === "port" &&
         dragData?.port?.parentNode.id !== node.id &&
         node.inputPorts.length === 1
       ) {
