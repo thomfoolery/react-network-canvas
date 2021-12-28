@@ -41,56 +41,53 @@ function App() {
 
   const { nodes, edges } = graph;
 
-  const bridge = useMemo(
-    () => ({
-      connect(graphManager) {
-        setGraphManager(graphManager);
-      },
-      onChangeZoom(zoom) {
-        setZoom(zoom);
-      },
-      onMutateGraph(graphEvent) {
-        setGraph(graphEvent.graph);
-        setSavedState(graphEvent.graph);
-      },
-      onDropCanvas(event, position, graphManager) {
-        event.preventDefault();
+  const onMount = useCallback((graphManager) => {
+    setGraphManager(graphManager);
+  }, []);
+  const onChangeZoom = useCallback((zoom) => {
+    setZoom(zoom);
+  }, []);
+  const onMutateGraph = useCallback((graphEvent) => {
+    setGraph(graphEvent.graph);
+    setSavedState(graphEvent.graph);
+  }, []);
+  const onDropCanvas = useCallback((event, position, graphManager) => {
+    event.preventDefault();
 
-        const type = event.dataTransfer.getData("text/plain");
-        const node = graphManager.createNode({
-          position,
-          data: {
-            type,
-          },
-          inputPorts:
-            type !== "MIDI" ? [{ id: generateUuid(), label: "In" }] : [],
-          outputPorts:
-            type !== "DEST" ? [{ id: generateUuid(), label: "Out" }] : [],
-        });
+    const type = event.dataTransfer.getData("text/plain");
+    const node = graphManager.createNode({
+      position,
+      data: {
+        type,
+      },
+      inputPorts: type !== "MIDI" ? [{ id: generateUuid(), label: "In" }] : [],
+      outputPorts:
+        type !== "DEST" ? [{ id: generateUuid(), label: "Out" }] : [],
+    });
 
-        graphManager.selectedNodeIds = [node.id];
-      },
-      onKeyPress(event, key, graphManager) {
-        if (key === "Backspace" && graphManager.selectedNodeIds.length > 0) {
-          graphManager.removeNodesByIds(graphManager.selectedNodeIds);
-        }
-      },
-      onChangeSelectedNodeIds(selectedNodeIds, graphManager) {
-        if (selectedNodeIds.length > 0) {
-          setIsDeleteVisible(true);
-          if (selectedNodeIds.length === 1) {
-            setSelectedNode(
-              graphManager.nodes.find(({ id }) => id === selectedNodeIds[0])
-            );
-          } else {
-            setSelectedNode(null);
-          }
+    graphManager.selectedNodeIds = [node.id];
+  }, []);
+  const onKeyPress = useCallback((event, key, graphManager) => {
+    if (key === "Backspace" && graphManager.selectedNodeIds.length > 0) {
+      graphManager.removeNodesByIds(graphManager.selectedNodeIds);
+    }
+  }, []);
+  const onChangeSelectedNodeIds = useCallback(
+    (selectedNodeIds, graphManager) => {
+      if (selectedNodeIds.length > 0) {
+        setIsDeleteVisible(true);
+        if (selectedNodeIds.length === 1) {
+          setSelectedNode(
+            graphManager.nodes.find(({ id }) => id === selectedNodeIds[0])
+          );
         } else {
           setSelectedNode(null);
-          setIsDeleteVisible(false);
         }
-      },
-    }),
+      } else {
+        setSelectedNode(null);
+        setIsDeleteVisible(false);
+      }
+    },
     []
   );
 
@@ -159,8 +156,13 @@ function App() {
         nodes={nodes}
         edges={edges}
         theme={theme}
-        bridge={bridge}
         options={options}
+        onMount={onMount}
+        onChangeZoom={onChangeZoom}
+        onMutateGraph={onMutateGraph}
+        onDropCanvas={onDropCanvas}
+        onKeyPress={onKeyPress}
+        onChangeSelectedNodeIds={onChangeSelectedNodeIds}
       />
       <div className={styles.Palette}>
         <Palette />

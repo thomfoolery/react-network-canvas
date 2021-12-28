@@ -11,7 +11,7 @@ import {
   useDragManager,
   useGraphManager,
   useWorkspace,
-  useBridge,
+  useCallbacks,
 } from "@component/hooks";
 
 import { DRAFT_EDGE_ID } from "@component/constants";
@@ -36,7 +36,7 @@ function Component(): ReactNode {
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
   const workspace = useWorkspace();
-  const bridge = useBridge();
+  const bridge = useCallbacks();
 
   const containerRef = useRef();
 

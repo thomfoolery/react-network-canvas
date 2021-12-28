@@ -6,17 +6,17 @@ import {
   mockUseGraphManager,
   mockUseWorkspace,
   mockUseOptions,
-  mockUseBridge,
+  mockUseCallbacks,
 } from "@component/utils/mocks";
 import {
   createGraphManager,
   createDragManager,
-  createBridge,
+  createCallbacks,
   useDragManager,
   useGraphManager,
   useWorkspace,
   useOptions,
-  useBridge,
+  useCallbacks,
 } from "@component/hooks";
 
 import { Port } from "./index";
@@ -27,14 +27,14 @@ jest.mock("@component/hooks", () => ({
   useGraphManager: jest.fn(),
   useWorkspace: jest.fn(),
   useOptions: jest.fn(),
-  useBridge: jest.fn(),
+  useCallbacks: jest.fn(),
 }));
 
 useDragManager.mockImplementation(mockUseDragManager());
 useGraphManager.mockImplementation(mockUseGraphManager());
 useWorkspace.mockImplementation(mockUseWorkspace());
 useOptions.mockImplementation(mockUseOptions());
-useBridge.mockImplementation(mockUseBridge());
+useCallbacks.mockImplementation(mockUseCallbacks());
 
 const defaultProps = {
   type: "input" as "input" | "output",
@@ -111,7 +111,7 @@ describe("Port", () => {
     const onClickPort = jest.fn();
     const dragDataGetter = jest.fn(() => ({ x: 0, y: 0 }));
     const dragManager = createDragManager();
-    const bridge = createBridge();
+    const bridge = createCallbacks();
 
     // override the value property definition with our mocked setter
     bridge.onClickPort = onClickPort;
@@ -121,7 +121,7 @@ describe("Port", () => {
     });
 
     useDragManager.mockImplementation(mockUseDragManager(dragManager));
-    useBridge.mockImplementation(mockUseBridge(bridge));
+    useCallbacks.mockImplementation(mockUseCallbacks(bridge));
 
     render(<Port {...defaultProps} />);
 

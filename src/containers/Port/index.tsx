@@ -1,6 +1,6 @@
 import React, { useCallback, ReactNode, SyntheticEvent } from "react";
 import {
-  useBridge,
+  useCallbacks,
   useOptions,
   useWorkspace,
   useDragManager,
@@ -22,7 +22,7 @@ function Port(props: Props): ReactNode {
   const dragManager = useDragManager();
   const workspace = useWorkspace();
   const options = useOptions();
-  const bridge = useBridge();
+  const bridge = useCallbacks();
 
   const { PortComponent } = options;
 

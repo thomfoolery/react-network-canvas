@@ -1,10 +1,10 @@
-import { createBridge } from "@component/hooks/useBridge";
+import { createCallbacks } from "@component/hooks/useCallbacks";
 import * as Types from "@component/types";
 
-function mockUseBridge(
-  bridge: Types.Bridge = createBridge()
-): () => Types.Bridge {
+function mockUseCallbacks(
+  bridge: Types.Callbacks = createCallbacks()
+): () => Types.Callbacks {
   return () => bridge;
 }
 
-export { mockUseBridge };
+export { mockUseCallbacks };

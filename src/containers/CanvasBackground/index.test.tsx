@@ -5,16 +5,16 @@ import {
   mockUseDragManager,
   mockUseGraphManager,
   mockUseWorkspace,
-  mockUseBridge,
+  mockUseCallbacks,
 } from "@component/utils/mocks";
 import {
   createGraphManager,
   createDragManager,
-  createBridge,
+  createCallbacks,
   useDragManager,
   useGraphManager,
   useWorkspace,
-  useBridge,
+  useCallbacks,
 } from "@component/hooks";
 
 import { CanvasBackground } from "./index";
@@ -24,13 +24,13 @@ jest.mock("@component/hooks", () => ({
   useDragManager: jest.fn(),
   useGraphManager: jest.fn(),
   useWorkspace: jest.fn(),
-  useBridge: jest.fn(),
+  useCallbacks: jest.fn(),
 }));
 
 useDragManager.mockImplementation(mockUseDragManager());
 useGraphManager.mockImplementation(mockUseGraphManager());
 useWorkspace.mockImplementation(mockUseWorkspace());
-useBridge.mockImplementation(mockUseBridge());
+useCallbacks.mockImplementation(mockUseCallbacks());
 
 const defaultProps = {
   transform: "translate3d(100px, 100px, 0) scale(1)",
@@ -90,7 +90,7 @@ describe("CanvasBackground", () => {
     const dragDataSetter = jest.fn();
     const graphManager = createGraphManager();
     const dragManager = createDragManager();
-    const bridge = createBridge();
+    const bridge = createCallbacks();
 
     const onClickCanvas = jest.fn();
 
@@ -109,7 +109,7 @@ describe("CanvasBackground", () => {
 
     useGraphManager.mockImplementation(mockUseGraphManager(graphManager));
     useDragManager.mockImplementation(mockUseDragManager(dragManager));
-    useBridge.mockImplementation(mockUseBridge(bridge));
+    useCallbacks.mockImplementation(mockUseCallbacks(bridge));
 
     render(<CanvasBackground {...defaultProps} />);
 

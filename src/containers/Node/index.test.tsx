@@ -6,18 +6,18 @@ import {
   mockUseGraphManager,
   mockUseWorkspace,
   mockUseOptions,
-  mockUseBridge,
+  mockUseCallbacks,
 } from "@component/utils/mocks";
 import {
   createGraphManager,
   createDragManager,
   createWorkspace,
-  createBridge,
+  createCallbacks,
   useDragManager,
   useGraphManager,
   useWorkspace,
   useOptions,
-  useBridge,
+  useCallbacks,
 } from "@component/hooks";
 
 import { Node } from "./index";
@@ -28,14 +28,14 @@ jest.mock("@component/hooks", () => ({
   useGraphManager: jest.fn(),
   useWorkspace: jest.fn(),
   useOptions: jest.fn(),
-  useBridge: jest.fn(),
+  useCallbacks: jest.fn(),
 }));
 
 useDragManager.mockImplementation(mockUseDragManager());
 useGraphManager.mockImplementation(mockUseGraphManager());
 useWorkspace.mockImplementation(mockUseWorkspace());
 useOptions.mockImplementation(mockUseOptions());
-useBridge.mockImplementation(mockUseBridge());
+useCallbacks.mockImplementation(mockUseCallbacks());
 const defaultProps = {
   key: "node-1",
   node: {
@@ -117,7 +117,7 @@ describe("Node", () => {
   it("calls bridge.onClickNode onMouseUp if isClick === true", () => {
     const graphManager = createGraphManager();
     const dragManager = createDragManager();
-    const bridge = createBridge();
+    const bridge = createCallbacks();
     const onClickNode = jest.fn();
 
     bridge.onClickNode = onClickNode;
@@ -129,7 +129,7 @@ describe("Node", () => {
 
     useGraphManager.mockImplementation(mockUseDragManager(graphManager));
     useDragManager.mockImplementation(mockUseDragManager(dragManager));
-    useBridge.mockImplementation(mockUseBridge(bridge));
+    useCallbacks.mockImplementation(mockUseCallbacks(bridge));
 
     render(<Node {...defaultProps} />);
 

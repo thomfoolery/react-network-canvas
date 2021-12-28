@@ -4,13 +4,13 @@ import {
   mockUseDragManager,
   mockUseGraphManager,
   mockUseWorkspace,
-  mockUseBridge,
+  mockUseCallbacks,
 } from "@component/utils/mocks";
 import {
   useDragManager,
   useGraphManager,
   useWorkspace,
-  useBridge,
+  useCallbacks,
 } from "@component/hooks";
 
 import { CanvasForeground } from "./index";
@@ -20,13 +20,13 @@ jest.mock("@component/hooks", () => ({
   useDragManager: jest.fn(),
   useGraphManager: jest.fn(),
   useWorkspace: jest.fn(),
-  useBridge: jest.fn(),
+  useCallbacks: jest.fn(),
 }));
 
 useDragManager.mockImplementation(mockUseDragManager());
 useGraphManager.mockImplementation(mockUseGraphManager());
 useWorkspace.mockImplementation(mockUseWorkspace());
-useBridge.mockImplementation(mockUseBridge());
+useCallbacks.mockImplementation(mockUseCallbacks());
 
 describe("CanvasForeground", () => {
   it("renders correctly", () => {

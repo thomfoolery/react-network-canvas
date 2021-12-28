@@ -13,7 +13,7 @@ import {
   useDragManager,
   useWorkspace,
   useOptions,
-  useBridge,
+  useCallbacks,
 } from "@component/hooks";
 import { isClick, svgGeneratePath } from "@component/utils";
 
@@ -30,7 +30,7 @@ function Node(props: Props): ReactNode {
   const dragManager = useDragManager();
   const workspace = useWorkspace();
   const options = useOptions();
-  const bridge = useBridge();
+  const bridge = useCallbacks();
 
   const { NodeComponent } = options;
 

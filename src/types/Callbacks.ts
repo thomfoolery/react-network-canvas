@@ -13,8 +13,8 @@ interface GraphEvent {
   graph: Types.Graph;
 }
 
-interface Bridge {
-  connect(graphManager: Types.GraphManager): void;
+interface Callbacks {
+  onMount(graphManager: Types.GraphManager): void;
   onChangeZoom(zoom: number): void;
   onMutateGraph(graphEvent: GraphEvent): void;
   onClickCanvas(
@@ -49,4 +49,4 @@ interface Bridge {
   ): void;
 }
 
-export { Bridge };
+export { Callbacks };

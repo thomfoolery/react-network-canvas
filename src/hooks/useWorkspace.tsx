@@ -1,7 +1,5 @@
-import React, { createContext, useContext, ReactNode, RefObject } from "react";
+import { RefObject } from "react";
 import * as Types from "@component/types";
-
-const Context = createContext();
 
 interface Options {
   panZoomRef: RefObject<number>;
@@ -11,13 +9,15 @@ interface Options {
   setPan(): void;
 }
 
+let workspaceInstance: Types.Workspace;
+
 function createWorkspace(options: Options): Types.Workspace {
   const {
     panZoomRef,
     workspaceDivRef,
     isSelectBoxKeyDownRef,
-    setZoom,
     setPan,
+    setZoom,
   } = options;
 
   const offset: Types.Position = {
@@ -29,7 +29,7 @@ function createWorkspace(options: Options): Types.Workspace {
     },
   };
 
-  return {
+  const API = {
     setPan,
     setZoom,
     get container() {
@@ -75,21 +75,14 @@ function createWorkspace(options: Options): Types.Workspace {
       throw Error("Unsupported object");
     },
   };
-}
 
-interface Props {
-  value?: Types.Workspace;
-  children?: ReactNode;
-}
+  workspaceInstance = API;
 
-function WorkspaceProvider(props: Props): ReactNode {
-  const { value, children } = props;
-
-  return <Context.Provider value={value}>{children}</Context.Provider>;
+  return workspaceInstance;
 }
 
 function useWorkspace(): Types.Workspace {
-  return useContext(Context);
+  return workspaceInstance;
 }
 
-export { createWorkspace, useWorkspace, WorkspaceProvider };
+export { createWorkspace, useWorkspace };

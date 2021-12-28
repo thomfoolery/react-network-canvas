@@ -3,28 +3,56 @@ import * as Types from "@component/types";
 import { Root } from "@component/containers";
 import { createOptions } from "@component/hooks";
 import { RecoilRoot } from "recoil";
+import { OptionsProvider, CallbacksProvider } from "@component/hooks";
 
-interface Props {
+interface Props extends Partial<Types.Callbacks> {
   nodes: Types.Node[];
   edges: Types.Edge[];
-  bridge?: Types.Bridge;
-  options?: Types.Options;
+  options?: Partial<Types.Options>;
   theme?: any;
 }
 
 function NetworkCanvas(props: Props): ReactNode {
-  const { nodes = [], edges = [], bridge, theme = {}, options = {} } = props;
-  const mergedOptions = useMemo(() => createOptions(options), [options]);
+  const {
+    nodes = [],
+    edges = [],
+    theme = {},
+    options: initialOptions = {},
+    onMount = () => null,
+    onKeyPress = () => null,
+    onClickNode = () => null,
+    onClickPort = () => null,
+    onDropCanvas = () => null,
+    onChangeZoom = () => null,
+    onMutateGraph = () => null,
+    onClickCanvas = () => null,
+    onChangeSelectedNodeIds = () => null,
+  } = props;
+
+  const options = useMemo(
+    () => createOptions(initialOptions),
+    [initialOptions]
+  );
+
+  const callbacks = {
+    onMount,
+    onKeyPress,
+    onClickNode,
+    onClickPort,
+    onDropCanvas,
+    onChangeZoom,
+    onMutateGraph,
+    onClickCanvas,
+    onChangeSelectedNodeIds,
+  };
 
   return (
     <RecoilRoot>
-      <Root
-        nodes={nodes}
-        edges={edges}
-        theme={theme}
-        bridge={bridge}
-        options={mergedOptions}
-      />
+      <OptionsProvider value={options}>
+        <CallbacksProvider value={callbacks}>
+          <Root nodes={nodes} edges={edges} theme={theme} />
+        </CallbacksProvider>
+      </OptionsProvider>
     </RecoilRoot>
   );
 }

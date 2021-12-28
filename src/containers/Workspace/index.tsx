@@ -8,13 +8,12 @@ import React, {
 import { Canvas } from "@component/containers";
 import * as Types from "@component/types";
 import {
-  useBridge,
+  useCallbacks,
   usePanZoom,
   useOptions,
   useDragManager,
   useGraphManager,
   createWorkspace,
-  WorkspaceProvider,
 } from "@component/hooks";
 
 import styles from "./styles.module.css";
@@ -23,7 +22,7 @@ function Workspace(): ReactNode {
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
   const options = useOptions();
-  const bridge = useBridge();
+  const bridge = useCallbacks();
 
   const {
     minZoom,
@@ -206,18 +205,16 @@ function Workspace(): ReactNode {
   }, [selectBoxKey, isSelectBoxKeyDownRef]);
 
   return (
-    <WorkspaceProvider value={workspace}>
-      <div
-        ref={handleRef}
-        className={styles.Workspace}
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-        onMouseDown={handleMouseDown}
-        onMouseLeave={handleMouseLeave}
-      >
-        {isPanZoomInitialized && <Canvas transform={transform} />}
-      </div>
-    </WorkspaceProvider>
+    <div
+      ref={handleRef}
+      className={styles.Workspace}
+      onDrop={handleDrop}
+      onDragOver={handleDragOver}
+      onMouseDown={handleMouseDown}
+      onMouseLeave={handleMouseLeave}
+    >
+      {isPanZoomInitialized && <Canvas transform={transform} />}
+    </div>
   );
 }
 

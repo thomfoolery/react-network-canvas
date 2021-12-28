@@ -1,20 +1,11 @@
-import React, {
-  createContext,
-  useRef,
-  useMemo,
-  useContext,
-  ReactNode,
-} from "react";
 import { createPublisher } from "@component/utils";
 import * as Types from "@component/types";
-
-const Context = createContext();
 
 interface DragManagerPrivateProps {
   dragData: any;
   dragDelta: Types.Position;
   dragStartPosition: Types.Position | null;
-  workspace?: Types.Workspace;
+  workspace: Types.Workspace | null;
   subscriptions: {
     dragStartById: Types.Publisher;
     dragMoveById: Types.Publisher;
@@ -22,12 +13,14 @@ interface DragManagerPrivateProps {
   };
 }
 
+let dragManagerInstance: Types.DragManager;
+
 function createDragManager(): Types.DragManager {
   const __: DragManagerPrivateProps = {
     dragData: null,
     dragDelta: { x: 0, y: 0 },
     dragStartPosition: null,
-    workspace: undefined,
+    workspace: null,
     subscriptions: {
       dragStartById: createPublisher(),
       dragMoveById: createPublisher(),
@@ -80,7 +73,7 @@ function createDragManager(): Types.DragManager {
     __.dragData = null;
   }
 
-  return {
+  const API = {
     set workspace(workspace: Types.Workspace) {
       __.workspace = workspace;
     },
@@ -119,42 +112,18 @@ function createDragManager(): Types.DragManager {
       __.subscriptions.dragEndById.removeListenerForId(id, fn);
     },
   };
+
+  dragManagerInstance = API;
+
+  return dragManagerInstance;
 }
 
 function handleOnSelectStart() {
   return false;
 }
 
-interface Props {
-  children?: ReactNode;
-}
-
-function DragManagerProvider(props: Props): ReactNode {
-  const dragManager = useMemo(() => createDragManager(), []);
-  const containerRef = useRef();
-  const { children } = props;
-  const style = {
-    width: "100%",
-    height: "100%",
-  };
-
-  return (
-    <Context.Provider value={dragManager}>
-      <div
-        style={style}
-        ref={containerRef}
-        onMouseUp={dragManager.handleDragEnd}
-        onMouseLeave={dragManager.handleDragEnd}
-        onMouseDown={dragManager.handleDragStart}
-      >
-        {children}
-      </div>
-    </Context.Provider>
-  );
-}
-
 function useDragManager(): Types.DragManager {
-  return useContext(Context);
+  return dragManagerInstance;
 }
 
-export { createDragManager, useDragManager, DragManagerProvider };
+export { createDragManager, useDragManager };

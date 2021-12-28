@@ -4,12 +4,12 @@ import * as Types from "@component/types";
 const Context = createContext();
 
 interface Props {
-  value?: Types.Bridge;
+  value?: Types.Callbacks;
   children?: ReactNode;
 }
 
-const defaultBridge: Types.Bridge = {
-  connect() {
+const defaultCallbacks: Types.Callbacks = {
+  onMount() {
     return undefined;
   },
   onChangeZoom() {
@@ -38,22 +38,24 @@ const defaultBridge: Types.Bridge = {
   },
 };
 
-function createBridge(value: Partial<Types.Bridge> = {}): Types.Bridge {
+function createCallbacks(
+  value: Partial<Types.Callbacks> = {}
+): Types.Callbacks {
   return {
-    ...defaultBridge,
+    ...defaultCallbacks,
     ...value,
   };
 }
 
-function BridgeProvider(props: Props): ReactNode {
+function CallbacksProvider(props: Props): ReactNode {
   const { value, children } = props;
-  const bridge = useMemo(() => createBridge(value), [value]);
+  const bridge = useMemo(() => createCallbacks(value), [value]);
 
   return <Context.Provider value={bridge}>{children}</Context.Provider>;
 }
 
-function useBridge(): Types.Bridge {
+function useCallbacks(): Types.Callbacks {
   return useContext(Context);
 }
 
-export { createBridge, useBridge, BridgeProvider };
+export { createCallbacks, useCallbacks, CallbacksProvider };

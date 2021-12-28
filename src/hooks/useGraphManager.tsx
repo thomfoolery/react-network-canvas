@@ -1,28 +1,12 @@
-import React, {
-  createContext,
-  useMemo,
-  useContext,
-  useEffect,
-  ReactNode,
-} from "react";
-
 import {
   roundToGrid,
   svgGeneratePath,
   createPublisher,
 } from "@component/utils";
-import {
-  createOptions,
-  useDragManager,
-  useOptions,
-  useBridge,
-} from "@component/hooks";
 import { DRAFT_EDGE_ID } from "@component/constants";
 import * as Types from "@component/types";
 
 import { v1 as generateUuid } from "uuid";
-
-const Context = createContext();
 
 function getObjectsByIdHash(objects) {
   return objects.reduce((acc, object) => {
@@ -57,7 +41,7 @@ interface GraphManagerPrivateProps {
   edgesByIdHash: { [id: string]: Types.Edge };
   edgesByNodeIdHash: { [id: string]: Types.Edge[] };
   selectedNodeIds: string[];
-  bridge?: Types.Bridge;
+  bridge?: Types.Callbacks;
   options: Types.Options;
   dragManager?: Types.DragManager;
   workspace?: Types.Workspace;
@@ -71,20 +55,22 @@ interface GraphManagerPrivateProps {
 }
 
 interface GraphManagerArguments {
-  options?: Types.Options;
-  nodes?: Types.Node[];
-  edges?: Types.Edge[];
-  bridge?: Types.Bridge;
+  options: Types.Options;
+  nodes: Types.Node[];
+  edges: Types.Edge[];
+  bridge?: Types.Callbacks;
   dragManager?: any;
 }
 
+let graphManagerInstance: Types.GraphManager;
+
 function createGraphManager({
-  options = createOptions(),
-  nodes = [],
-  edges = [],
+  options,
+  nodes,
+  edges,
   bridge,
   dragManager,
-}: GraphManagerArguments = {}): Types.GraphManager {
+}: GraphManagerArguments): Types.GraphManager {
   const __: GraphManagerPrivateProps = {
     nodes: [],
     edges: [],
@@ -185,9 +171,9 @@ function createGraphManager({
   const API = {
     // bridge
     get bridge() {
-      return { ...__.bridge } as Types.Bridge;
+      return { ...__.bridge } as Types.Callbacks;
     },
-    set bridge(bridge: Types.Bridge) {
+    set bridge(bridge: Types.Callbacks) {
       __.bridge = bridge;
     },
     // workspace
@@ -465,44 +451,13 @@ function createGraphManager({
     },
   };
 
-  return API;
-}
+  graphManagerInstance = API;
 
-interface Props {
-  nodes: Types.Node[];
-  edges: Types.Edge[];
-  children?: ReactNode;
-}
-
-function GraphManagerProvider(props: Props): ReactNode {
-  const { nodes, edges, children } = props;
-  const dragManager = useDragManager();
-  const options = useOptions();
-  const bridge = useBridge();
-
-  const graphManager = useMemo(
-    () => createGraphManager({ options, nodes, edges, bridge, dragManager }),
-    []
-  );
-
-  useEffect(() => {
-    const id = "graphManager";
-
-    bridge.connect(graphManager);
-    dragManager.subscribeToDragMove(id, graphManager.handleDragMove);
-    dragManager.subscribeToDragEnd(id, graphManager.handleDragEnd);
-
-    return () => {
-      dragManager.unsubscribeToDragMove(id, graphManager.handleDragMove);
-      dragManager.unsubscribeToDragEnd(id, graphManager.handleDragEnd);
-    };
-  }, [bridge, dragManager]);
-
-  return <Context.Provider value={graphManager}>{children}</Context.Provider>;
+  return graphManagerInstance;
 }
 
 function useGraphManager(): Types.GraphManager {
-  return useContext(Context);
+  return graphManagerInstance;
 }
 
-export { createGraphManager, useGraphManager, GraphManagerProvider };
+export { createGraphManager, useGraphManager };

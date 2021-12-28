@@ -5,7 +5,7 @@ import {
   mockUseDragManager,
   mockUseGraphManager,
   mockUseWorkspace,
-  mockUseBridge,
+  mockUseCallbacks,
 } from "@component/utils/mocks";
 import {
   createGraphManager,
@@ -14,7 +14,7 @@ import {
   useDragManager,
   useGraphManager,
   useWorkspace,
-  useBridge,
+  useCallbacks,
 } from "@component/hooks";
 
 import { Canvas } from "./index";
@@ -24,13 +24,13 @@ jest.mock("@component/hooks", () => ({
   useDragManager: jest.fn(),
   useGraphManager: jest.fn(),
   useWorkspace: jest.fn(),
-  useBridge: jest.fn(),
+  useCallbacks: jest.fn(),
 }));
 
 useDragManager.mockImplementation(mockUseDragManager());
 useGraphManager.mockImplementation(mockUseGraphManager());
 useWorkspace.mockImplementation(mockUseWorkspace());
-useBridge.mockImplementation(mockUseBridge());
+useCallbacks.mockImplementation(mockUseCallbacks());
 
 const defaultProps = {
   transform: "translate3d(100px, 100px, 0) scale(1)",

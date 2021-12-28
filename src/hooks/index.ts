@@ -1,4 +1,4 @@
-export * from "./useBridge";
+export * from "./useCallbacks";
 export * from "./useDragManager";
 export * from "./useGraphManager";
 export * from "./useOptions";
