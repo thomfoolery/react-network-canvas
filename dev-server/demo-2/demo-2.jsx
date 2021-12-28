@@ -44,13 +44,16 @@ function App() {
   const onMount = useCallback((graphManager) => {
     setGraphManager(graphManager);
   }, []);
+
   const onChangeZoom = useCallback((zoom) => {
     setZoom(zoom);
   }, []);
+
   const onMutateGraph = useCallback((graphEvent) => {
     setGraph(graphEvent.graph);
     setSavedState(graphEvent.graph);
   }, []);
+
   const onDropCanvas = useCallback((event, position, graphManager) => {
     event.preventDefault();
 
@@ -67,11 +70,13 @@ function App() {
 
     graphManager.selectedNodeIds = [node.id];
   }, []);
+
   const onKeyPress = useCallback((event, key, graphManager) => {
     if (key === "Backspace" && graphManager.selectedNodeIds.length > 0) {
       graphManager.removeNodesByIds(graphManager.selectedNodeIds);
     }
   }, []);
+
   const onChangeSelectedNodeIds = useCallback(
     (selectedNodeIds, graphManager) => {
       if (selectedNodeIds.length > 0) {
@@ -158,15 +163,17 @@ function App() {
         theme={theme}
         options={options}
         onMount={onMount}
-        onChangeZoom={onChangeZoom}
-        onMutateGraph={onMutateGraph}
-        onDropCanvas={onDropCanvas}
         onKeyPress={onKeyPress}
+        onChangeZoom={onChangeZoom}
+        onDropCanvas={onDropCanvas}
+        onMutateGraph={onMutateGraph}
         onChangeSelectedNodeIds={onChangeSelectedNodeIds}
       />
+
       <div className={styles.Palette}>
         <Palette />
       </div>
+
       <div className={styles.Controls}>
         <ZoomControls zoom={zoom} graphManager={graphManager} />
         <button onClick={handleClickExport}>Export</button>
@@ -176,6 +183,7 @@ function App() {
           ?
         </button>
       </div>
+
       {selectedNode && (
         <div className={styles.NodeDetails}>
           {selectedNode.data.type === "SRC" ? (
@@ -187,6 +195,7 @@ function App() {
           )}
         </div>
       )}
+
       {isHelpVisible && (
         <Modal onClose={closeHelp}>
           <div>

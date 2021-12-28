@@ -1,5 +1,4 @@
-.Canvas,
-.Canvas__DisableTransition {
+.Canvas {
   position: relative;
 
   width: var(--NC-canvas-size);
@@ -20,8 +19,7 @@
   transition: transform 200ms ease-out;
 }
 
-.Canvas:hover,
-.Canvas__DisableTransition {
+.Canvas:hover {
   transition: none;
 }
 

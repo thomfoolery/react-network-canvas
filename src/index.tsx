@@ -1,8 +1,8 @@
 import React, { useMemo, ReactNode } from "react";
+import { RecoilRoot } from "recoil";
 import * as Types from "@component/types";
 import { Root } from "@component/containers";
 import { createOptions } from "@component/hooks";
-import { RecoilRoot } from "recoil";
 import { OptionsProvider, CallbacksProvider } from "@component/hooks";
 
 interface Props extends Partial<Types.Callbacks> {
@@ -34,17 +34,30 @@ function NetworkCanvas(props: Props): ReactNode {
     [initialOptions]
   );
 
-  const callbacks = {
-    onMount,
-    onKeyPress,
-    onClickNode,
-    onClickPort,
-    onDropCanvas,
-    onChangeZoom,
-    onMutateGraph,
-    onClickCanvas,
-    onChangeSelectedNodeIds,
-  };
+  const callbacks = useMemo(
+    () => ({
+      onMount,
+      onKeyPress,
+      onClickNode,
+      onClickPort,
+      onDropCanvas,
+      onChangeZoom,
+      onMutateGraph,
+      onClickCanvas,
+      onChangeSelectedNodeIds,
+    }),
+    [
+      onMount,
+      onKeyPress,
+      onClickNode,
+      onClickPort,
+      onDropCanvas,
+      onChangeZoom,
+      onMutateGraph,
+      onClickCanvas,
+      onChangeSelectedNodeIds,
+    ]
+  );
 
   return (
     <RecoilRoot>

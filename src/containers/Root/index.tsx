@@ -37,33 +37,30 @@ function Root(props: Props): ReactNode {
   );
 
   useEffect(() => {
-    const id = "graphManager";
+    const { handleDragMove, handleDragEnd } = graphManager;
 
     if (bridge && "onMount" in bridge) {
       bridge?.onMount(graphManager);
     }
-    dragManager.subscribeToDragMove(id, graphManager.handleDragMove);
-    dragManager.subscribeToDragEnd(id, graphManager.handleDragEnd);
+
+    dragManager.subscribeToDragMove("graphManager", handleDragMove);
+    dragManager.subscribeToDragEnd("graphManager", handleDragEnd);
 
     return () => {
-      dragManager.unsubscribeToDragMove(id, graphManager.handleDragMove);
-      dragManager.unsubscribeToDragEnd(id, graphManager.handleDragEnd);
+      dragManager.unsubscribeToDragMove("graphManager", handleDragMove);
+      dragManager.unsubscribeToDragEnd("graphManager", handleDragEnd);
     };
   }, []);
 
   const { gridSize, canvasSize } = options;
-  const cssVars = {
+  const style = {
+    height: "100%",
+    width: "100%",
     ...themeToCssVars({
       ...theme,
       gridSize: `${gridSize}px`,
       canvasSize: `${canvasSize}px`,
     }),
-  };
-
-  const style = {
-    ...cssVars,
-    width: "100%",
-    height: "100%",
   };
 
   return (

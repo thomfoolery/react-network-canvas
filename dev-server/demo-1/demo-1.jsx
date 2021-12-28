@@ -37,6 +37,7 @@ function App() {
         const nodeDimensions =
           graphManager.workspace.getElementDimensions(nodeElement);
         const position = graphManager.workspace.getCanvasPosition(BCR);
+
         if (position.y >= acc.y) {
           return {
             ...acc,
@@ -80,9 +81,9 @@ function App() {
     <NetworkCanvas
       nodes={nodes}
       edges={edges}
-      onClickCanvas={onClickCanvas}
-      onClickPort={onClickPort}
       onKeyPress={onKeyPress}
+      onClickPort={onClickPort}
+      onClickCanvas={onClickCanvas}
     />
   );
 }
