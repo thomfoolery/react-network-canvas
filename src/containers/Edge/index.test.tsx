@@ -1,14 +1,15 @@
 import React from "react";
 import renderer from "react-test-renderer";
 import { render, fireEvent, screen } from "@testing-library/react";
+
 import {
   mockUseDragManager,
   mockUseGraphManager,
   mockUseWorkspace,
   mockUseCallbacks,
 } from "@component/utils/mocks";
+import { createGraphManager } from "@component/utils";
 import {
-  createGraphManager,
   useDragManager,
   useGraphManager,
   useWorkspace,

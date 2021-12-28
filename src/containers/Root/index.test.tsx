@@ -1,6 +1,6 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import { createOptions } from "@component/hooks";
+import { createOptions } from "@component/utils";
 
 import { Root } from "./index";
 

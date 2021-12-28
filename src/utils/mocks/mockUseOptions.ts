@@ -1,4 +1,4 @@
-import { createOptions } from "@component/hooks/useOptions";
+import { createOptions } from "@component/utils";
 import * as Types from "@component/types";
 
 const defaultOptions = createOptions();

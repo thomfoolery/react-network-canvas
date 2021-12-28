@@ -1,5 +1,5 @@
-import { createPublisher } from "@component/utils";
 import * as Types from "@component/types";
+import { createPublisher } from "@component/utils";
 
 interface DragManagerPrivateProps {
   dragData: any;
@@ -12,8 +12,6 @@ interface DragManagerPrivateProps {
     dragEndById: Types.Publisher;
   };
 }
-
-let dragManagerInstance: Types.DragManager;
 
 function createDragManager(): Types.DragManager {
   const __: DragManagerPrivateProps = {
@@ -113,17 +111,11 @@ function createDragManager(): Types.DragManager {
     },
   };
 
-  dragManagerInstance = API;
-
-  return dragManagerInstance;
+  return API;
 }
 
 function handleOnSelectStart() {
   return false;
 }
 
-function useDragManager(): Types.DragManager {
-  return dragManagerInstance;
-}
-
-export { createDragManager, useDragManager };
+export { createDragManager };

@@ -78,13 +78,26 @@ function App() {
   }, []);
 
   return (
-    <NetworkCanvas
-      nodes={nodes}
-      edges={edges}
-      onKeyPress={onKeyPress}
-      onClickPort={onClickPort}
-      onClickCanvas={onClickCanvas}
-    />
+    <>
+      <div className="demo">
+        <NetworkCanvas
+          nodes={nodes}
+          edges={edges}
+          onKeyPress={onKeyPress}
+          onClickPort={onClickPort}
+          onClickCanvas={onClickCanvas}
+        />
+      </div>
+      <div className="demo">
+        <NetworkCanvas
+          nodes={[]}
+          edges={[]}
+          onKeyPress={onKeyPress}
+          onClickPort={onClickPort}
+          onClickCanvas={onClickCanvas}
+        />
+      </div>
+    </>
   );
 }
 

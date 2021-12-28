@@ -5,6 +5,8 @@ import React, {
   useCallback,
   ReactNode,
 } from "react";
+import { WorkspaceProvider } from "@component/contexts";
+import { createWorkspace } from "@component/utils";
 import { Canvas } from "@component/containers";
 import * as Types from "@component/types";
 import {
@@ -13,7 +15,6 @@ import {
   useOptions,
   useDragManager,
   useGraphManager,
-  createWorkspace,
 } from "@component/hooks";
 
 import styles from "./styles.module.css";
@@ -22,7 +23,7 @@ function Workspace(): ReactNode {
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
   const options = useOptions();
-  const bridge = useCallbacks();
+  const callbacks = useCallbacks();
 
   const {
     minZoom,
@@ -83,8 +84,8 @@ function Workspace(): ReactNode {
   }, [workspaceDivRef.current]);
 
   const onChangeZoom = useCallback(
-    (zoom) => bridge.onChangeZoom(zoom),
-    [bridge]
+    (zoom) => callbacks.onChangeZoom(zoom),
+    [callbacks]
   );
 
   const {
@@ -128,9 +129,9 @@ function Workspace(): ReactNode {
   const handleDrop = useCallback(
     (event) => {
       const position = workspace.getCanvasPosition(event);
-      bridge.onDropCanvas(event, position, graphManager);
+      callbacks.onDropCanvas(event, position, graphManager);
     },
-    [bridge, workspace, graphManager]
+    [callbacks, workspace, graphManager]
   );
 
   const handleDragOver = useCallback((event) => {
@@ -181,12 +182,12 @@ function Workspace(): ReactNode {
 
   useEffect(() => {
     function handleKeyUp(event) {
-      bridge.onKeyPress(event, event.key, graphManager);
+      callbacks.onKeyPress(event, event.key, graphManager);
     }
 
     document.addEventListener("keyup", handleKeyUp);
     return () => document.removeEventListener("keyup", handleKeyUp);
-  }, [bridge, workspace, graphManager]);
+  }, [callbacks, workspace, graphManager]);
 
   useEffect(() => {
     function handleKeyDown({ key }) {
@@ -205,16 +206,18 @@ function Workspace(): ReactNode {
   }, [selectBoxKey, isSelectBoxKeyDownRef]);
 
   return (
-    <div
-      ref={handleRef}
-      className={styles.Workspace}
-      onDrop={handleDrop}
-      onDragOver={handleDragOver}
-      onMouseDown={handleMouseDown}
-      onMouseLeave={handleMouseLeave}
-    >
-      {isPanZoomInitialized && <Canvas transform={transform} />}
-    </div>
+    <WorkspaceProvider value={workspace}>
+      <div
+        ref={handleRef}
+        className={styles.Workspace}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onMouseDown={handleMouseDown}
+        onMouseLeave={handleMouseLeave}
+      >
+        {isPanZoomInitialized && <Canvas transform={transform} />}
+      </div>
+    </WorkspaceProvider>
   );
 }
 

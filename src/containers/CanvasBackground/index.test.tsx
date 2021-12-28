@@ -1,6 +1,7 @@
 import React from "react";
 import renderer from "react-test-renderer";
 import { render, fireEvent, screen } from "@testing-library/react";
+
 import {
   mockUseDragManager,
   mockUseGraphManager,
@@ -8,9 +9,11 @@ import {
   mockUseCallbacks,
 } from "@component/utils/mocks";
 import {
-  createGraphManager,
-  createDragManager,
   createCallbacks,
+  createDragManager,
+  createGraphManager,
+} from "@component/utils";
+import {
   useDragManager,
   useGraphManager,
   useWorkspace,
@@ -90,7 +93,7 @@ describe("CanvasBackground", () => {
     const dragDataSetter = jest.fn();
     const graphManager = createGraphManager();
     const dragManager = createDragManager();
-    const bridge = createCallbacks();
+    const callbacks = createCallbacks();
 
     const onClickCanvas = jest.fn();
 
@@ -105,11 +108,11 @@ describe("CanvasBackground", () => {
       configurable: true,
     });
 
-    bridge.onClickCanvas = onClickCanvas;
+    callbacks.onClickCanvas = onClickCanvas;
 
     useGraphManager.mockImplementation(mockUseGraphManager(graphManager));
     useDragManager.mockImplementation(mockUseDragManager(dragManager));
-    useCallbacks.mockImplementation(mockUseCallbacks(bridge));
+    useCallbacks.mockImplementation(mockUseCallbacks(callbacks));
 
     render(<CanvasBackground {...defaultProps} />);
 

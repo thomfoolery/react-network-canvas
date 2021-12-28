@@ -29,7 +29,7 @@ Render in application
 
 ```jsx
 import React from "react";
-import {NetworkCanvas} from "react-network-canvas";
+import { NetworkCanvas } from "react-network-canvas";
 
 function MyApp() {
   return (
@@ -37,13 +37,13 @@ function MyApp() {
       nodes={nodes}
       edges={edges}
       theme={theme}
-      bridge={bridge}
+      callbacks={callbacks}
       options={options}
     />
   );
 }
 
-export {MyApp};
+export { MyApp };
 ```
 
 ## Demos
@@ -57,21 +57,21 @@ https://337n0.sse.codesandbox.io/demo-2/
 ```jsx
 import React from "react";
 import ReactDOM from "react-dom";
-import {createElement} from "react";
-import {v1 as generateUuid} from "uuid";
+import { createElement } from "react";
+import { v1 as generateUuid } from "uuid";
 
-import {NetworkCanvas} from "react-network-canvas";
+import { NetworkCanvas } from "react-network-canvas";
 
-import {nodes, edges} from "./graph.json";
+import { nodes, edges } from "./graph.json";
 
 function App() {
-  const bridge = {
+  const callbacks = {
     onClickCanvas(event, position, graphManager) {
       // create node at click position
       const node = graphManager.createNode({
         position,
-        inputPorts: [{id: generateUuid()}],
-        outputPorts: [{id: generateUuid()}, {id: generateUuid()}],
+        inputPorts: [{ id: generateUuid() }],
+        outputPorts: [{ id: generateUuid() }, { id: generateUuid() }],
       });
 
       // select the newly created node
@@ -99,7 +99,7 @@ function App() {
     <NetworkCanvas
       nodes={nodes}
       edges={edges}
-      bridge={bridge}
+      callbacks={callbacks}
       options={options}
     />
   );
@@ -216,7 +216,7 @@ ReactDOM.render(createElement(App), document.getElementById("app"));
 interface Props {
   nodes: Types.Node[];
   edges: Types.Edge[];
-  bridge?: Types.Bridge;
+  callbacks?: Types.Bridge;
   options?: Types.Options;
   theme?: any;
 }
@@ -247,7 +247,7 @@ const DEFAULT_OPTIONS: Types.Options = {
   isSnapToGridEnabled: false,
   startAtCanvasCenter: true,
   canvasMargin: 50,
-  initialPanOffset: {x: 50, y: 50},
+  initialPanOffset: { x: 50, y: 50 },
   zoomSensitivity: 0.001,
   zoomWheelKey: undefined,
   selectBoxKey: "Shift",
@@ -335,13 +335,13 @@ interface Bridge {
 interface GraphManager {
   nodes: Types.Node[];
   edges: Types.Edge[];
-  bridge: Types.Bridge;
+  callbacks: Types.Bridge;
   workspace: Types.Workspace | undefined;
   dragManager: Types.DragManager;
   selectedNodeIds: string[];
 
   getNodeById(id: string): Types.Node;
-  getNodesByEdgeId(id: string): {from?: Types.Node; to?: Types.Node};
+  getNodesByEdgeId(id: string): { from?: Types.Node; to?: Types.Node };
   createNode(nodeProps: Partial<Types.Node>): Types.Node | null;
   removeNodeById(id: string): void;
   removeNodesByIds(removedNodeIds: string[]): void;
@@ -385,7 +385,7 @@ interface Workspace {
   setZoom(zoom: number | ((zoom: number) => number)): void;
   container?: HTMLDivElement;
   isSelectBoxKeyDown: boolean;
-  getElementDimensions(HTMLElement): {width: number; height: number};
+  getElementDimensions(HTMLElement): { width: number; height: number };
   getCanvasPosition(object: HTMLElement | DOMRect | MouseEvent): Position;
   mountContextScreenOffset: Position;
   panZoom: {

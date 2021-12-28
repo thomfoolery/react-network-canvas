@@ -1,12 +1,12 @@
+import { v1 as generateUuid } from "uuid";
+
+import { DRAFT_EDGE_ID } from "@component/constants";
+import * as Types from "@component/types";
 import {
   roundToGrid,
   svgGeneratePath,
   createPublisher,
 } from "@component/utils";
-import { DRAFT_EDGE_ID } from "@component/constants";
-import * as Types from "@component/types";
-
-import { v1 as generateUuid } from "uuid";
 
 function getObjectsByIdHash(objects) {
   return objects.reduce((acc, object) => {
@@ -34,6 +34,7 @@ function getEdgesByNodeIdHash(edges) {
     return acc;
   }, {});
 }
+
 interface GraphManagerPrivateProps {
   nodes: Types.Node[];
   edges: Types.Edge[];
@@ -41,7 +42,7 @@ interface GraphManagerPrivateProps {
   edgesByIdHash: { [id: string]: Types.Edge };
   edgesByNodeIdHash: { [id: string]: Types.Edge[] };
   selectedNodeIds: string[];
-  bridge?: Types.Callbacks;
+  callbacks?: Types.Callbacks;
   options: Types.Options;
   dragManager?: Types.DragManager;
   workspace?: Types.Workspace;
@@ -58,17 +59,15 @@ interface GraphManagerArguments {
   options: Types.Options;
   nodes: Types.Node[];
   edges: Types.Edge[];
-  bridge?: Types.Callbacks;
-  dragManager?: any;
+  callbacks?: Types.Callbacks;
+  dragManager?: Types.DragManager;
 }
-
-let graphManagerInstance: Types.GraphManager;
 
 function createGraphManager({
   options,
   nodes,
   edges,
-  bridge,
+  callbacks,
   dragManager,
 }: GraphManagerArguments): Types.GraphManager {
   const __: GraphManagerPrivateProps = {
@@ -78,7 +77,7 @@ function createGraphManager({
     edgesByIdHash: {},
     edgesByNodeIdHash: {},
     selectedNodeIds: [],
-    bridge,
+    callbacks,
     options,
     dragManager,
     workspace: undefined,
@@ -120,7 +119,7 @@ function createGraphManager({
     requestAnimationFrame(() => {
       __.subscriptions.isSelectedById.notifyIds(newSelectedNodeIds, true);
       __.subscriptions.isSelectedById.notifyIds(unselectedNodeIds, false);
-      __.bridge?.onChangeSelectedNodeIds(selectedNodeIds, API);
+      __.callbacks?.onChangeSelectedNodeIds(selectedNodeIds, API);
     });
   }
 
@@ -143,7 +142,7 @@ function createGraphManager({
     node.position = position;
     __.subscriptions.nodePositionChangeById.notifyIds([id], position);
 
-    __.bridge?.onMutateGraph({
+    __.callbacks?.onMutateGraph({
       action: "UPDATE_NODE",
       subject: node,
       graph: {
@@ -169,12 +168,12 @@ function createGraphManager({
   }
 
   const API = {
-    // bridge
-    get bridge() {
-      return { ...__.bridge } as Types.Callbacks;
+    // callbacks
+    get callbacks() {
+      return { ...__.callbacks } as Types.Callbacks;
     },
-    set bridge(bridge: Types.Callbacks) {
-      __.bridge = bridge;
+    set callbacks(callbacks: Types.Callbacks) {
+      __.callbacks = callbacks;
     },
     // workspace
     get workspace() {
@@ -216,7 +215,7 @@ function createGraphManager({
 
       setNodes([...__.nodes, node]);
 
-      __.bridge?.onMutateGraph({
+      __.callbacks?.onMutateGraph({
         action: "CREATE_NODE",
         subject: node,
         graph: {
@@ -237,7 +236,7 @@ function createGraphManager({
       setEdges(__.edges.filter((edge) => !removedEdgeIds.includes(edge.id)));
       setNodes(__.nodes.filter((node) => node.id != id));
 
-      __.bridge?.onMutateGraph({
+      __.callbacks?.onMutateGraph({
         action: "DELETE_NODE",
         subject: __.nodesByIdHash[id],
         graph: {
@@ -264,7 +263,7 @@ function createGraphManager({
       setNodes(__.nodes.filter((node) => !removedNodeIds.includes(node.id)));
 
       removedNodeIds.forEach((id) => {
-        __.bridge?.onMutateGraph({
+        __.callbacks?.onMutateGraph({
           action: "DELETE_NODE",
           subject: __.nodesByIdHash[id],
           graph: {
@@ -394,7 +393,7 @@ function createGraphManager({
       // trigger render to draw edges
       updateNodePositionById(edge.from.nodeId, { x: 0, y: 0 });
 
-      __.bridge?.onMutateGraph({
+      __.callbacks?.onMutateGraph({
         action: "CREATE_EDGE",
         subject: edge,
         graph: {
@@ -421,7 +420,7 @@ function createGraphManager({
       updateNodePositionById(edge.from.nodeId, { x: 0, y: 0 });
       updateNodePositionById(edge.to.nodeId, { x: 0, y: 0 });
 
-      __.bridge?.onMutateGraph({
+      __.callbacks?.onMutateGraph({
         action: "DELETE_EDGE",
         subject: edge,
         graph: {
@@ -451,13 +450,7 @@ function createGraphManager({
     },
   };
 
-  graphManagerInstance = API;
-
-  return graphManagerInstance;
+  return API;
 }
 
-function useGraphManager(): Types.GraphManager {
-  return graphManagerInstance;
-}
-
-export { createGraphManager, useGraphManager };
+export { createGraphManager };

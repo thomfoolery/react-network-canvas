@@ -2,8 +2,12 @@ import React, { useMemo, ReactNode } from "react";
 import { RecoilRoot } from "recoil";
 import * as Types from "@component/types";
 import { Root } from "@component/containers";
-import { createOptions } from "@component/hooks";
-import { OptionsProvider, CallbacksProvider } from "@component/hooks";
+import { createOptions, createCallbacks } from "@component/utils";
+import {
+  OptionsProvider,
+  CallbacksProvider,
+  DragManagerProvider,
+} from "@component/contexts";
 
 interface Props extends Partial<Types.Callbacks> {
   nodes: Types.Node[];
@@ -35,17 +39,18 @@ function NetworkCanvas(props: Props): ReactNode {
   );
 
   const callbacks = useMemo(
-    () => ({
-      onMount,
-      onKeyPress,
-      onClickNode,
-      onClickPort,
-      onDropCanvas,
-      onChangeZoom,
-      onMutateGraph,
-      onClickCanvas,
-      onChangeSelectedNodeIds,
-    }),
+    () =>
+      createCallbacks({
+        onMount,
+        onKeyPress,
+        onClickNode,
+        onClickPort,
+        onDropCanvas,
+        onChangeZoom,
+        onMutateGraph,
+        onClickCanvas,
+        onChangeSelectedNodeIds,
+      }),
     [
       onMount,
       onKeyPress,
@@ -61,9 +66,11 @@ function NetworkCanvas(props: Props): ReactNode {
 
   return (
     <RecoilRoot>
-      <OptionsProvider value={options}>
-        <CallbacksProvider value={callbacks}>
-          <Root nodes={nodes} edges={edges} theme={theme} />
+      <OptionsProvider options={options}>
+        <CallbacksProvider callbacks={callbacks}>
+          <DragManagerProvider>
+            <Root nodes={nodes} edges={edges} theme={theme} />
+          </DragManagerProvider>
         </CallbacksProvider>
       </OptionsProvider>
     </RecoilRoot>

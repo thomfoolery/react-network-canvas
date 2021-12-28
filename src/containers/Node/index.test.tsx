@@ -1,6 +1,7 @@
 import React from "react";
 import renderer from "react-test-renderer";
 import { render, fireEvent, screen } from "@testing-library/react";
+
 import {
   mockUseDragManager,
   mockUseGraphManager,
@@ -9,10 +10,12 @@ import {
   mockUseCallbacks,
 } from "@component/utils/mocks";
 import {
-  createGraphManager,
-  createDragManager,
-  createWorkspace,
   createCallbacks,
+  createWorkspace,
+  createDragManager,
+  createGraphManager,
+} from "@component/utils";
+import {
   useDragManager,
   useGraphManager,
   useWorkspace,
@@ -114,13 +117,13 @@ describe("Node", () => {
     expect(selectedNodeIdsSetter).toBeCalledWith([defaultProps.node.id]);
   });
 
-  it("calls bridge.onClickNode onMouseUp if isClick === true", () => {
+  it("calls callbacks.onClickNode onMouseUp if isClick === true", () => {
     const graphManager = createGraphManager();
     const dragManager = createDragManager();
-    const bridge = createCallbacks();
+    const callbacks = createCallbacks();
     const onClickNode = jest.fn();
 
-    bridge.onClickNode = onClickNode;
+    callbacks.onClickNode = onClickNode;
 
     Object.defineProperty(dragManager, "dragDelta", {
       get: () => ({ x: 0, y: 0 }),
@@ -129,7 +132,7 @@ describe("Node", () => {
 
     useGraphManager.mockImplementation(mockUseDragManager(graphManager));
     useDragManager.mockImplementation(mockUseDragManager(dragManager));
-    useCallbacks.mockImplementation(mockUseCallbacks(bridge));
+    useCallbacks.mockImplementation(mockUseCallbacks(callbacks));
 
     render(<Node {...defaultProps} />);
 

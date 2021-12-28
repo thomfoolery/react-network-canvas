@@ -53,4 +53,34 @@ const DEFAULT_OPTIONS: Types.Options = {
   PortComponent,
 };
 
-export { DRAFT_EDGE_ID, DEFAULT_THEME, DEFAULT_OPTIONS };
+const DEFAULT_CALLBACKS: Types.Callbacks = {
+  onMount() {
+    return undefined;
+  },
+  onChangeZoom() {
+    return undefined;
+  },
+  onMutateGraph() {
+    return undefined;
+  },
+  onClickCanvas() {
+    return undefined;
+  },
+  onClickNode() {
+    return undefined;
+  },
+  onClickPort() {
+    return undefined;
+  },
+  onDropCanvas() {
+    return undefined;
+  },
+  onKeyPress() {
+    return undefined;
+  },
+  onChangeSelectedNodeIds() {
+    return undefined;
+  },
+};
+
+export { DRAFT_EDGE_ID, DEFAULT_THEME, DEFAULT_OPTIONS, DEFAULT_CALLBACKS };

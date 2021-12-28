@@ -36,7 +36,7 @@ function Component(): ReactNode {
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
   const workspace = useWorkspace();
-  const bridge = useCallbacks();
+  const callbacks = useCallbacks();
 
   const containerRef = useRef();
 
@@ -64,10 +64,10 @@ function Component(): ReactNode {
       ) {
         const position = workspace.getCanvasPosition(event);
 
-        bridge.onClickCanvas(event, position, graphManager);
+        callbacks.onClickCanvas(event, position, graphManager);
       }
     },
-    [bridge, workspace, dragManager, graphManager, containerRef]
+    [callbacks, workspace, dragManager, graphManager, containerRef]
   );
 
   useEffect(() => {

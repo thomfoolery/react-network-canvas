@@ -1,4 +1,4 @@
-import { createWorkspace } from "@component/hooks/useWorkspace";
+import { createWorkspace } from "@component/utils";
 import * as Types from "@component/types";
 
 const defaultOptions = {

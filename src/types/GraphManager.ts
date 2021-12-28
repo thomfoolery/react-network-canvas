@@ -3,7 +3,7 @@ import * as Types from "@component/types";
 interface GraphManager {
   nodes: Types.Node[];
   edges: Types.Edge[];
-  bridge: Types.Callbacks;
+  callbacks: Types.Callbacks;
   workspace: Types.Workspace | undefined;
   dragManager: Types.DragManager;
   selectedNodeIds: string[];

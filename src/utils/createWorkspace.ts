@@ -1,4 +1,5 @@
 import { RefObject } from "react";
+
 import * as Types from "@component/types";
 
 interface Options {
@@ -8,8 +9,6 @@ interface Options {
   setZoom(): void;
   setPan(): void;
 }
-
-let workspaceInstance: Types.Workspace;
 
 function createWorkspace(options: Options): Types.Workspace {
   const {
@@ -76,13 +75,7 @@ function createWorkspace(options: Options): Types.Workspace {
     },
   };
 
-  workspaceInstance = API;
-
-  return workspaceInstance;
+  return API;
 }
 
-function useWorkspace(): Types.Workspace {
-  return workspaceInstance;
-}
-
-export { createWorkspace, useWorkspace };
+export { createWorkspace };

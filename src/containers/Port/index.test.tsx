@@ -1,6 +1,7 @@
 import React from "react";
 import renderer from "react-test-renderer";
 import { render, fireEvent, screen } from "@testing-library/react";
+
 import {
   mockUseDragManager,
   mockUseGraphManager,
@@ -9,9 +10,11 @@ import {
   mockUseCallbacks,
 } from "@component/utils/mocks";
 import {
-  createGraphManager,
-  createDragManager,
   createCallbacks,
+  createDragManager,
+  createGraphManager,
+} from "@component/utils";
+import {
   useDragManager,
   useGraphManager,
   useWorkspace,
@@ -107,21 +110,21 @@ describe("Port", () => {
     });
   });
 
-  it("calls bridge.onClickPort onMouseUp if isClick", () => {
+  it("calls callbacks.onClickPort onMouseUp if isClick", () => {
     const onClickPort = jest.fn();
     const dragDataGetter = jest.fn(() => ({ x: 0, y: 0 }));
     const dragManager = createDragManager();
-    const bridge = createCallbacks();
+    const callbacks = createCallbacks();
 
     // override the value property definition with our mocked setter
-    bridge.onClickPort = onClickPort;
+    callbacks.onClickPort = onClickPort;
     Object.defineProperty(dragManager, "dragDelta", {
       get: dragDataGetter,
       configurable: true,
     });
 
     useDragManager.mockImplementation(mockUseDragManager(dragManager));
-    useCallbacks.mockImplementation(mockUseCallbacks(bridge));
+    useCallbacks.mockImplementation(mockUseCallbacks(callbacks));
 
     render(<Port {...defaultProps} />);
 

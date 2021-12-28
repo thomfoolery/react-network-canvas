@@ -2,9 +2,9 @@ import { createCallbacks } from "@component/hooks/useCallbacks";
 import * as Types from "@component/types";
 
 function mockUseCallbacks(
-  bridge: Types.Callbacks = createCallbacks()
+  callbacks: Types.Callbacks = createCallbacks()
 ): () => Types.Callbacks {
-  return () => bridge;
+  return () => callbacks;
 }
 
 export { mockUseCallbacks };

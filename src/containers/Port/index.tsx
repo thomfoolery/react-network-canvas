@@ -22,7 +22,7 @@ function Port(props: Props): ReactNode {
   const dragManager = useDragManager();
   const workspace = useWorkspace();
   const options = useOptions();
-  const bridge = useCallbacks();
+  const callbacks = useCallbacks();
 
   const { PortComponent } = options;
 
@@ -55,7 +55,7 @@ function Port(props: Props): ReactNode {
     (event: SyntheticEvent) => {
       const { dragData } = dragManager;
       if (isClick(dragManager.dragDelta)) {
-        bridge.onClickPort(event, port, node, graphManager);
+        callbacks.onClickPort(event, port, node, graphManager);
       } else if (
         dragData?.port &&
         type === "input" &&

@@ -30,7 +30,7 @@ function Node(props: Props): ReactNode {
   const dragManager = useDragManager();
   const workspace = useWorkspace();
   const options = useOptions();
-  const bridge = useCallbacks();
+  const callbacks = useCallbacks();
 
   const { NodeComponent } = options;
 
@@ -99,10 +99,10 @@ function Node(props: Props): ReactNode {
             graphManager.appendSelectedNodeId(id);
           }
         }
-        bridge.onClickNode(event, node, graphManager);
+        callbacks.onClickNode(event, node, graphManager);
       }
     },
-    [node, bridge, workspace, dragManager, graphManager]
+    [node, callbacks, workspace, dragManager, graphManager]
   );
 
   useEffect(
