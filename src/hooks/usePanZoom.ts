@@ -118,7 +118,7 @@ function usePanZoom(options: Options): Types.PanZoom {
     function handleDragMove(event, dragDelta, dragData) {
       const { minX, minY, maxX, maxY } = boundaryRef.current;
 
-      if (dragData?.soource === "panzoom") {
+      if (dragData?.source === "panzoom") {
         setTransform((transform) => ({
           ...transform,
           x: clamp(minX, maxX, dragStartPosition.x + dragDelta.x),
