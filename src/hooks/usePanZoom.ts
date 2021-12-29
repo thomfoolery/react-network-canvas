@@ -121,8 +121,16 @@ function usePanZoom(options: Options): Types.PanZoom {
       if (dragData?.source === "panzoom") {
         setTransform((transform) => ({
           ...transform,
-          x: clamp(minX, maxX, dragStartPosition.x + dragDelta.x),
-          y: clamp(minY, maxY, dragStartPosition.y + dragDelta.y),
+          x: clamp(
+            minX,
+            maxX,
+            dragStartPosition.x + dragDelta.x * transform.zoom
+          ),
+          y: clamp(
+            minY,
+            maxY,
+            dragStartPosition.y + dragDelta.y * transform.zoom
+          ),
         }));
       }
     }
