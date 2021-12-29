@@ -1,5 +1,4 @@
 import React, { useMemo, ReactNode } from "react";
-import { RecoilRoot } from "recoil";
 import * as Types from "@component/types";
 import { Root } from "@component/containers";
 import { createOptions, createCallbacks } from "@component/utils";
@@ -65,15 +64,13 @@ function NetworkCanvas(props: Props): ReactNode {
   );
 
   return (
-    <RecoilRoot>
-      <OptionsProvider options={options}>
-        <CallbacksProvider callbacks={callbacks}>
-          <DragManagerProvider>
-            <Root nodes={nodes} edges={edges} theme={theme} />
-          </DragManagerProvider>
-        </CallbacksProvider>
-      </OptionsProvider>
-    </RecoilRoot>
+    <OptionsProvider options={options}>
+      <CallbacksProvider callbacks={callbacks}>
+        <DragManagerProvider>
+          <Root nodes={nodes} edges={edges} theme={theme} />
+        </DragManagerProvider>
+      </CallbacksProvider>
+    </OptionsProvider>
   );
 }
 
