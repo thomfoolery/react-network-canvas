@@ -182,10 +182,7 @@ function usePanZoom(options: Options): Types.PanZoom {
 
     container.addEventListener("wheel", onWheel);
 
-    // requestAnimationFrame(() => {
-    //   debugger;
     setIsInitialized(true);
-    // });
 
     return () => {
       container.removeEventListener("wheel", onWheel);
