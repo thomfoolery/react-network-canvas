@@ -48,9 +48,7 @@ export { MyApp };
 
 ## Demos
 
-[demo 1](https://rlmizyzoa--github--3000.local.webcontainer.io/demo-1/)
-
-[demo 2](https://rlmizyzoa--github--3000.local.webcontainer.io/demo-2/)
+[StackBlitz ⚡️ Demos](https://stackblitz.com/edit/github-6yd6p4?embed=1&hideExplorer=1&view=preview)
 
 ### Example Code
 
