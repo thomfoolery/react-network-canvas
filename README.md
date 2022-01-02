@@ -48,9 +48,9 @@ export { MyApp };
 
 ## Demos
 
-https://337n0.sse.codesandbox.io/demo-1/
+[demo 1](https://rlmizyzoa--github--3000.local.webcontainer.io/demo-1/)
 
-https://337n0.sse.codesandbox.io/demo-2/
+[demo 2](https://rlmizyzoa--github--3000.local.webcontainer.io/demo-2/)
 
 ### Example Code
 
