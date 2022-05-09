@@ -1,6 +1,6 @@
 {
   "name": "react-network-canvas",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "author": "Thomas Yuill <thomas.yuill@gmail.com> (https://thomasyuill.com)",
   "description": "A themeable and customizable react component that provides a visual canvas and api for rendering, creating, editing, importing and exporting directed network graphs.",
   "keywords": [
@@ -69,8 +69,5 @@
   "bugs": {
     "url": "https://github.com/thomfoolery/react-network-canvas/issues"
   },
-  "homepage": "https://github.com/thomfoolery/react-network-canvas",
-  "exports": {
-    "./package.json": "./package.json"
-  }
+  "homepage": "https://github.com/thomfoolery/react-network-canvas"
 }
