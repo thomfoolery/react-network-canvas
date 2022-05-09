@@ -1,6 +1,6 @@
 {
   "name": "react-network-canvas",
-  "version": "0.9.0",
+  "version": "0.9.2",
   "author": "Thomas Yuill <thomas.yuill@gmail.com> (https://thomasyuill.com)",
   "description": "A themeable and customizable react component that provides a visual canvas and api for rendering, creating, editing, importing and exporting directed network graphs.",
   "keywords": [
@@ -19,8 +19,8 @@
     "uuid": "^8.3.2"
   },
   "peerDependencies": {
-    "react": "^16.8.0",
-    "react-dom": "^16.8.0"
+    "react": ">16.8.0",
+    "react-dom": ">16.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.13.10",
@@ -40,15 +40,15 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^26.6.3",
     "postcss": "^8.2.6",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-test-renderer": "^17.0.1",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-test-renderer": "^18.0.0",
     "rollup": "^2.40.0",
     "rollup-plugin-alias": "^2.2.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss-modules": "^2.0.2",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.30.0",
+    "rollup-plugin-typescript2": "^0.31.0",
     "ts-node": "^9.1.1",
     "tslib": "^2.1.0",
     "typescript": "^4.2.2",
@@ -69,5 +69,8 @@
   "bugs": {
     "url": "https://github.com/thomfoolery/react-network-canvas/issues"
   },
-  "homepage": "https://github.com/thomfoolery/react-network-canvas"
+  "homepage": "https://github.com/thomfoolery/react-network-canvas",
+  "exports": {
+    "./package.json": "./package.json"
+  }
 }
