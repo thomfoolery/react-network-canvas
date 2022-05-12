@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, ReactNode } from "react";
+import React, { memo, useMemo, useEffect, ReactNode } from "react";
 
 import { Workspace } from "@component/containers";
 import { themeToCssVars, createGraphManager } from "@component/utils";
@@ -9,13 +9,13 @@ import * as Types from "@component/types";
 import styles from "./styles.module.css";
 
 interface Props {
+  theme?: any;
   nodes: Types.Node[];
   edges: Types.Edge[];
-  theme?: any;
 }
 
-function Root(props: Props): ReactNode {
-  const { nodes, edges, theme = {} } = props;
+const Root = memo(function Root(props: Props): ReactNode {
+  const { theme = {}, nodes, edges } = props;
   const dragManager = useDragManager();
   const callbacks = useCallbacks();
   const options = useOptions();
@@ -36,7 +36,7 @@ function Root(props: Props): ReactNode {
     if (callbacks && "onMount" in callbacks) {
       callbacks?.onMount(graphManager);
     }
-  }, [callbacks]);
+  }, []);
 
   useEffect(() => {
     const { handleDragMove, handleDragEnd } = graphManager;
@@ -63,6 +63,6 @@ function Root(props: Props): ReactNode {
       </div>
     </GraphManagerProvider>
   );
-}
+});
 
 export { Root };

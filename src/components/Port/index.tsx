@@ -10,6 +10,7 @@ interface Props {
   type: "input" | "output";
   onMouseUp(): void;
   onMouseDown(): void;
+  index?: number;
 }
 
 function Port(props: Props): ReactNode {

@@ -2,6 +2,9 @@
   stroke: var(--NC-edge-stroke);
   stroke-width: var(--NC-edge-stroke-width);
   fill: transparent;
+
+  marker-end: url("#edge-marker-end");
+  marker-start: url("#edge-marker-start");
 }
 
 .EdgeArea {
@@ -13,10 +16,16 @@
 
 .isHovered .Edge {
   stroke: var(--NC-edge-hover-stroke);
+
+  marker-end: url("#edge-marker-end-hover");
+  marker-start: url("#edge-marker-start-hover");
 }
 
 .isDraft .Edge {
   stroke: var(--NC-edge-draft-stroke);
+
+  marker-end: url("#edge-marker-end-draft");
+  marker-start: url("#edge-marker-start-draft");
 }
 
 .isDraft .EdgeArea {

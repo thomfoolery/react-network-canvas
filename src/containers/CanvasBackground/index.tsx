@@ -12,6 +12,7 @@ import {
   useGraphManager,
   useWorkspace,
   useCallbacks,
+  useOptions,
 } from "@component/hooks";
 
 import { DRAFT_EDGE_ID } from "@component/constants";
@@ -37,6 +38,7 @@ function Component(): ReactNode {
   const dragManager = useDragManager();
   const workspace = useWorkspace();
   const callbacks = useCallbacks();
+  const options = useOptions();
 
   const containerRef = useRef();
 
@@ -84,6 +86,7 @@ function Component(): ReactNode {
       className={styles.CanvasBackground}
       data-testid="CanvasBackground"
     >
+      {options.SvgEdgeMarkersDefs}
       {edges.map((edge) => (
         <Edge key={edge.id} edge={edge} />
       ))}

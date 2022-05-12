@@ -5,11 +5,9 @@ import { v1 as generateUuid } from "uuid";
 
 import { NetworkCanvas } from "@component";
 
-import graph from "./graph-1.json";
+import initialGraph from "./graph-1.json";
 
 function App() {
-  const { nodes, edges } = graph;
-
   const onClickCanvas = useCallback((event, position, graphManager) => {
     const node = graphManager.createNode({
       position,
@@ -81,8 +79,7 @@ function App() {
     <>
       <div className="demo">
         <NetworkCanvas
-          nodes={nodes}
-          edges={edges}
+          initialGraph={initialGraph}
           onKeyPress={onKeyPress}
           onClickPort={onClickPort}
           onClickCanvas={onClickCanvas}
@@ -90,8 +87,7 @@ function App() {
       </div>
       <div className="demo">
         <NetworkCanvas
-          nodes={[]}
-          edges={[]}
+          initialGraph={{ nodes: [], edges: [] }}
           onKeyPress={onKeyPress}
           onClickPort={onClickPort}
           onClickCanvas={onClickCanvas}

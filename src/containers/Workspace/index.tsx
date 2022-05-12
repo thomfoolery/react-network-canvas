@@ -206,7 +206,7 @@ function Workspace(): ReactNode {
   }, [selectBoxKey, isSelectBoxKeyDownRef]);
 
   return (
-    <WorkspaceProvider value={workspace}>
+    <WorkspaceProvider workspace={workspace}>
       <div
         ref={handleRef}
         className={styles.Workspace}

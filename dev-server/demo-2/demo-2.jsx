@@ -11,7 +11,7 @@ import {
   Keyboard,
   Palette,
   Modal,
-} from "../custom-components";
+} from "./components";
 
 import styles from "./styles.module.css";
 
@@ -38,8 +38,6 @@ function App() {
   const [isHelpVisible, setIsHelpVisible] = useState();
   const [selectedNode, setSelectedNode] = useState(null);
   const [isDeleteVisible, setIsDeleteVisible] = useState();
-
-  const { nodes, edges } = graph;
 
   const onMount = useCallback((graphManager) => {
     setGraphManager(graphManager);
@@ -158,8 +156,7 @@ function App() {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <NetworkCanvas
-        nodes={nodes}
-        edges={edges}
+        initialGraph={graph}
         theme={theme}
         options={options}
         onMount={onMount}

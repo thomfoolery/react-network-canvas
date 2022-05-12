@@ -8,28 +8,31 @@ import {
   DragManagerProvider,
 } from "@component/contexts";
 
+const noop = () => null;
+
 interface Props extends Partial<Types.Callbacks> {
-  nodes: Types.Node[];
-  edges: Types.Edge[];
+  initialGraph: {
+    nodes: Types.Node[];
+    edges: Types.Edge[];
+  };
   options?: Partial<Types.Options>;
   theme?: any;
 }
 
 function NetworkCanvas(props: Props): ReactNode {
   const {
-    nodes = [],
-    edges = [],
+    initialGraph: { nodes = [], edges = [] },
     theme = {},
     options: initialOptions = {},
-    onMount = () => null,
-    onKeyPress = () => null,
-    onClickNode = () => null,
-    onClickPort = () => null,
-    onDropCanvas = () => null,
-    onChangeZoom = () => null,
-    onMutateGraph = () => null,
-    onClickCanvas = () => null,
-    onChangeSelectedNodeIds = () => null,
+    onMount = noop,
+    onKeyPress = noop,
+    onClickNode = noop,
+    onClickPort = noop,
+    onDropCanvas = noop,
+    onChangeZoom = noop,
+    onMutateGraph = noop,
+    onClickCanvas = noop,
+    onChangeSelectedNodeIds = noop,
   } = props;
 
   const options = useMemo(
@@ -37,20 +40,8 @@ function NetworkCanvas(props: Props): ReactNode {
     [initialOptions]
   );
 
-  const callbacks = useMemo(
-    () =>
-      createCallbacks({
-        onMount,
-        onKeyPress,
-        onClickNode,
-        onClickPort,
-        onDropCanvas,
-        onChangeZoom,
-        onMutateGraph,
-        onClickCanvas,
-        onChangeSelectedNodeIds,
-      }),
-    [
+  const callbacks = useMemo(() => {
+    return createCallbacks({
       onMount,
       onKeyPress,
       onClickNode,
@@ -60,8 +51,18 @@ function NetworkCanvas(props: Props): ReactNode {
       onMutateGraph,
       onClickCanvas,
       onChangeSelectedNodeIds,
-    ]
-  );
+    });
+  }, [
+    onMount,
+    onKeyPress,
+    onClickNode,
+    onClickPort,
+    onDropCanvas,
+    onChangeZoom,
+    onMutateGraph,
+    onClickCanvas,
+    onChangeSelectedNodeIds,
+  ]);
 
   return (
     <OptionsProvider options={options}>

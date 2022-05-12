@@ -14,10 +14,11 @@ interface Props {
   node: Types.Node;
   port: Types.Port;
   type: "input" | "output";
+  index?: number;
 }
 
 function Port(props: Props): ReactNode {
-  const { node, port, type } = props;
+  const { node, port, type, index } = props;
   const graphManager = useGraphManager();
   const dragManager = useDragManager();
   const workspace = useWorkspace();
@@ -89,6 +90,7 @@ function Port(props: Props): ReactNode {
       node={node}
       port={port}
       type={type}
+      index={index}
       onMouseUp={handleMouseUp}
       onMouseDown={handleMouseDown}
     />

@@ -4,15 +4,15 @@ import * as Types from "@component/types";
 const WorkspaceContext = createContext();
 
 interface Props {
-  value?: Types.Workspace;
+  workspace?: Types.Workspace;
   children?: ReactNode;
 }
 
 function WorkspaceProvider(props: Props): ReactNode {
-  const { value, children } = props;
+  const { workspace, children } = props;
 
   return (
-    <WorkspaceContext.Provider value={value}>
+    <WorkspaceContext.Provider value={workspace}>
       {children}
     </WorkspaceContext.Provider>
   );

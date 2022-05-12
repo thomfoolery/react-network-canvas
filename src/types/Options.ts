@@ -1,5 +1,6 @@
+import { ReactNode, ReactComponent } from "react";
+
 import * as Types from "@component/types";
-import { ReactComponent } from "react";
 
 interface Options {
   gridSize: number;
@@ -15,6 +16,7 @@ interface Options {
   minZoom: number;
   NodeComponent: ReactComponent;
   PortComponent: ReactComponent;
+  SvgEdgeMarkersDefs: ReactNode;
 }
 
 export { Options };

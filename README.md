@@ -97,8 +97,8 @@ function App() {
     <NetworkCanvas
       nodes={nodes}
       edges={edges}
-      callbacks={callbacks}
       options={options}
+      {...callbacks}
     />
   );
 }
