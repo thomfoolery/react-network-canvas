@@ -16,7 +16,7 @@ interface GraphEvent {
 interface Callbacks {
   onMount(graphManager: Types.GraphManager): void;
   onChangeZoom(zoom: number): void;
-  onMutateGraph(graphEvent: GraphEvent): void;
+  onMutateGraph(graphEvent: GraphEvent, graphManager: Types.GraphManager): void;
   onClickCanvas(
     event: React.SyntheticEvent,
     position: Types.Position,

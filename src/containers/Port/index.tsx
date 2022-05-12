@@ -55,12 +55,14 @@ function Port(props: Props): ReactNode {
   const handleMouseUp = useCallback(
     (event: SyntheticEvent) => {
       const { dragData } = dragManager;
+
       if (isClick(dragManager.dragDelta)) {
         callbacks.onClickPort(event, port, node, graphManager);
       } else if (
         dragData?.port &&
         type === "input" &&
-        dragData?.port.type === "output"
+        dragData?.port.type === "output" &&
+        node.id !== dragData?.port.parentNode.id
       ) {
         const edge = {
           from: {

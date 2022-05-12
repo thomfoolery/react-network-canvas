@@ -33,6 +33,18 @@ const Root = memo(function Root(props: Props): ReactNode {
   );
 
   useEffect(() => {
+    graphManager.options = options;
+  }, [options]);
+
+  useEffect(() => {
+    graphManager.callbacks = callbacks;
+  }, [callbacks]);
+
+  useEffect(() => {
+    graphManager.dragManager = dragManager;
+  }, [dragManager]);
+
+  useEffect(() => {
     if (callbacks && "onMount" in callbacks) {
       callbacks?.onMount(graphManager);
     }

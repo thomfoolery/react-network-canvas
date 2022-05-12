@@ -1,6 +1,7 @@
 import React, {
   memo,
   useRef,
+  useMemo,
   useState,
   useEffect,
   useCallback,
@@ -15,23 +16,10 @@ import {
   useOptions,
 } from "@component/hooks";
 
-import { DRAFT_EDGE_ID } from "@component/constants";
 import { Edge } from "@component/containers";
 import { isClick } from "@component/utils";
 
 import styles from "./styles.module.css";
-
-const draftEdge = {
-  id: DRAFT_EDGE_ID,
-  from: {
-    nodeId: "",
-    portId: "",
-  },
-  to: {
-    nodeId: "",
-    portId: "",
-  },
-};
 
 function Component(): ReactNode {
   const graphManager = useGraphManager();
@@ -41,6 +29,21 @@ function Component(): ReactNode {
   const options = useOptions();
 
   const containerRef = useRef();
+
+  const draftEdge = useMemo(
+    () => ({
+      id: graphManager.draftEdgeId,
+      from: {
+        nodeId: "",
+        portId: "",
+      },
+      to: {
+        nodeId: "",
+        portId: "",
+      },
+    }),
+    [graphManager.draftEdgeId]
+  );
 
   const [edges, setEdges] = useState(graphManager.edges);
 

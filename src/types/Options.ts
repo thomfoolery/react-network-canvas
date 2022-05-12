@@ -16,7 +16,7 @@ interface Options {
   minZoom: number;
   NodeComponent: ReactComponent;
   PortComponent: ReactComponent;
-  SvgEdgeMarkersDefs: ReactNode;
+  SvgEdgeMarkersDefs?: ReactNode;
 }
 
 export { Options };

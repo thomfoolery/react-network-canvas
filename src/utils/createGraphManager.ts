@@ -1,6 +1,4 @@
 import { v1 as generateUuid } from "uuid";
-
-import { DRAFT_EDGE_ID } from "@component/constants";
 import * as Types from "@component/types";
 import {
   roundToGrid,
@@ -64,12 +62,14 @@ interface GraphManagerArguments {
 }
 
 function createGraphManager({
-  options,
   nodes,
   edges,
+  options,
   callbacks,
   dragManager,
 }: GraphManagerArguments): Types.GraphManager {
+  const DRAFT_EDGE_ID = generateUuid();
+
   const __: GraphManagerPrivateProps = {
     nodes: [],
     edges: [],
@@ -77,8 +77,8 @@ function createGraphManager({
     edgesByIdHash: {},
     edgesByNodeIdHash: {},
     selectedNodeIds: [],
-    callbacks,
     options,
+    callbacks,
     dragManager,
     workspace: undefined,
     subscriptions: {
@@ -142,14 +142,17 @@ function createGraphManager({
     node.position = position;
     __.subscriptions.nodePositionChangeById.notifyIds([id], position);
 
-    __.callbacks?.onMutateGraph({
-      action: "UPDATE_NODE",
-      subject: node,
-      graph: {
-        nodes: [...__.nodes],
-        edges: [...__.edges],
+    __.callbacks?.onMutateGraph(
+      {
+        action: "UPDATE_NODE",
+        subject: node,
+        graph: {
+          nodes: [...__.nodes],
+          edges: [...__.edges],
+        },
       },
-    });
+      API
+    );
   }
 
   function clearDraftEdgePath() {
@@ -168,6 +171,13 @@ function createGraphManager({
   }
 
   const API = {
+    // options
+    get options() {
+      return { ...__.options } as Types.Options;
+    },
+    set options(options: Types.Options) {
+      __.options = options;
+    },
     // callbacks
     get callbacks() {
       return { ...__.callbacks } as Types.Callbacks;
@@ -215,14 +225,17 @@ function createGraphManager({
 
       setNodes([...__.nodes, node]);
 
-      __.callbacks?.onMutateGraph({
-        action: "CREATE_NODE",
-        subject: node,
-        graph: {
-          nodes: [...__.nodes],
-          edges: [...__.edges],
+      __.callbacks?.onMutateGraph(
+        {
+          action: "CREATE_NODE",
+          subject: node,
+          graph: {
+            nodes: [...__.nodes],
+            edges: [...__.edges],
+          },
         },
-      });
+        API
+      );
 
       return node;
     },
@@ -236,14 +249,17 @@ function createGraphManager({
       setEdges(__.edges.filter((edge) => !removedEdgeIds.includes(edge.id)));
       setNodes(__.nodes.filter((node) => node.id != id));
 
-      __.callbacks?.onMutateGraph({
-        action: "DELETE_NODE",
-        subject: __.nodesByIdHash[id],
-        graph: {
-          nodes: [...__.nodes],
-          edges: [...__.edges],
+      __.callbacks?.onMutateGraph(
+        {
+          action: "DELETE_NODE",
+          subject: __.nodesByIdHash[id],
+          graph: {
+            nodes: [...__.nodes],
+            edges: [...__.edges],
+          },
         },
-      });
+        API
+      );
     },
     removeNodesByIds(removedNodeIds: string[]) {
       const removedEdgeIds: string[] = removedNodeIds.reduce(
@@ -263,14 +279,17 @@ function createGraphManager({
       setNodes(__.nodes.filter((node) => !removedNodeIds.includes(node.id)));
 
       removedNodeIds.forEach((id) => {
-        __.callbacks?.onMutateGraph({
-          action: "DELETE_NODE",
-          subject: __.nodesByIdHash[id],
-          graph: {
-            nodes: __.nodes,
-            edges: __.edges,
+        __.callbacks?.onMutateGraph(
+          {
+            action: "DELETE_NODE",
+            subject: __.nodesByIdHash[id],
+            graph: {
+              nodes: __.nodes,
+              edges: __.edges,
+            },
           },
-        });
+          API
+        );
       });
     },
     subscribeToNodesChange(fn: () => void) {
@@ -280,7 +299,10 @@ function createGraphManager({
       __.subscriptions.nodesChange.removeListenerForId("default", fn);
     },
     // position
-    set dragManager(dragManager: any) {
+    get dragManager(): Types.DragManager {
+      return __.dragManager as Types.DragManager;
+    },
+    set dragManager(dragManager: Types.DragManager) {
       __.dragManager = dragManager;
     },
     handleDragMove(event, dragDelta: Types.Position, dragData: any) {
@@ -393,14 +415,17 @@ function createGraphManager({
       // trigger render to draw edges
       updateNodePositionById(edge.from.nodeId, { x: 0, y: 0 });
 
-      __.callbacks?.onMutateGraph({
-        action: "CREATE_EDGE",
-        subject: edge,
-        graph: {
-          nodes: [...__.nodes],
-          edges: [...__.edges],
+      __.callbacks?.onMutateGraph(
+        {
+          action: "CREATE_EDGE",
+          subject: edge,
+          graph: {
+            nodes: [...__.nodes],
+            edges: [...__.edges],
+          },
         },
-      });
+        API
+      );
 
       return edge as Types.Edge;
     },
@@ -420,15 +445,23 @@ function createGraphManager({
       updateNodePositionById(edge.from.nodeId, { x: 0, y: 0 });
       updateNodePositionById(edge.to.nodeId, { x: 0, y: 0 });
 
-      __.callbacks?.onMutateGraph({
-        action: "DELETE_EDGE",
-        subject: edge,
-        graph: {
-          nodes: [...__.nodes],
-          edges: [...__.edges],
+      __.callbacks?.onMutateGraph(
+        {
+          action: "DELETE_EDGE",
+          subject: edge,
+          graph: {
+            nodes: [...__.nodes],
+            edges: [...__.edges],
+          },
         },
-      });
+        API
+      );
     },
+
+    get draftEdgeId() {
+      return DRAFT_EDGE_ID;
+    },
+
     clearDraftEdgePath,
     updateDraftEdgePath,
     subscribeToEdgesChange(id: string, fn: () => void) {

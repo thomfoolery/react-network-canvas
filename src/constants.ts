@@ -4,8 +4,6 @@ import {
   Port as PortComponent,
 } from "@component/components";
 
-const DRAFT_EDGE_ID = "cc77e2e0-598e-4cb0-813c-516666955e42";
-
 const DEFAULT_THEME = {
   workspace: {
     backgroundSize: "",
@@ -83,4 +81,4 @@ const DEFAULT_CALLBACKS: Types.Callbacks = {
   },
 };
 
-export { DRAFT_EDGE_ID, DEFAULT_THEME, DEFAULT_OPTIONS, DEFAULT_CALLBACKS };
+export { DEFAULT_THEME, DEFAULT_OPTIONS, DEFAULT_CALLBACKS };

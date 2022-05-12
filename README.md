@@ -237,6 +237,7 @@ interface Options {
   minZoom: number;
   NodeComponent: ReactComponent;
   PortComponent: ReactComponent;
+  SvgEdgeMarkersDefs: ReactComponent;
 }
 
 const DEFAULT_OPTIONS: Types.Options = {
@@ -253,6 +254,7 @@ const DEFAULT_OPTIONS: Types.Options = {
   minZoom: 0,
   NodeComponent,
   PortComponent,
+  SvgEdgeMarkersDefs,
 };
 
 const DEFAULT_THEME = {
