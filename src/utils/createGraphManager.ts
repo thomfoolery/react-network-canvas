@@ -240,6 +240,7 @@ function createGraphManager({
       return node;
     },
     removeNodeById(id: string) {
+      const subject = __.nodesByIdHash[id];
       const edges = __.edgesByNodeIdHash[id] || [];
       const removedEdgeIds = edges.map(({ id }) => id);
 
@@ -251,8 +252,8 @@ function createGraphManager({
 
       __.callbacks?.onMutateGraph(
         {
+          subject,
           action: "DELETE_NODE",
-          subject: __.nodesByIdHash[id],
           graph: {
             nodes: [...__.nodes],
             edges: [...__.edges],
@@ -270,6 +271,10 @@ function createGraphManager({
         []
       );
 
+      const removedNodes = removedNodeIds.reduce((acc, nodeId) => {
+        return { ...acc, [nodeId]: __.nodesByIdHash[nodeId] };
+      }, {});
+
       setSelectedNodeIds(
         __.selectedNodeIds.filter(
           (selectedNodeId) => !removedNodeIds.includes(selectedNodeId)
@@ -282,7 +287,7 @@ function createGraphManager({
         __.callbacks?.onMutateGraph(
           {
             action: "DELETE_NODE",
-            subject: __.nodesByIdHash[id],
+            subject: removedNodes[id],
             graph: {
               nodes: __.nodes,
               edges: __.edges,
@@ -472,6 +477,32 @@ function createGraphManager({
     },
     // import/export
     import({ nodes, edges }) {
+      const { canvasMargin } = __.options;
+      const {
+        initialPanOffset = {
+          x: canvasMargin,
+          y: canvasMargin,
+        },
+      } = __.options;
+
+      const panPosition = nodes.reduce(
+        (acc, node) => {
+          const x = node.position.x < acc.x ? node.position.x : acc.x;
+          const y = node.position.y < acc.y ? node.position.y : acc.y;
+
+          return { x, y };
+        },
+        { x: Infinity, y: Infinity }
+      );
+
+      requestAnimationFrame(() => {
+        if (panPosition.x === Infinity || panPosition.y === Infinity) return;
+        __.workspace?.setPan({
+          x: panPosition.x * -1 + initialPanOffset.x,
+          y: panPosition.y * -1 + initialPanOffset.y,
+        });
+      });
+
       setNodes(nodes);
       setEdges(edges);
     },

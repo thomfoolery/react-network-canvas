@@ -10,15 +10,20 @@ import styles from "./styles.module.css";
 
 interface Props {
   theme?: any;
-  nodes: Types.Node[];
-  edges: Types.Edge[];
+  initialGraph: {
+    nodes: Types.Node[];
+    edges: Types.Edge[];
+  };
 }
 
 const Root = memo(function Root(props: Props): ReactNode {
-  const { theme = {}, nodes, edges } = props;
-  const dragManager = useDragManager();
-  const callbacks = useCallbacks();
+  const {
+    theme = {},
+    initialGraph: { nodes, edges },
+  } = props;
   const options = useOptions();
+  const callbacks = useCallbacks();
+  const dragManager = useDragManager();
 
   const graphManager = useMemo(
     () =>

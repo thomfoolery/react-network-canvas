@@ -16,11 +16,6 @@
   user-select: none;
 
   transform-origin: 0 0;
-  transition: transform 200ms ease-out;
-}
-
-.Canvas:hover {
-  transition: none;
 }
 
 .CanvasEdges {

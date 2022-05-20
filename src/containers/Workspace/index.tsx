@@ -46,7 +46,6 @@ function Workspace(): ReactNode {
       return null;
     }
 
-    const { nodes } = graphManager;
     const {
       initialPanOffset = {
         x: canvasMargin,
@@ -54,33 +53,14 @@ function Workspace(): ReactNode {
       },
     } = options;
 
-    if (nodes.length > 0) {
-      return ((position) => {
-        return {
-          x: position.x * -1 + initialPanOffset.x,
-          y: position.y * -1 + initialPanOffset.y,
-        };
-      })(
-        nodes.reduce(
-          (acc, node) => {
-            const x = node.position.x < acc.x ? node.position.x : acc.x;
-            const y = node.position.y < acc.y ? node.position.y : acc.y;
-
-            return { x, y };
-          },
-          { x: Infinity, y: Infinity }
-        )
-      );
-    } else {
-      if (startAtCanvasCenter) {
-        return {
-          x: (canvasSize / 2 - container.clientWidth / 2) * -1,
-          y: (canvasSize / 2 - container.clientHeight / 2) * -1,
-        };
-      }
-
-      return null;
+    if (startAtCanvasCenter) {
+      return {
+        x: (canvasSize / 2 - container.clientWidth / 2) * -1,
+        y: (canvasSize / 2 - container.clientHeight / 2) * -1,
+      };
     }
+
+    return initialPanOffset;
   }, [workspaceDivRef.current]);
 
   const onChangeZoom = useCallback(

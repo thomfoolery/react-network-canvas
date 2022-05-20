@@ -21,7 +21,7 @@ interface Props extends Partial<Types.Callbacks> {
 
 function NetworkCanvas(props: Props): ReactNode {
   const {
-    initialGraph: { nodes = [], edges = [] },
+    initialGraph = { nodes: [], edges: [] },
     theme = {},
     options: initialOptions = {},
     onMount = noop,
@@ -68,7 +68,7 @@ function NetworkCanvas(props: Props): ReactNode {
     <OptionsProvider options={options}>
       <CallbacksProvider callbacks={callbacks}>
         <DragManagerProvider>
-          <Root nodes={nodes} edges={edges} theme={theme} />
+          <Root initialGraph={initialGraph} theme={theme} />
         </DragManagerProvider>
       </CallbacksProvider>
     </OptionsProvider>
